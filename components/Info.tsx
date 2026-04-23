@@ -75,6 +75,7 @@ export function Info() {
                   alt="Sebastian Portrait"
                   fill
                   className="object-cover"
+                  sizes="(max-width: 768px) 35vw, 224px"
                   priority
                 />
               </div>
