@@ -201,20 +201,29 @@ export function Works() {
                   </h3>
                 </div>
               </div>
-              <span className="text-xs lg:text-sm font-bold uppercase tracking-widest text-foreground/30 flex-shrink-0">
-                {project.year}
-              </span>
             </div>
 
-            <div className="text-foreground group-hover:text-primary transition-all duration-500">
-              <svg 
-                className="w-7 h-7 lg:w-8 lg:h-8" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 7h10v10M7 17L17 7" />
-              </svg>
+            {/* YEAR TO ARROW SLIDE */}
+            <div className="h-8 lg:h-10 overflow-hidden flex-shrink-0">
+              <div className="flex flex-col items-end transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-1/2">
+                {/* STATE 1: YEAR */}
+                <div className="h-8 lg:h-10 flex items-center">
+                  <span className="font-mono text-xs lg:text-sm font-bold tracking-tighter text-foreground/30 group-hover:text-primary transition-colors">
+                    [{project.year}]
+                  </span>
+                </div>
+                {/* STATE 2: ARROW */}
+                <div className="h-8 lg:h-10 flex items-center text-primary">
+                  <svg 
+                    className="w-6 h-6 lg:w-7 lg:h-7" 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 7h10v10M7 17L17 7" />
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
         </GridItem>

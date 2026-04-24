@@ -118,13 +118,10 @@ export function Info() {
 
               <div className="flex flex-wrap gap-3 mt-12">
                 {/* PILL: STATUS */}
-                <div className="inline-flex items-center gap-3 px-5 py-2.5 border border-primary/40 bg-primary/5 rounded-none transition-all hover:bg-primary/10 hover:border-primary">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-                  </span>
-                  <p className="text-[10px] lg:text-xs font-bold uppercase tracking-[0.05em] text-primary leading-none">
-                    Available for new projects
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-none border border-emerald-500/20 bg-emerald-500/5 text-emerald-500/70 font-mono tracking-[0.1em]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <p className="text-[10px] lg:text-xs font-bold uppercase leading-none">
+                    Available for freelance / {new Date().getFullYear()}
                   </p>
                 </div>
 
@@ -176,48 +173,6 @@ export function Info() {
                   </div>
                 </a>
               </div>
-            </div>
-
-            {/* RIGHT: CONNECT */}
-            <div className="shrink-0 pt-2 lg:pt-1">
-              <h3 className="text-xs font-bold uppercase tracking-[0.1em] text-foreground/40 mb-6">
-                Connect*
-              </h3>
-              <ul className="flex flex-col gap-2">
-                <li>
-                  <a
-                    href="mailto:hello@sebbi.com"
-                    className="text-lg lg:text-xl font-medium hover:text-primary transition-colors block"
-                  >
-                    hello@sebbi.com
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://github.com/iamsebbi"
-                    target="_blank"
-                    className="text-lg lg:text-xl font-medium hover:text-primary transition-colors block"
-                  >
-                    GitHub
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-lg lg:text-xl font-medium hover:text-primary transition-colors block"
-                  >
-                    LinkedIn
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-lg lg:text-xl font-medium hover:text-primary transition-colors block"
-                  >
-                    Twitter / X
-                  </a>
-                </li>
-              </ul>
             </div>
           </div>
         </GridItem>

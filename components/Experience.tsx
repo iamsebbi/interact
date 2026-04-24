@@ -1,7 +1,9 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { Section, GridItem } from "./Section";
+import { cn } from "@/lib/utils";
 
 const EXPERIENCES = [
   {
@@ -29,11 +31,46 @@ const EXPERIENCES = [
 
 export function Experience() {
   return (
-    <Section id="experience" className="py-8 lg:py-12">
+    <Section id="experience" className="py-16 lg:py-24">
+      {/* PORTRAIT DECORATOR */}
+      <GridItem span="col-span-full" className="mb-24 lg:mb-40">
+        <div className="flex items-center justify-center">
+          <div className="relative flex items-center">
+            {/* LEFT DECORATORS */}
+            <div className="absolute right-full flex items-center gap-2 lg:gap-6 pr-2 lg:pr-6">
+              <span className="font-special text-[12vw] lg:text-[5rem] text-foreground">
+                *
+              </span>
+              <span className="font-special text-[18vw] lg:text-[10rem] leading-none text-foreground">
+                (
+              </span>
+            </div>
+
+            {/* CENTERED IMAGE */}
+            <div className="relative w-[35vw] h-[35vw] lg:w-56 lg:h-56 overflow-hidden bg-card border border-border shrink-0">
+              <Image
+                src="/hero_portrait_1.png"
+                alt="Sebastian Portrait"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 35vw, 224px"
+              />
+            </div>
+
+            {/* RIGHT DECORATOR */}
+            <div className="absolute left-full pl-2 lg:pl-6">
+              <span className="font-special text-[18vw] lg:text-[10rem] leading-none text-foreground">
+                )
+              </span>
+            </div>
+          </div>
+        </div>
+      </GridItem>
+
       {/* HEADER */}
       <GridItem span="col-span-full" className="mb-1 lg:mb-2">
         <div className="flex flex-col">
-          <span className="text-[10px] lg:text-xs font-bold uppercase tracking-[0.1em] text-foreground/40">
+          <span className="text-[12px] lg:text-xs font-bold uppercase tracking-[0.1em] text-foreground/40">
             History*
           </span>
         </div>
@@ -41,36 +78,35 @@ export function Experience() {
 
       {/* EXPERIENCE LIST */}
       <GridItem span="col-span-full">
-        <div className="flex flex-col border-t border-border/50">
+        <div className="flex flex-col">
           {EXPERIENCES.map((exp, index) => (
             <div
               key={index}
-              className="group relative border-b border-border/50 py-3 lg:py-4 transition-all duration-500 hover:bg-card/30"
+              className="group relative flex flex-col pt-4 pb-8 lg:pt-6 lg:pb-10 min-h-[80px] lg:min-h-[110px] border-b border-border/50 last:border-0"
             >
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-2 lg:px-4">
-                {/* YEAR & COMPANY */}
-                <div className="flex flex-col gap-1 md:w-1/4">
-                  <span className="text-xs lg:text-sm font-bold uppercase tracking-widest text-foreground mb-1">
-                    {exp.year}
-                  </span>
-                  <span className="text-[10px] lg:text-xs font-bold uppercase tracking-widest text-foreground/30">
-                    {exp.company}
-                  </span>
+              {/* METADATA: YEAR & COMPANY */}
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 font-mono text-[10px] lg:text-xs uppercase tracking-tight">
+                  <span className="text-foreground/80">{exp.year.split(" — ")[0]}</span>
+                  <span className="text-foreground/30">—</span>
+                  <span className="text-foreground/80">{exp.year.split(" — ")[1] || ""}</span>
                 </div>
+                <span className="text-foreground/20 text-[10px]">•</span>
+                <span className="font-mono text-[10px] lg:text-xs uppercase tracking-tight text-foreground/40 group-hover:text-foreground/60 transition-colors">
+                  {exp.company}
+                </span>
+              </div>
 
-                {/* ROLE */}
-                <div className="flex-1">
-                  <h3 className="text-xl lg:text-3xl font-bold uppercase tracking-tight text-foreground/80 group-hover:text-foreground transition-colors">
-                    {exp.role}
-                  </h3>
-                </div>
-
-                {/* DESCRIPTION */}
-                <div className="hidden lg:block w-1/3 text-right">
-                  <p className="text-xs text-foreground/20 leading-relaxed max-w-xs ml-auto group-hover:text-foreground/40 transition-colors">
-                    {exp.description}
-                  </p>
-                </div>
+              {/* ROLE */}
+              <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+                <h3 className="text-2xl lg:text-4xl font-bold uppercase tracking-tighter text-foreground/90 group-hover:text-foreground transition-all">
+                  {exp.role}
+                </h3>
+                
+                {/* DESCRIPTION (Desktop only) */}
+                <p className="hidden lg:block max-w-md text-xs lg:text-sm text-foreground/40 leading-relaxed font-medium group-hover:text-foreground/60 transition-colors">
+                  {exp.description}
+                </p>
               </div>
             </div>
           ))}
