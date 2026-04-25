@@ -26,17 +26,7 @@ export function BrutalistDivider() {
   }, []);
 
   useGSAP(() => {
-    // Parallax on the image container
-    gsap.to(".portrait-container", {
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: true,
-      },
-      y: -50,
-      ease: "none",
-    });
+    // Parallax removed
   }, { scope: containerRef });
 
   return (
@@ -44,21 +34,20 @@ export function BrutalistDivider() {
       <GridItem span="col-span-full">
         <div ref={containerRef} className="flex flex-col items-center justify-center relative">
           
-          {/* TECHNICAL OVERLAYS - LEFT */}
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 hidden xl:flex flex-col gap-4 font-mono text-[10px] uppercase tracking-widest text-foreground/40">
+          {/* MOBILE TECHNICAL OVERLAYS - TOP */}
+          <div className="flex xl:hidden w-full justify-between items-end mb-3 px-0 font-mono text-[10px] uppercase tracking-widest text-foreground/40">
             <div className="flex flex-col">
               <span className="text-primary font-bold">Location</span>
-              <span>44.4268° N</span>
-              <span>26.1025° E</span>
+              <span>44.439628° N</span>
+              <span>26.096306° E</span>
             </div>
-            <div className="w-12 h-px bg-border" />
-            <div className="flex flex-col">
+            <div className="flex flex-col text-right">
               <span className="text-primary font-bold">System</span>
               <span>v2.0.4_boot</span>
             </div>
           </div>
 
-          <div className="relative flex items-center">
+          <div className="relative w-full lg:w-max flex items-center justify-center">
             {/* LARGE DECORATORS */}
             <div className="absolute right-full hidden lg:flex items-center gap-8 pr-10">
               <span className="font-special text-6xl lg:text-[8rem] text-foreground">
@@ -70,7 +59,7 @@ export function BrutalistDivider() {
             </div>
 
             {/* PORTRAIT CONTAINER */}
-            <div className="portrait-container relative w-[80vw] h-[80vw] lg:w-96 lg:h-96 overflow-hidden bg-card border border-border shrink-0 z-10 shadow-2xl">
+            <div className="portrait-container relative w-full aspect-square lg:w-96 lg:h-96 overflow-hidden bg-card border border-border shrink-0 z-10">
               {FRAME_IMAGES.map((src, i) => (
                 <div 
                   key={src}
@@ -81,7 +70,7 @@ export function BrutalistDivider() {
                     alt={`Portrait ${i + 1}`}
                     fill
                     className="object-cover grayscale"
-                    sizes="(max-width: 768px) 80vw, 400px"
+                    sizes="(max-width: 768px) 100vw, 400px"
                   />
                 </div>
               ))}
@@ -95,7 +84,33 @@ export function BrutalistDivider() {
             </div>
           </div>
 
-          {/* TECHNICAL OVERLAYS - RIGHT */}
+          {/* MOBILE TECHNICAL OVERLAYS - BOTTOM */}
+          <div className="flex xl:hidden w-full justify-between items-start mt-3 px-0 font-mono text-[10px] uppercase tracking-widest text-foreground/40">
+            <div className="flex flex-col">
+              <span className="text-primary font-bold">Status</span>
+              <span>Active_Connection</span>
+            </div>
+            <div className="flex flex-col text-right">
+              <span className="text-primary font-bold">Scale</span>
+              <span>1:1.000_REF</span>
+            </div>
+          </div>
+
+          {/* DESKTOP TECHNICAL OVERLAYS - LEFT */}
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 hidden xl:flex flex-col gap-4 font-mono text-[10px] uppercase tracking-widest text-foreground/40">
+            <div className="flex flex-col">
+              <span className="text-primary font-bold">Location</span>
+              <span>44.439628° N</span>
+              <span>26.096306° E</span>
+            </div>
+            <div className="w-12 h-px bg-border" />
+            <div className="flex flex-col">
+              <span className="text-primary font-bold">System</span>
+              <span>v2.0.4_boot</span>
+            </div>
+          </div>
+
+          {/* DESKTOP TECHNICAL OVERLAYS - RIGHT */}
           <div className="absolute right-0 top-1/2 -translate-y-1/2 hidden xl:flex flex-col items-end gap-4 font-mono text-[10px] uppercase tracking-widest text-foreground/40 text-right">
             <div className="flex flex-col">
               <span className="text-primary font-bold">Status</span>
