@@ -46,11 +46,11 @@ export function Loader({ onComplete }: { onComplete: () => void }) {
   }, [progress, onComplete]);
 
   return (
-    <div className="loader-bg fixed inset-0 z-index-9999 flex items-center justify-center bg-foreground overflow-hidden">
+    <div className="loader-bg fixed inset-0 z-[9999] flex items-center justify-center bg-background overflow-hidden">
 
       <div className="relative flex flex-col items-center">
         <div className="loader-text flex flex-col items-center">
-          <span className="font-mono font-semibold text-[8vw] lg:text-[4rem] leading-none text-background select-none tracking-tighter">
+          <span className="font-mono font-semibold text-[8vw] lg:text-[4rem] leading-none text-foreground select-none tracking-tighter">
             {"[ "}
             {progress}%{" ]"}
           </span>
@@ -68,9 +68,9 @@ export function Loader({ onComplete }: { onComplete: () => void }) {
                 className={`flex items-center gap-3 transition-all duration-500 ${progress >= log.t ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"}`}
               >
                 <span
-                  className={`w-1 h-1 rounded-full ${progress >= log.t ? "bg-primary" : "bg-background/20"}`}
+                  className={`w-1 h-1 rounded-full ${progress >= log.t ? "bg-primary" : "bg-foreground/20"}`}
                 />
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-background/60">
+                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/60">
                   {log.m}{" "}
                   {progress >= log.t && progress < 100 && i < 5 && "[ OK ]"}
                 </span>
@@ -78,7 +78,7 @@ export function Loader({ onComplete }: { onComplete: () => void }) {
             ))}
 
             {/* PROGRESS BAR (Minimalist) */}
-            <div className="w-full h-[1px] bg-background/5 mt-8 relative">
+            <div className="w-full h-[1px] bg-foreground/5 mt-8 relative">
               <div
                 className="absolute inset-y-0 left-0 bg-primary transition-all duration-300"
                 style={{ width: `${progress}%` }}
@@ -89,10 +89,10 @@ export function Loader({ onComplete }: { onComplete: () => void }) {
       </div>
 
       {/* DECORATIVE CORNER ACCENTS */}
-      <div className="absolute top-10 left-10 font-mono text-[10px] text-background/20 uppercase tracking-widest hidden md:block">
+      <div className="absolute top-10 left-10 font-mono text-[10px] text-foreground/20 uppercase tracking-widest hidden md:block">
         System_Boot_v2.0.4
       </div>
-      <div className="absolute bottom-10 right-10 font-mono text-[10px] text-background/20 uppercase tracking-widest hidden md:block">
+      <div className="absolute bottom-10 right-10 font-mono text-[10px] text-foreground/20 uppercase tracking-widest hidden md:block">
         ©{new Date().getFullYear()} Sebastian
       </div>
     </div>
