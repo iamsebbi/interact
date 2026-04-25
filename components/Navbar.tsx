@@ -240,7 +240,7 @@ export function Navbar() {
           <button
             ref={buttonRef}
             onClick={() => setIsOpen(!isOpen)}
-            className="w-10 h-10 flex items-center justify-center text-foreground rounded-full focus:outline-none"
+            className="w-12 h-12 flex items-center justify-center text-foreground rounded-full focus:outline-none active:scale-90 transition-transform"
             style={{ WebkitTapHighlightColor: "transparent" }}
             aria-label="Toggle menu"
           >
@@ -253,7 +253,7 @@ export function Navbar() {
       </div>
 
       {/* Menu Overlay */}
-      <div id="menu-overlay" className="fixed inset-0 z-100 px-4 flex flex-col items-center invisible pointer-events-none">
+      <div id="menu-overlay" className="fixed inset-0 z-100 px-4 flex flex-col items-center invisible pointer-events-none overscroll-contain">
         <div className="absolute inset-0 bg-background/80 backdrop-blur-md backdrop-saturate-[1.8]" onClick={() => setIsOpen(false)} />
         <div ref={menuRef} className="relative mt-24 glass rounded-3xl p-6 flex flex-col gap-4 shadow-2xl border border-border/50 w-full max-w-350">
           {navLinks.map((link) => (

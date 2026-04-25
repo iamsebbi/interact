@@ -50,6 +50,14 @@
     /* Removed smooth scroll as it can conflict with GSAP ScrollTrigger */
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+    /* TOUCH OPTIMIZATIONS */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  button, a {
+    touch-action: manipulation;
+    cursor: pointer;
   }
 
   body {
@@ -99,6 +107,7 @@
   .text-gradient {
     background: var(--accent-gradient);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
@@ -123,12 +132,10 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
 
-  .hover-invert {
-    transition: filter 0.6s cubic-bezier(0.19, 1, 0.22, 1);
-  }
-
-  .hover-invert:hover {
-    filter: invert(1);
+  @media (hover: hover) {
+    .hover-invert:hover {
+      filter: invert(1);
+    }
   }
 
   @keyframes marquee {
@@ -147,5 +154,15 @@
 
   .animate-marquee-reverse {
     animation: marquee-reverse 80s linear infinite;
+  }
+
+  @keyframes slider-pulse {
+    0% { scale: 1 1; }
+    50% { scale: 1.05 1.1; }
+    100% { scale: 1 1; }
+  }
+
+  .animate-slider-pulse {
+    animation: slider-pulse 0.5s cubic-bezier(0.65, 0, 0.35, 1);
   }
 }

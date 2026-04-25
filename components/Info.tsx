@@ -128,21 +128,38 @@ export function Info() {
                 </div>
 
                 <div className="hidden lg:block lg:pt-2">
-                  <a 
-                    href="/CV_Prisecaru_Sebastian.pdf" 
-                    download="CV_Prisecaru_Sebastian.pdf"
-                    className="group flex flex-row items-center gap-5 transition-all duration-500"
-                  >
-                    <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-full border-[3px] border-white flex items-center justify-center group-hover:bg-white group-hover:border-white transition-all duration-500 shrink-0">
-                      <svg className="w-4 h-4 lg:w-5 lg:h-5 text-white group-hover:text-black transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                      </svg>
-                    </div>
-                    <div className="flex flex-col items-start">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Curriculum Vitae</span>
-                      <span className="font-special text-xl lg:text-2xl uppercase text-white">Download CV*</span>
-                    </div>
-                  </a>
+                  <div className="flex flex-col gap-6">
+                    <a 
+                      href="/CV_Prisecaru_Sebastian.pdf" 
+                      download="CV_Prisecaru_Sebastian.pdf"
+                      className="group flex flex-row items-center gap-5 transition-all duration-500"
+                    >
+                      <div className="w-12 h-12 lg:w-12 lg:h-12 rounded-full border-[3px] border-white flex items-center justify-center group-hover:bg-white group-hover:border-white group-active:bg-white group-active:scale-90 transition-all duration-500 shrink-0">
+                        <svg className="w-5 h-5 lg:w-6 lg:h-6 text-white group-hover:text-black group-active:text-black transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                        </svg>
+                      </div>
+                      <div className="flex flex-col items-start">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Curriculum Vitae</span>
+                        <span className="font-special text-xl lg:text-2xl uppercase text-white">Download CV*</span>
+                      </div>
+                    </a>
+
+                    <a 
+                      href="mailto:hello@iamsebbi.com" 
+                      className="group flex flex-row items-center gap-5 transition-all duration-500"
+                    >
+                      <div className="w-12 h-12 lg:w-12 lg:h-12 rounded-full border-[3px] border-white flex items-center justify-center group-hover:bg-white group-hover:border-white group-active:bg-white group-active:scale-90 transition-all duration-500 shrink-0">
+                        <svg className="w-5 h-5 lg:w-6 lg:h-6 text-white group-hover:text-black group-active:text-black transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                      <div className="flex flex-col items-start">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Say hello</span>
+                        <span className="font-special text-xl lg:text-2xl uppercase text-white">Mail me*</span>
+                      </div>
+                    </a>
+                  </div>
                 </div>
               </div>
             </GridItem>
@@ -178,20 +195,35 @@ export function Info() {
       </Section>
 
       {/* MOBILE DOWNLOAD CV - OUTSIDE SECTION */}
-      <div className="lg:hidden w-full py-6 px-4 bg-background border-b border-border/50">
+      <div className="lg:hidden w-full py-8 px-4 bg-background border-b border-border/50 flex flex-col gap-8">
         <a 
           href="/CV_Prisecaru_Sebastian.pdf" 
           download="CV_Prisecaru_Sebastian.pdf"
           className="group flex flex-row items-center justify-start gap-5 transition-all duration-500"
         >
-          <div className="w-10 h-10 rounded-full border-[3px] border-foreground flex items-center justify-center transition-all duration-500 shrink-0">
-            <svg className="w-4 h-4 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="w-12 h-12 rounded-full border-[3px] border-foreground flex items-center justify-center group-active:bg-foreground group-active:scale-90 transition-all duration-500 shrink-0">
+            <svg className="w-5 h-5 text-foreground group-active:text-background transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
             </svg>
           </div>
           <div className="flex flex-col items-start">
             <span className="text-[10px] font-bold uppercase tracking-widest text-foreground/40">Curriculum Vitae</span>
             <span className="font-special text-xl uppercase text-foreground">Download CV*</span>
+          </div>
+        </a>
+
+        <a 
+          href="mailto:hello@iamsebbi.com" 
+          className="group flex flex-row items-center justify-start gap-5 transition-all duration-500"
+        >
+          <div className="w-12 h-12 rounded-full border-[3px] border-foreground flex items-center justify-center group-active:bg-foreground group-active:scale-90 transition-all duration-500 shrink-0">
+            <svg className="w-5 h-5 text-foreground group-active:text-background transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div className="flex flex-col items-start">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-foreground/40">Say hello</span>
+            <span className="font-special text-xl uppercase text-foreground">Mail me*</span>
           </div>
         </a>
       </div>

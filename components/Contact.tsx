@@ -122,13 +122,13 @@ export function Contact() {
                   <a
                     key={social.name}
                     href={social.url}
-                    className="group relative h-7 lg:h-9 overflow-hidden"
+                    className="group relative h-11 lg:h-9 overflow-hidden active:scale-95 transition-transform"
                   >
                     <div className="flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-1/2">
-                      <span className="text-lg lg:text-2xl font-special uppercase text-background h-7 lg:h-9 flex items-center">
+                      <span className="text-lg lg:text-2xl font-special uppercase text-background h-11 lg:h-9 flex items-center">
                         {social.name}
                       </span>
-                      <span className="text-lg lg:text-2xl font-special uppercase text-primary h-7 lg:h-9 flex items-center">
+                      <span className="text-lg lg:text-2xl font-special uppercase text-primary h-11 lg:h-9 flex items-center">
                         {social.name}
                       </span>
                     </div>

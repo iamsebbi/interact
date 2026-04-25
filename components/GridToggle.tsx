@@ -8,7 +8,7 @@ export function GridToggle() {
   return (
     <button
       onClick={toggleGrid}
-      className={`relative flex items-center justify-center gap-3 px-4 py-2 transition-all duration-500 rounded-full glass cursor-pointer group overflow-hidden border-transparent ${
+      className={`relative flex items-center justify-center gap-3 px-4 py-3 transition-all duration-500 rounded-full glass cursor-pointer group overflow-hidden border-transparent ${
         showGrid ? "bg-primary text-primary-foreground" : "hover:bg-foreground hover:text-background"
       }`}
       aria-label="Toggle grid system"

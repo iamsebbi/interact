@@ -10,8 +10,15 @@ import { PROJECTS, type Category } from "@/lib/projects";
 
 export function Works() {
   const [activeCategory, setActiveCategory] = useState<Category>("web");
+  const [isTabAnimating, setIsTabAnimating] = useState(false);
   const containerRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
+
+  const handleCategoryChange = (cat: Category) => {
+    if (cat === activeCategory) return;
+    setActiveCategory(cat);
+    setIsTabAnimating(true);
+  };
 
   const filteredProjects = PROJECTS.filter(
     (p) => p.category === activeCategory,
@@ -36,6 +43,23 @@ export function Works() {
     { scope: containerRef, dependencies: [activeCategory] },
   );
 
+  // Tab Pulse Animation
+  useGSAP(
+    () => {
+      if (isTabAnimating) {
+        gsap.to(".slider-bg", {
+          scale: 1.2,
+          duration: 0.25,
+          yoyo: true,
+          repeat: 1,
+          ease: "power2.inOut",
+          onComplete: () => setIsTabAnimating(false),
+        });
+      }
+    },
+    { scope: containerRef, dependencies: [isTabAnimating] },
+  );
+
   return (
     <Section ref={containerRef} id="works" className="py-24 lg:py-40">
       <GridItem span="col-span-full">
@@ -46,21 +70,23 @@ export function Works() {
             </h2>
 
             {/* SHARP TAB SWITCHER (GLASSMORPHISM) */}
-            <div className="relative flex w-full md:w-120 h-12 lg:h-14 p-1 bg-foreground/3 dark:bg-white/5 backdrop-blur-2xl border border-border rounded-none overflow-hidden origin-left">
+            <div className="relative flex w-full md:w-120 h-12 lg:h-14 p-1 bg-foreground/3 dark:bg-white/5 backdrop-blur-2xl border border-border rounded-none origin-left">
               {/* SLIDING BACKGROUND (NEUTRAL) */}
               <div
-                className="absolute top-1 bottom-1 left-1 rounded-none bg-foreground transition-transform duration-500 ease-[cubic-bezier(0.65,0,0.35,1)]"
+                className="absolute top-1 bottom-1 left-1 rounded-none transition-transform duration-500 ease-[cubic-bezier(0.65,0,0.35,1)]"
                 style={{
                   width: "calc(50% - 4px)",
                   transform: `translateX(${activeCategory === "web" ? "0" : "100%"})`,
                 }}
-              />
+              >
+                <div className="slider-bg w-full h-full bg-foreground rounded-none" />
+              </div>
 
               {(["web", "design"] as const).map((cat) => (
                 <button
                   key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`relative z-10 flex-1 flex items-center justify-center rounded-none text-sm lg:text-base font-bold tracking-tight transition-colors duration-300 ${
+                  onClick={() => handleCategoryChange(cat)}
+                  className={`relative z-10 flex-1 flex items-center justify-center rounded-none text-sm lg:text-base font-bold tracking-tight transition-colors duration-300 active:scale-95 ${
                     activeCategory === cat
                       ? "text-background"
                       : "text-foreground/40 hover:text-foreground/60"
