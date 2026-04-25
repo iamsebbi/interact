@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Google_Sans, Special_Gothic_Expanded_One } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { GridHelper } from "@/components/GridHelper";
+import { GridToggle } from "@/components/GridToggle";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -47,6 +48,10 @@ export default function RootLayout({
         <ThemeProvider>
           <GridHelper />
           {children}
+          {/* Floating Grid Toggle — bottom-right corner */}
+          <div className="fixed bottom-6 right-6 z-50">
+            <GridToggle />
+          </div>
         </ThemeProvider>
       </body>
     </html>

@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { ThemeToggle } from "./ThemeToggle";
-import { GridToggle } from "./GridToggle";
+import { LanguageToggle } from "./LanguageToggle";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useTheme } from "./ThemeProvider";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
 const navLinks = [
-  { name: "Work", href: "/works" },
+  { name: "Work", href: "/#works" },
   { name: "About", href: "/#about" },
   { name: "Contact", href: "/#contact" },
 ];
@@ -169,6 +170,27 @@ export function Navbar() {
     };
   }, [isOpen]);
 
+  const handleScroll = (e: React.MouseEvent, href: string) => {
+    const isAnchor = href.includes("#");
+    const isHomePage = window.location.pathname === "/";
+
+    if (isAnchor && isHomePage) {
+      e.preventDefault();
+      const targetId = href.split("#")[1];
+      const elem = document.getElementById(targetId);
+      if (elem) {
+        if (isOpen) setIsOpen(false);
+        const top = elem.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({
+          top,
+          behavior: "smooth"
+        });
+      }
+    } else if (isAnchor) {
+      if (isOpen) setIsOpen(false);
+    }
+  };
+
   return (
     <nav 
       ref={containerRef} 
@@ -223,13 +245,24 @@ export function Navbar() {
         {/* Desktop - Links with spacing protection */}
         <div className="hidden md:flex shrink-0 items-center gap-8">
           {navLinks.map((link) => (
-            <Link key={link.name} href={link.href} className="text-sm font-semibold text-foreground/80 hover:text-primary transition-colors relative group">
-              {link.name}
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" />
+            <Link 
+              key={link.name} 
+              href={link.href} 
+              onClick={(e) => handleScroll(e, link.href)}
+              className="group relative h-8 text-sm font-bold tracking-tight overflow-hidden"
+            >
+              <div className="relative flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-1/2">
+                <span className="h-8 flex items-center text-foreground/60 transition-colors group-hover:text-foreground">
+                  {link.name}
+                </span>
+                <span className="h-8 flex items-center text-foreground">
+                  {link.name}
+                </span>
+              </div>
             </Link>
           ))}
           <div className="pl-4 border-l border-border/50 flex items-center gap-3">
-            <GridToggle />
+            <LanguageToggle />
             <ThemeToggle />
           </div>
         </div>
@@ -257,14 +290,26 @@ export function Navbar() {
         <div className="absolute inset-0 bg-background/80 backdrop-blur-md backdrop-saturate-[1.8]" onClick={() => setIsOpen(false)} />
         <div ref={menuRef} className="relative mt-24 glass rounded-3xl p-6 flex flex-col gap-4 shadow-2xl border border-border/50 w-full max-w-350">
           {navLinks.map((link) => (
-            <Link key={link.name} href={link.href} onClick={() => setIsOpen(false)} className="menu-link text-xl font-medium px-4 py-4 hover:bg-primary/10 hover:text-primary rounded-2xl transition-all opacity-0">
-              {link.name}
+            <Link 
+              key={link.name} 
+              href={link.href} 
+              onClick={(e) => handleScroll(e, link.href)} 
+              className="menu-link group relative h-14 text-2xl font-bold tracking-tighter overflow-hidden opacity-0"
+            >
+              <div className="relative flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-active:-translate-y-1/2 lg:group-hover:-translate-y-1/2">
+                <span className="h-14 flex items-center text-foreground">
+                  {link.name}
+                </span>
+                <span className="h-14 flex items-center text-foreground">
+                  {link.name}
+                </span>
+              </div>
             </Link>
           ))}
           <div className="menu-link pt-4 mt-2 border-t border-border/50 flex flex-col gap-4 px-4 opacity-0">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-semibold opacity-60 uppercase tracking-widest">Grid System</span>
-              {mounted && <GridToggle />}
+              <span className="text-sm font-semibold opacity-60 uppercase tracking-widest">Language</span>
+              {mounted && <LanguageSwitcher />}
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm font-semibold opacity-60 uppercase tracking-widest">Theme</span>

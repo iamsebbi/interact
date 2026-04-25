@@ -64,7 +64,7 @@ export function Info() {
         className="relative bg-white overflow-hidden min-h-screen lg:min-h-[80vh] flex flex-col"
       >
         {/* GLOBAL BACKGROUND PORTRAIT */}
-        <div className="absolute inset-0 z-0 pointer-events-none opacity-90">
+        <div className="absolute inset-0 z-0 pointer-events-none">
           {/* Desktop Image */}
           <Image
             src="/portretweb.png"
@@ -72,7 +72,9 @@ export function Info() {
             fill
             className="hidden lg:block object-cover object-center lg:object-right grayscale"
             priority
-            sizes="(max-width: 1024px) 0vw, 50vw"
+            unoptimized={true}
+            quality={100}
+            sizes="(max-width: 1024px) 0vw, 100vw"
           />
           {/* Mobile Image */}
           <Image
@@ -81,7 +83,9 @@ export function Info() {
             fill
             className="block lg:hidden object-cover object-center grayscale scale-[1.6] translate-y-[10%]"
             priority
-            sizes="(max-width: 1024px) 100vw, 0vw"
+            unoptimized={true}
+            quality={100}
+            sizes="100vw"
           />
         </div>
 
@@ -107,56 +111,90 @@ export function Info() {
                 {/* LEFT: DESCRIPTION & PILLS */}
                 <div className="flex-1">
                   <p className="text-xl lg:text-2xl text-white max-w-2xl leading-tight mb-6">
-                    A creative developer and designer obsessed with the intersection
-                    of art and high-performance technology. I build digital spaces
-                    that feel alive.
+                    A creative developer and designer obsessed with the
+                    intersection of art and high-performance technology. I build
+                    digital spaces that feel alive.
                   </p>
 
                   <div className="flex flex-wrap gap-3 mt-8">
                     {/* PILLS */}
                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-none border border-emerald-500/20 bg-emerald-500/5 text-emerald-500/70 filter-[invert(1)]">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      <span className="text-[10px] lg:text-xs font-mono uppercase tracking-wider">Available for projects</span>
+                      <span className="text-[10px] lg:text-xs font-mono uppercase tracking-wider">
+                        Available for projects
+                      </span>
                     </div>
                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-none border border-white/20 bg-white/5 text-white">
-                      <span className="text-[10px] lg:text-xs font-mono uppercase tracking-wider">Based in Romania</span>
+                      <span className="text-[10px] lg:text-xs font-mono uppercase tracking-wider">
+                        Based in Romania
+                      </span>
                     </div>
                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-none border border-white/20 bg-white/5 text-white">
-                      <span className="text-[10px] lg:text-xs font-mono uppercase tracking-wider">Creative Technologist</span>
+                      <span className="text-[10px] lg:text-xs font-mono uppercase tracking-wider">
+                        Creative Technologist
+                      </span>
                     </div>
                   </div>
                 </div>
 
                 <div className="hidden lg:block lg:pt-2">
                   <div className="flex flex-col gap-6">
-                    <a 
-                      href="/CV_Prisecaru_Sebastian.pdf" 
+                    <a
+                      href="/CV_Prisecaru_Sebastian.pdf"
                       download="CV_Prisecaru_Sebastian.pdf"
                       className="group flex flex-row items-center gap-5 transition-all duration-500"
                     >
                       <div className="w-12 h-12 lg:w-12 lg:h-12 rounded-full border-[3px] border-white flex items-center justify-center group-hover:bg-white group-hover:border-white group-active:bg-white group-active:scale-90 transition-all duration-500 shrink-0">
-                        <svg className="w-5 h-5 lg:w-6 lg:h-6 text-white group-hover:text-black group-active:text-black transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                        <svg
+                          className="w-5 h-5 lg:w-6 lg:h-6 text-white group-hover:text-black group-active:text-black transition-colors"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={3}
+                            d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                          />
                         </svg>
                       </div>
                       <div className="flex flex-col items-start">
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Curriculum Vitae</span>
-                        <span className="font-special text-xl lg:text-2xl uppercase text-white">Download CV*</span>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">
+                          Curriculum Vitae
+                        </span>
+                        <span className="font-special text-xl lg:text-2xl uppercase text-white">
+                          Download CV*
+                        </span>
                       </div>
                     </a>
 
-                    <a 
-                      href="mailto:hello@iamsebbi.com" 
+                    <a
+                      href="mailto:hello@iamsebbi.com"
                       className="group flex flex-row items-center gap-5 transition-all duration-500"
                     >
                       <div className="w-12 h-12 lg:w-12 lg:h-12 rounded-full border-[3px] border-white flex items-center justify-center group-hover:bg-white group-hover:border-white group-active:bg-white group-active:scale-90 transition-all duration-500 shrink-0">
-                        <svg className="w-5 h-5 lg:w-6 lg:h-6 text-white group-hover:text-black group-active:text-black transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        <svg
+                          className="w-5 h-5 lg:w-6 lg:h-6 text-white group-hover:text-black group-active:text-black transition-colors"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={3}
+                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                          />
                         </svg>
                       </div>
                       <div className="flex flex-col items-start">
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Say hello</span>
-                        <span className="font-special text-xl lg:text-2xl uppercase text-white">Mail me*</span>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">
+                          Say hello
+                        </span>
+                        <span className="font-special text-xl lg:text-2xl uppercase text-white">
+                          Mail me*
+                        </span>
                       </div>
                     </a>
                   </div>
@@ -171,8 +209,15 @@ export function Info() {
           <div className="relative flex whitespace-nowrap overflow-hidden">
             <div className="skills-marquee-content flex items-center gap-12 text-4xl lg:text-7xl font-special uppercase tracking-tighter text-white">
               {[
-                "React", "Next.js", "GSAP", "Tailwind CSS", "TypeScript", 
-                "UI/UX Design", "Three.js", "Node.js", "Framer Motion"
+                "React",
+                "Next.js",
+                "GSAP",
+                "Tailwind CSS",
+                "TypeScript",
+                "UI/UX Design",
+                "Three.js",
+                "Node.js",
+                "Framer Motion",
               ].map((skill, i) => (
                 <div key={`${skill}-${i}`} className="flex items-center gap-12">
                   <span>{skill}</span>
@@ -181,10 +226,20 @@ export function Info() {
               ))}
               {/* Duplicate for infinite loop */}
               {[
-                "React", "Next.js", "GSAP", "Tailwind CSS", "TypeScript", 
-                "UI/UX Design", "Three.js", "Node.js", "Framer Motion"
+                "React",
+                "Next.js",
+                "GSAP",
+                "Tailwind CSS",
+                "TypeScript",
+                "UI/UX Design",
+                "Three.js",
+                "Node.js",
+                "Framer Motion",
               ].map((skill, i) => (
-                <div key={`dup-${skill}-${i}`} className="flex items-center gap-12">
+                <div
+                  key={`dup-${skill}-${i}`}
+                  className="flex items-center gap-12"
+                >
                   <span>{skill}</span>
                   <span className="text-primary text-xl lg:text-3xl">•</span>
                 </div>
@@ -196,34 +251,62 @@ export function Info() {
 
       {/* MOBILE DOWNLOAD CV - OUTSIDE SECTION */}
       <div className="lg:hidden w-full py-8 px-4 bg-background border-b border-border/50 flex flex-col gap-8">
-        <a 
-          href="/CV_Prisecaru_Sebastian.pdf" 
+        <a
+          href="/CV_Prisecaru_Sebastian.pdf"
           download="CV_Prisecaru_Sebastian.pdf"
           className="group flex flex-row items-center justify-start gap-5 transition-all duration-500"
         >
           <div className="w-12 h-12 rounded-full border-[3px] border-foreground flex items-center justify-center group-active:bg-foreground group-active:scale-90 transition-all duration-500 shrink-0">
-            <svg className="w-5 h-5 text-foreground group-active:text-background transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            <svg
+              className="w-5 h-5 text-foreground group-active:text-background transition-colors"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={3}
+                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+              />
             </svg>
           </div>
           <div className="flex flex-col items-start">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-foreground/40">Curriculum Vitae</span>
-            <span className="font-special text-xl uppercase text-foreground">Download CV*</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-foreground/40">
+              Curriculum Vitae
+            </span>
+            <span className="font-special text-xl uppercase text-foreground">
+              Download CV*
+            </span>
           </div>
         </a>
 
-        <a 
-          href="mailto:hello@iamsebbi.com" 
+        <a
+          href="mailto:hello@iamsebbi.com"
           className="group flex flex-row items-center justify-start gap-5 transition-all duration-500"
         >
           <div className="w-12 h-12 rounded-full border-[3px] border-foreground flex items-center justify-center group-active:bg-foreground group-active:scale-90 transition-all duration-500 shrink-0">
-            <svg className="w-5 h-5 text-foreground group-active:text-background transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            <svg
+              className="w-5 h-5 text-foreground group-active:text-background transition-colors"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={3}
+                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              />
             </svg>
           </div>
           <div className="flex flex-col items-start">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-foreground/40">Say hello</span>
-            <span className="font-special text-xl uppercase text-foreground">Mail me*</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-foreground/40">
+              Say hello
+            </span>
+            <span className="font-special text-xl uppercase text-foreground">
+              Mail me*
+            </span>
           </div>
         </a>
       </div>
