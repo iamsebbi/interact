@@ -41,12 +41,12 @@ export function Works() {
       <GridItem span="col-span-full">
         <div className="works-header flex flex-col md:flex-row md:items-end justify-between gap-12 mb-4 md:mb-6 text-left">
           <div className="flex flex-col items-start">
-            <h2 className="text-xs font-bold uppercase tracking-[0.1em] text-foreground/40 mb-4">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-foreground/40 mb-4">
               Selected Works*
             </h2>
 
             {/* SHARP TAB SWITCHER (GLASSMORPHISM) */}
-            <div className="relative flex w-full md:w-[480px] h-12 lg:h-14 p-1 bg-foreground/[0.03] dark:bg-white/[0.05] backdrop-blur-2xl border border-border rounded-none overflow-hidden origin-left">
+            <div className="relative flex w-full md:w-120 h-12 lg:h-14 p-1 bg-foreground/3 dark:bg-white/5 backdrop-blur-2xl border border-border rounded-none overflow-hidden origin-left">
               {/* SLIDING BACKGROUND (NEUTRAL) */}
               <div
                 className="absolute top-1 bottom-1 left-1 rounded-none bg-foreground transition-transform duration-500 ease-[cubic-bezier(0.65,0,0.35,1)]"
@@ -87,7 +87,7 @@ export function Works() {
           className="project-card group mb-8"
         >
           <Link href={`/works/${project.slug}`} className="block">
-            <div className="relative aspect-[4/5] lg:aspect-[16/10] overflow-hidden bg-card border border-border/50 mb-1 hover-invert">
+            <div className="relative aspect-4/5 lg:aspect-16/10 overflow-hidden bg-card border border-border/50 mb-1 hover-invert">
               <Image
                 src={project.image}
                 alt={project.title}
@@ -112,7 +112,7 @@ export function Works() {
                 </div>
               </div>
 
-              <div className="h-8 lg:h-10 overflow-hidden flex-shrink-0">
+              <div className="h-8 lg:h-10 overflow-hidden shrink-0">
                 <div className="flex flex-col items-end transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-1/2">
                   <div className="h-8 lg:h-10 flex items-center">
                     <span className="font-mono text-xs lg:text-sm font-bold tracking-tighter text-foreground/30 group-hover:text-primary transition-colors">
@@ -138,7 +138,7 @@ export function Works() {
 
       {/* VIEW ALL PROJECTS - PREMIUM ACTION BLOCK */}
       <GridItem span="col-span-full" className="mt-4 lg:mt-8">
-        <button className="group relative w-full h-16 lg:h-24 flex items-center justify-between px-6 lg:px-12 overflow-hidden border border-foreground/30 cursor-pointer">
+        <Link href="/works" className="group relative w-full h-16 lg:h-24 flex items-center justify-between px-6 lg:px-12 overflow-hidden border border-foreground/30 cursor-pointer">
           {/* BACKGROUND FILL ANIMATION */}
           <div className="absolute inset-0 bg-primary translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)]" />
 
@@ -158,7 +158,7 @@ export function Works() {
 
           {/* RIGHT: REVEAL ELEMENTS */}
           <div className="relative z-10 flex items-center gap-6 lg:gap-8">
-            <span className="hidden md:block text-[10px] lg:text-xs font-bold uppercase tracking-[0.1em] text-foreground group-hover:text-background transition-colors duration-500 delay-100">
+            <span className="hidden md:block text-[10px] lg:text-xs font-bold uppercase tracking-widest text-foreground group-hover:text-background transition-colors duration-500 delay-100">
               Total {PROJECTS.length} Items
             </span>
 
@@ -173,7 +173,7 @@ export function Works() {
               </svg>
             </div>
           </div>
-        </button>
+        </Link>
       </GridItem>
     </Section>
   );

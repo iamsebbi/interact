@@ -7,12 +7,11 @@ import { GridToggle } from "./GridToggle";
 import { useTheme } from "./ThemeProvider";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { name: "Work", href: "#work" },
-  { name: "About", href: "#about" },
-  { name: "Contact", href: "#contact" },
+  { name: "Work", href: "/works" },
+  { name: "About", href: "/#about" },
+  { name: "Contact", href: "/#contact" },
 ];
 
 export function Navbar() {
@@ -139,7 +138,7 @@ export function Navbar() {
     });
 
     toggleMenuAnimation();
-  }, [isOpen, mounted]);
+  }, [isOpen, mounted, contextSafe]);
 
   // 4. Scroll Lock & Resize Auto-Close
   useEffect(() => {
@@ -173,7 +172,7 @@ export function Navbar() {
   return (
     <nav 
       ref={containerRef} 
-      className="fixed top-0 left-0 right-0 z-[100] flex justify-center"
+      className="fixed top-0 left-0 right-0 z-100 flex justify-center"
       style={{
         paddingLeft: "env(safe-area-inset-left)",
         paddingRight: "env(safe-area-inset-right)",
@@ -181,7 +180,7 @@ export function Navbar() {
     >
       <div 
         ref={innerRef}
-        className="flex items-center justify-between py-3 relative z-[120] border-border/50 transition-none"
+        className="flex items-center justify-between py-3 relative z-120 border-border/50 transition-none"
         style={{ 
           // Default CSS Variable Initial Values (Prevents FOUC & Enables Smooth Return)
           "--nav-width": "100%",
@@ -237,7 +236,7 @@ export function Navbar() {
 
 
         {/* Mobile Toggle */}
-        <div className="flex md:hidden shrink-0 items-center gap-2 relative z-[110]">
+        <div className="flex md:hidden shrink-0 items-center gap-2 relative z-110">
           <button
             ref={buttonRef}
             onClick={() => setIsOpen(!isOpen)}
@@ -254,9 +253,9 @@ export function Navbar() {
       </div>
 
       {/* Menu Overlay */}
-      <div id="menu-overlay" className="fixed inset-0 z-[100] px-4 flex flex-col items-center invisible pointer-events-none">
+      <div id="menu-overlay" className="fixed inset-0 z-100 px-4 flex flex-col items-center invisible pointer-events-none">
         <div className="absolute inset-0 bg-background/80 backdrop-blur-md backdrop-saturate-[1.8]" onClick={() => setIsOpen(false)} />
-        <div ref={menuRef} className="relative mt-24 glass rounded-3xl p-6 flex flex-col gap-4 shadow-2xl border border-border/50 w-full max-w-[1400px]">
+        <div ref={menuRef} className="relative mt-24 glass rounded-3xl p-6 flex flex-col gap-4 shadow-2xl border border-border/50 w-full max-w-350">
           {navLinks.map((link) => (
             <Link key={link.name} href={link.href} onClick={() => setIsOpen(false)} className="menu-link text-xl font-medium px-4 py-4 hover:bg-primary/10 hover:text-primary rounded-2xl transition-all opacity-0">
               {link.name}

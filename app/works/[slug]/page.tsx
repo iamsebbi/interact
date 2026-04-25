@@ -6,7 +6,6 @@ import Link from "next/link";
 import { Section, GridItem } from "@/components/Section";
 import { PROJECTS } from "@/lib/projects";
 import { Navbar } from "@/components/Navbar";
-import { GridHelper } from "@/components/GridHelper";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
@@ -48,7 +47,7 @@ export default function ProjectPage() {
   return (
     <div ref={containerRef} className="bg-background min-h-screen">
       <Navbar />
-      <GridHelper />
+
 
       {/* HERO SECTION - EDITORIAL STYLE FOR DESIGN */}
       <Section className="pt-32 lg:pt-48 pb-20 overflow-hidden">
@@ -58,7 +57,7 @@ export default function ProjectPage() {
               Case_Study_No_{project.id}
             </span>
             <div className="overflow-hidden">
-              <h1 className="hero-title font-special text-[13vw] lg:text-[11vw] xl:text-[12rem] leading-[0.8] uppercase text-foreground tracking-tighter mb-12 break-words">
+              <h1 className="hero-title font-special text-[13vw] lg:text-[11vw] xl:text-[12rem] leading-[0.8] uppercase text-foreground tracking-tighter mb-12 wrap-break-word">
                 {project.title.split(' ').map((word, i) => (
                   <span key={i} className={`block ${i % 2 !== 0 ? 'lg:pl-[10vw]' : ''}`}>
                     {word}
@@ -89,7 +88,7 @@ export default function ProjectPage() {
         </GridItem>
 
         <GridItem span="col-span-full md:col-span-4 lg:col-span-7 lg:col-start-6 mt-12 md:mt-0">
-          <div className="relative aspect-[4/5] lg:aspect-[16/10] overflow-hidden bg-card border border-border/40 project-image">
+          <div className="relative aspect-4/5 lg:aspect-16/10 overflow-hidden bg-card border border-border/40 project-image">
             <Image
               src={project.image}
               alt={project.title}
@@ -110,7 +109,7 @@ export default function ProjectPage() {
               <div className="relative aspect-video w-full md:w-2/3 overflow-hidden bg-card border border-border/40 project-image">
                 <Image src={project.image} alt="Landscape" fill className="object-cover grayscale hover:grayscale-0 transition-all duration-1000" />
               </div>
-              <div className="relative aspect-[3/4] w-full md:w-1/3 overflow-hidden bg-card border border-border/40 project-image">
+              <div className="relative aspect-3/4 w-full md:w-1/3 overflow-hidden bg-card border border-border/40 project-image">
                 <Image src={project.image} alt="Portrait" fill className="object-cover grayscale hover:grayscale-0 transition-all duration-1000" />
               </div>
             </div>
@@ -152,7 +151,7 @@ export default function ProjectPage() {
       <Section className="py-12 lg:py-24">
         <GridItem span="col-span-full">
           <div className="flex flex-col gap-4">
-            <div className="relative aspect-[21/9] w-full overflow-hidden bg-card border border-border/40 project-image">
+            <div className="relative aspect-21/9 w-full overflow-hidden bg-card border border-border/40 project-image">
               <Image src={project.image} alt="Full Width" fill className="object-cover grayscale hover:grayscale-0 transition-all duration-1000" />
             </div>
             <div className="flex justify-between items-start px-2">
@@ -196,7 +195,7 @@ export default function ProjectPage() {
               <div className="relative aspect-video w-full md:w-2/3 overflow-hidden bg-card border border-border/40 project-image">
                 <Image src={project.image} alt="Landscape Inverted" fill className="object-cover grayscale hover:grayscale-0 transition-all duration-1000" />
               </div>
-              <div className="relative aspect-[3/4] w-full md:w-1/3 overflow-hidden bg-card border border-border/40 project-image">
+              <div className="relative aspect-3/4 w-full md:w-1/3 overflow-hidden bg-card border border-border/40 project-image">
                 <Image src={project.image} alt="Portrait Inverted" fill className="object-cover grayscale hover:grayscale-0 transition-all duration-1000" />
               </div>
             </div>

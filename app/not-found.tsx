@@ -17,10 +17,10 @@ export default function NotFound() {
           </h1>
 
           <div className="relative px-4 w-full">
-            <h2 className="font-special text-4xl lg:text-7xl uppercase tracking-tighter text-foreground mb-4 leading-[0.9] max-w-[200px] lg:max-w-none mx-auto">
+            <h2 className="font-special text-4xl lg:text-7xl uppercase tracking-tighter text-foreground mb-4 leading-[0.9] max-w-50 lg:max-w-none mx-auto">
               Lost in Space*
             </h2>
-            <p className="font-mono text-[10px] lg:text-sm uppercase tracking-[0.1em] text-foreground/40 mb-12 max-w-[280px] lg:max-w-none mx-auto leading-relaxed">
+            <p className="font-mono text-[10px] lg:text-sm uppercase tracking-widest text-foreground/40 mb-12 max-w-70 lg:max-w-none mx-auto leading-relaxed">
               The requested resource does not exist or has been relocated.
             </p>
 

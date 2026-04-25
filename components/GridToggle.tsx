@@ -1,15 +1,9 @@
 "use client";
 
 import { useTheme } from "./ThemeProvider";
-import { useEffect, useState } from "react";
 
 export function GridToggle() {
   const { showGrid, toggleGrid } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   return (
     <button
@@ -19,7 +13,7 @@ export function GridToggle() {
       }`}
       aria-label="Toggle grid system"
     >
-      <div className="relative w-5 h-5 flex-shrink-0">
+      <div className="relative w-5 h-5 shrink-0">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"

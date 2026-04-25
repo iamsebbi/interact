@@ -46,7 +46,7 @@ export function Loader({ onComplete }: { onComplete: () => void }) {
   }, [progress, onComplete]);
 
   return (
-    <div className="loader-bg fixed inset-0 z-[9999] flex items-center justify-center bg-background overflow-hidden">
+    <div className="loader-bg fixed inset-0 z-9999 flex items-center justify-center bg-background overflow-hidden">
 
       <div className="relative flex flex-col items-center">
         <div className="loader-text flex flex-col items-center">
@@ -78,7 +78,7 @@ export function Loader({ onComplete }: { onComplete: () => void }) {
             ))}
 
             {/* PROGRESS BAR (Minimalist) */}
-            <div className="w-full h-[1px] bg-foreground/5 mt-8 relative">
+            <div className="w-full h-px bg-foreground/5 mt-8 relative">
               <div
                 className="absolute inset-y-0 left-0 bg-primary transition-all duration-300"
                 style={{ width: `${progress}%` }}

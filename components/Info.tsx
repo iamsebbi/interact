@@ -72,6 +72,7 @@ export function Info() {
             fill
             className="hidden lg:block object-cover object-center lg:object-right grayscale"
             priority
+            sizes="(max-width: 1024px) 0vw, 50vw"
           />
           {/* Mobile Image */}
           <Image
@@ -80,6 +81,7 @@ export function Info() {
             fill
             className="block lg:hidden object-cover object-center grayscale scale-[1.6] translate-y-[10%]"
             priority
+            sizes="(max-width: 1024px) 100vw, 0vw"
           />
         </div>
 
@@ -98,7 +100,7 @@ export function Info() {
         </div>
 
         {/* TOP CONTENT WRAPPER */}
-        <div className="relative z-10 w-full mx-auto max-w-[1920px] px-4 md:px-12 py-16 lg:py-20 flex-grow mix-blend-difference flex items-center">
+        <div className="relative z-10 w-full mx-auto max-w-480 px-4 md:px-12 py-16 lg:py-20 grow mix-blend-difference flex items-center">
           <div className="grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-5 md:gap-6 lg:gap-8 w-full mt-24 lg:mt-80">
             <GridItem span="col-span-full" className="reveal-item relative">
               <div className="flex flex-col lg:flex-row gap-12 lg:gap-24 items-start">
@@ -112,7 +114,7 @@ export function Info() {
 
                   <div className="flex flex-wrap gap-3 mt-8">
                     {/* PILLS */}
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-none border border-emerald-500/20 bg-emerald-500/5 text-emerald-500/70 [filter:invert(1)]">
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-none border border-emerald-500/20 bg-emerald-500/5 text-emerald-500/70 filter-[invert(1)]">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                       <span className="text-[10px] lg:text-xs font-mono uppercase tracking-wider">Available for projects</span>
                     </div>

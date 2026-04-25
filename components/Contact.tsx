@@ -16,7 +16,7 @@ export function Contact() {
       <div className="noise-overlay" />
 
       {/* HEADER MARQUEE (Reverse Scroll) */}
-      <div className="col-span-full w-[100vw] relative left-1/2 -ml-[50vw] overflow-hidden pt-4 lg:pt-6 bg-transparent z-10">
+      <div className="col-span-full w-screen relative left-1/2 -ml-[50vw] overflow-hidden pt-4 lg:pt-6 bg-transparent z-10">
         <div className="flex whitespace-nowrap w-fit animate-marquee-reverse">
           {[...Array(2)].map((_, idx) => (
             <div key={idx} className="flex items-center">
@@ -45,7 +45,7 @@ export function Contact() {
         </GridItem>
 
         <div
-          className="w-[100vw] relative left-1/2 -ml-[50vw] overflow-hidden pb-4 lg:pb-6 bg-transparent lg:cursor-none"
+          className="w-screen relative left-1/2 -ml-[50vw] overflow-hidden pb-4 lg:pb-6 bg-transparent lg:cursor-none"
           onMouseMove={(e) => {
             if (window.innerWidth < 1024) return;
             const rect = e.currentTarget.getBoundingClientRect();
@@ -109,7 +109,7 @@ export function Contact() {
           <div className="grid grid-cols-2 gap-12 lg:gap-24">
             {/* SOCIAL LIST */}
             <div className="flex flex-col gap-6">
-              <h3 className="text-[12px] lg:text-xs font-bold uppercase tracking-[0.1em] text-background/40">
+              <h3 className="text-[12px] lg:text-xs font-bold uppercase tracking-widest text-background/40">
                 Social*
               </h3>
               <div className="flex flex-col gap-3">
@@ -139,7 +139,7 @@ export function Contact() {
 
             {/* NAVIGATION LIST */}
             <div className="flex flex-col gap-6">
-              <h3 className="text-[12px] lg:text-xs font-bold uppercase tracking-[0.1em] text-background/40">
+              <h3 className="text-[12px] lg:text-xs font-bold uppercase tracking-widest text-background/40">
                 Navigation*
               </h3>
               <div className="flex flex-col gap-3">

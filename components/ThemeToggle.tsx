@@ -1,15 +1,9 @@
 "use client";
 
 import { useTheme } from "./ThemeProvider";
-import { useEffect, useState } from "react";
 
 export function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   return (
     <button
@@ -17,7 +11,7 @@ export function ThemeToggle() {
       className="relative flex items-center justify-center gap-3 w-32 px-4 py-2 transition-all duration-500 rounded-full glass cursor-pointer group overflow-hidden hover:bg-foreground hover:text-background border-transparent"
       aria-label="Toggle theme"
     >
-      <div className="relative w-5 h-5 flex-shrink-0">
+      <div className="relative w-5 h-5 shrink-0">
         {/* Sun Icon */}
         <svg
           xmlns="http://www.w3.org/2000/svg"

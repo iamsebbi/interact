@@ -1,16 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import Image from "next/image";
+import React from "react";
 import { Section, GridItem } from "./Section";
-import { cn } from "@/lib/utils";
-
-const FRAME_IMAGES = [
-  "/1.jpg",
-  "/2.jpg",
-  "/3.jpg",
-  "/4.jpg",
-];
 
 const EXPERIENCES = [
   {
@@ -37,65 +28,14 @@ const EXPERIENCES = [
 ];
 
 export function Experience() {
-  const [currentIdx, setCurrentIdx] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIdx((prev) => (prev + 1) % FRAME_IMAGES.length);
-    }, 400); 
-    
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <Section id="experience" className="py-16 lg:py-24">
-      {/* PORTRAIT DECORATOR */}
-      <GridItem span="col-span-full" className="mb-24 lg:mb-40">
-        <div className="flex items-center justify-center">
-          <div className="relative flex items-center">
-            {/* LEFT DECORATORS (Desktop Only) */}
-            <div className="absolute right-full hidden lg:flex items-center gap-2 lg:gap-8 pr-4 lg:pr-10">
-              <span className="font-special lg:text-[8rem] text-foreground">
-                *
-              </span>
-              <span className="font-special lg:text-[15rem] leading-none text-foreground">
-                (
-              </span>
-            </div>
-
-            {/* CENTERED IMAGE - STROBE EFFECT */}
-            <div className="relative w-[80vw] h-[80vw] lg:w-80 lg:h-80 overflow-hidden bg-card border border-border shrink-0">
-              {FRAME_IMAGES.map((src, i) => (
-                <div 
-                  key={src}
-                  className={`absolute inset-0 transition-none ${i === currentIdx ? "opacity-100" : "opacity-0"}`}
-                >
-                  <Image
-                    src={src}
-                    alt={`Portrait ${i + 1}`}
-                    fill
-                    className="object-cover"
-                    priority={i === 0}
-                    sizes="(max-width: 768px) 80vw, 320px"
-                  />
-                </div>
-              ))}
-            </div>
-
-            {/* RIGHT DECORATOR (Desktop Only) */}
-            <div className="absolute left-full hidden lg:pl-10 lg:flex">
-              <span className="font-special lg:text-[15rem] leading-none text-foreground">
-                )
-              </span>
-            </div>
-          </div>
-        </div>
-      </GridItem>
 
       {/* HEADER */}
       <GridItem span="col-span-full" className="mb-1 lg:mb-2">
         <div className="flex flex-col">
-          <span className="text-[12px] lg:text-xs font-bold uppercase tracking-[0.1em] text-foreground/40">
+          <span className="text-[12px] lg:text-xs font-bold uppercase tracking-widest text-foreground/40">
             History*
           </span>
         </div>
@@ -107,7 +47,7 @@ export function Experience() {
           {EXPERIENCES.map((exp, index) => (
             <div
               key={index}
-              className="group relative flex flex-col pt-4 pb-8 lg:pt-6 lg:pb-10 min-h-[80px] lg:min-h-[110px] border-b border-border/50 last:border-0"
+              className="group relative flex flex-col pt-4 pb-8 lg:pt-6 lg:pb-10 min-h-20 lg:min-h-27.5 border-b border-border/50 last:border-0"
             >
               {/* METADATA: YEAR & COMPANY */}
               <div className="flex items-center gap-3">

@@ -35,7 +35,7 @@ export const Section = React.forwardRef<HTMLElement, SectionProps>(({
     >
       <div className={cn(
         "w-full",
-        container && "mx-auto max-w-[1920px]",
+        container && "mx-auto max-w-480",
         padding && "py-12 md:py-24 px-4 md:px-12",
         grid && "grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-5 md:gap-6 lg:gap-8",
       )}>
