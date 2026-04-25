@@ -1,17 +1,10 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import { Section, GridItem } from "./Section";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-
-const FRAME_IMAGES = [
-  "/hero_portrait_1.png",
-  "/hero_portrait_2.png",
-  "/hero_portrait_3.png",
-  "/hero_portrait_4.png",
-];
 
 export function Info() {
   const containerRef = useRef<HTMLElement>(null);
@@ -52,187 +45,141 @@ export function Info() {
       <Section
         ref={containerRef}
         id="about"
-        className="relative theme-inverted"
-      >
-        {/* TRANSITION ELEMENT (PORTRAIT FRAME) */}
-        <div className="absolute top-12 lg:top-24 left-1/2 -translate-x-1/2 z-20">
-          <div className="reveal-item flex items-center justify-center">
-            <div className="relative flex items-center">
-              {/* LEFT DECORATORS */}
-              <div className="absolute right-full flex items-center gap-2 lg:gap-6 pr-2 lg:pr-6">
-                <span className="font-special text-[12vw] lg:text-[5rem] text-foreground">
-                  *
-                </span>
-                <span className="font-special text-[18vw] lg:text-[10rem] leading-none text-foreground">
-                  (
-                </span>
-              </div>
-
-              {/* CENTERED IMAGE */}
-              <div className="relative w-[35vw] h-[35vw] lg:w-56 lg:h-56 overflow-hidden bg-card border border-border shrink-0">
-                <Image
-                  src="/hero_portrait_1.png"
-                  alt="Sebastian Portrait"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 35vw, 224px"
-                  priority
-                />
-              </div>
-
-              {/* RIGHT DECORATOR */}
-              <div className="absolute left-full pl-2 lg:pl-6">
-                <span className="font-special text-[18vw] lg:text-[10rem] leading-none text-foreground">
-                  )
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* NAME */}
-        <GridItem span="col-span-full" className="reveal-item pt-40 lg:pt-64 mb-2 lg:mb-12">
-          {/* MOBILE: Edge-to-edge letters */}
-          <div className="flex lg:hidden justify-between w-full">
-            {"SEBASTIAN".split("").map((char, i) => (
-              <span key={i} className="font-special text-[14vw] uppercase leading-none tracking-tighter text-foreground">
-                {char}
-              </span>
-            ))}
-          </div>
-          {/* DESKTOP: Standard heading */}
-          <h2 className="hidden lg:block font-special lg:text-[10rem] uppercase leading-none tracking-tighter text-foreground text-left">
-            Sebastian
-          </h2>
-        </GridItem>
-
-        <GridItem span="col-span-full" className="reveal-item">
-          <div className="flex flex-col lg:flex-row gap-12 lg:gap-24 items-start">
-            {/* LEFT: DESCRIPTION & PILLS */}
-            <div className="flex-1">
-              <p className="text-xl lg:text-3xl text-foreground/80 max-w-3xl leading-tight mb-12">
-                A creative developer and designer obsessed with the intersection
-                of art and high-performance technology. I build digital spaces
-                that feel alive.
-              </p>
-
-              <div className="flex flex-wrap gap-3 mt-12">
-                {/* PILL: STATUS */}
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-none border border-emerald-500/20 bg-emerald-500/5 text-emerald-500/70 font-mono tracking-[0.1em]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <p className="text-[10px] lg:text-xs font-bold uppercase leading-none">
-                    Available for freelance / {new Date().getFullYear()}
-                  </p>
-                </div>
-
-                {/* PILL: LOCATION */}
-                <div className="inline-flex items-center px-5 py-2.5 border border-border/50 rounded-none transition-all hover:border-foreground/30">
-                  <p className="text-[10px] lg:text-xs font-bold uppercase tracking-[0.05em] text-foreground/60 leading-none">
-                    Based in Romania
-                  </p>
-                </div>
-
-                {/* PILL: TYPE */}
-                <div className="inline-flex items-center px-5 py-2.5 border border-border/50 rounded-none transition-all hover:border-foreground/30">
-                  <p className="text-[10px] lg:text-xs font-bold uppercase tracking-[0.05em] text-foreground/60 leading-none">
-                    Creative Direction
-                  </p>
-                </div>
-              </div>
-
-              {/* CV DOWNLOAD BUTTON (VARIANT 3) */}
-              <div className="reveal-item mt-12 lg:mt-16">
-                <a
-                  href="/cv.pdf"
-                  download
-                  className="inline-flex items-center gap-6 group cursor-pointer"
-                >
-                  <div className="relative flex items-center justify-center w-16 h-16 lg:w-20 lg:h-20 rounded-full border border-foreground/20 group-hover:border-primary transition-colors duration-500">
-                    <div className="absolute inset-0 rounded-full bg-primary scale-0 group-hover:scale-100 transition-transform duration-500 ease-out" />
-                    <svg
-                      className="relative z-10 w-6 h-6 lg:w-8 lg:h-8 text-foreground group-hover:text-background transition-colors duration-500"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M19 14l-7 7m0 0l-7-7m7 7V3"
-                      />
-                    </svg>
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] lg:text-xs font-bold uppercase tracking-[0.1em] text-foreground/40 group-hover:text-primary transition-colors duration-300">
-                      Curriculum Vitae
-                    </span>
-                    <span className="text-2xl lg:text-4xl font-special uppercase leading-none text-foreground mt-1">
-                      Download CV*
-                    </span>
-                  </div>
-                </a>
-              </div>
-            </div>
-          </div>
-        </GridItem>
-      </Section>
-
-      {/* BOTTOM: SKILLS MARQUEE (FULL WIDTH & REDUCED HEIGHT) */}
-      <Section
         container={false}
         padding={false}
         grid={false}
-        className="theme-inverted overflow-hidden"
+        className="relative bg-white overflow-hidden min-h-[80vh] flex flex-col"
       >
-        <div className="relative flex flex-col py-6 lg:py-8">
-          <div className="mx-auto max-w-[1920px] w-full px-4 md:px-12">
-            <h3 className="reveal-item text-[12px] lg:text-xs font-bold uppercase tracking-[0.1em] text-foreground/40 mb-6 lg:mb-10">
-              Expertise*
-            </h3>
+        {/* GLOBAL BACKGROUND PORTRAIT */}
+        <div className="absolute inset-0 z-0 pointer-events-none opacity-90">
+          {/* Desktop Image */}
+          <Image
+            src="/portretweb.png"
+            alt="Sebastian Portrait"
+            fill
+            className="hidden lg:block object-cover object-center lg:object-right grayscale"
+            priority
+          />
+          {/* Mobile Image */}
+          <Image
+            src="/portretweb1.png"
+            alt="Sebastian Portrait Mobile"
+            fill
+            className="block lg:hidden object-cover object-center grayscale scale-[1.6] translate-y-[10%]"
+            priority
+          />
+        </div>
+
+        {/* TOP CONTENT WRAPPER */}
+        <div className="relative z-10 w-full mx-auto max-w-[1920px] px-4 md:px-12 py-10 lg:py-16 flex-grow mix-blend-difference">
+          <div className="grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-5 md:gap-6 lg:gap-8">
+            
+            {/* NAME */}
+            <GridItem span="col-span-full" className="reveal-item relative pt-8 lg:pt-12 mb-2 lg:mb-4">
+              <svg viewBox="0 0 1000 120" className="w-full h-auto overflow-visible select-none">
+                <text
+                  x="0"
+                  y="95"
+                  textLength="1000"
+                  lengthAdjust="spacingAndGlyphs"
+                  className="font-special uppercase fill-white text-[120px] tracking-[-0.05em]"
+                >
+                  Sebastian
+                </text>
+              </svg>
+            </GridItem>
+
+            <GridItem span="col-span-full" className="reveal-item relative">
+              <div className="flex flex-col lg:flex-row gap-12 lg:gap-24 items-start">
+                {/* LEFT: DESCRIPTION & PILLS */}
+                <div className="flex-1">
+                  <p className="text-xl lg:text-2xl text-white max-w-2xl leading-tight mb-6">
+                    A creative developer and designer obsessed with the intersection
+                    of art and high-performance technology. I build digital spaces
+                    that feel alive.
+                  </p>
+
+                  <div className="flex flex-wrap gap-3 mt-8">
+                    {/* PILLS */}
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-none border border-emerald-500/20 bg-emerald-500/5 text-emerald-500/70 [filter:invert(1)]">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="text-[10px] lg:text-xs font-mono uppercase tracking-wider">Available for projects</span>
+                    </div>
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-none border border-white/20 bg-white/5 text-white">
+                      <span className="text-[10px] lg:text-xs font-mono uppercase tracking-wider">Based in Romania</span>
+                    </div>
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-none border border-white/20 bg-white/5 text-white">
+                      <span className="text-[10px] lg:text-xs font-mono uppercase tracking-wider">Creative Technologist</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="hidden lg:block lg:pt-2">
+                  <a 
+                    href="#" 
+                    className="group flex flex-row items-center gap-5 transition-all duration-500"
+                  >
+                    <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-full border-[3px] border-white flex items-center justify-center group-hover:bg-white group-hover:border-white transition-all duration-500 shrink-0">
+                      <svg className="w-4 h-4 lg:w-5 lg:h-5 text-white group-hover:text-black transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                      </svg>
+                    </div>
+                    <div className="flex flex-col items-start">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Curriculum Vitae</span>
+                      <span className="font-special text-xl lg:text-2xl uppercase text-white">Download CV*</span>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </GridItem>
           </div>
-          <div className="relative flex whitespace-nowrap">
-            <div className="marquee-content flex items-center gap-12 text-2xl lg:text-4xl font-special uppercase tracking-tighter text-foreground/80">
+        </div>
+
+        {/* BOTTOM MARQUEE (Pinned to absolute bottom) */}
+        <div className="absolute bottom-0 left-0 w-full pb-6 lg:pb-10 mix-blend-difference">
+          <div className="relative flex whitespace-nowrap overflow-hidden">
+            <div className="marquee-content flex items-center gap-12 text-4xl lg:text-7xl font-special uppercase tracking-tighter text-white">
               {[
-                "React",
-                "Next.js",
-                "GSAP",
-                "Tailwind CSS",
-                "TypeScript",
-                "UI/UX Design",
-                "Three.js",
-                "Node.js",
-                "Framer Motion",
+                "React", "Next.js", "GSAP", "Tailwind CSS", "TypeScript", 
+                "UI/UX Design", "Three.js", "Node.js", "Framer Motion"
               ].map((skill, i) => (
                 <div key={`${skill}-${i}`} className="flex items-center gap-12">
                   <span>{skill}</span>
-                  <span className="text-primary text-xl lg:text-2xl">•</span>
+                  <span className="text-primary text-xl lg:text-3xl">•</span>
                 </div>
               ))}
               {/* Duplicate for infinite loop */}
               {[
-                "React",
-                "Next.js",
-                "GSAP",
-                "Tailwind CSS",
-                "TypeScript",
-                "UI/UX Design",
-                "Three.js",
-                "Node.js",
-                "Framer Motion",
+                "React", "Next.js", "GSAP", "Tailwind CSS", "TypeScript", 
+                "UI/UX Design", "Three.js", "Node.js", "Framer Motion"
               ].map((skill, i) => (
-                <div
-                  key={`dup-${skill}-${i}`}
-                  className="flex items-center gap-12"
-                >
+                <div key={`dup-${skill}-${i}`} className="flex items-center gap-12">
                   <span>{skill}</span>
-                  <span className="text-primary text-xl lg:text-2xl">•</span>
+                  <span className="text-primary text-xl lg:text-3xl">•</span>
                 </div>
               ))}
             </div>
           </div>
         </div>
       </Section>
+
+      {/* MOBILE DOWNLOAD CV - OUTSIDE SECTION */}
+      <div className="lg:hidden w-full py-6 px-4 bg-background border-b border-border/50">
+        <a 
+          href="#" 
+          className="group flex flex-row items-center justify-start gap-5 transition-all duration-500"
+        >
+          <div className="w-10 h-10 rounded-full border-[3px] border-foreground flex items-center justify-center transition-all duration-500 shrink-0">
+            <svg className="w-4 h-4 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </div>
+          <div className="flex flex-col items-start">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-foreground/40">Curriculum Vitae</span>
+            <span className="font-special text-xl uppercase text-foreground">Download CV*</span>
+          </div>
+        </a>
+      </div>
     </>
   );
 }

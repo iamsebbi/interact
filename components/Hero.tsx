@@ -12,10 +12,10 @@ if (typeof window !== "undefined") {
 }
 
 const FRAME_IMAGES = [
-  "/hero_portrait_1.png",
-  "/hero_portrait_2.png",
-  "/hero_portrait_3.png",
-  "/hero_portrait_4.png",
+  "/1.jpg",
+  "/2.jpg",
+  "/3.jpg",
+  "/4.jpg",
 ];
 
 export function Hero() {

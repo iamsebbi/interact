@@ -1,9 +1,16 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Section, GridItem } from "./Section";
 import { cn } from "@/lib/utils";
+
+const FRAME_IMAGES = [
+  "/1.jpg",
+  "/2.jpg",
+  "/3.jpg",
+  "/4.jpg",
+];
 
 const EXPERIENCES = [
   {
@@ -30,36 +37,54 @@ const EXPERIENCES = [
 ];
 
 export function Experience() {
+  const [currentIdx, setCurrentIdx] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIdx((prev) => (prev + 1) % FRAME_IMAGES.length);
+    }, 400); 
+    
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <Section id="experience" className="py-16 lg:py-24">
       {/* PORTRAIT DECORATOR */}
       <GridItem span="col-span-full" className="mb-24 lg:mb-40">
         <div className="flex items-center justify-center">
           <div className="relative flex items-center">
-            {/* LEFT DECORATORS */}
-            <div className="absolute right-full flex items-center gap-2 lg:gap-6 pr-2 lg:pr-6">
-              <span className="font-special text-[12vw] lg:text-[5rem] text-foreground">
+            {/* LEFT DECORATORS (Desktop Only) */}
+            <div className="absolute right-full hidden lg:flex items-center gap-2 lg:gap-8 pr-4 lg:pr-10">
+              <span className="font-special lg:text-[8rem] text-foreground">
                 *
               </span>
-              <span className="font-special text-[18vw] lg:text-[10rem] leading-none text-foreground">
+              <span className="font-special lg:text-[15rem] leading-none text-foreground">
                 (
               </span>
             </div>
 
-            {/* CENTERED IMAGE */}
-            <div className="relative w-[35vw] h-[35vw] lg:w-56 lg:h-56 overflow-hidden bg-card border border-border shrink-0">
-              <Image
-                src="/hero_portrait_1.png"
-                alt="Sebastian Portrait"
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 35vw, 224px"
-              />
+            {/* CENTERED IMAGE - STROBE EFFECT */}
+            <div className="relative w-[80vw] h-[80vw] lg:w-80 lg:h-80 overflow-hidden bg-card border border-border shrink-0">
+              {FRAME_IMAGES.map((src, i) => (
+                <div 
+                  key={src}
+                  className={`absolute inset-0 transition-none ${i === currentIdx ? "opacity-100" : "opacity-0"}`}
+                >
+                  <Image
+                    src={src}
+                    alt={`Portrait ${i + 1}`}
+                    fill
+                    className="object-cover"
+                    priority={i === 0}
+                    sizes="(max-width: 768px) 80vw, 320px"
+                  />
+                </div>
+              ))}
             </div>
 
-            {/* RIGHT DECORATOR */}
-            <div className="absolute left-full pl-2 lg:pl-6">
-              <span className="font-special text-[18vw] lg:text-[10rem] leading-none text-foreground">
+            {/* RIGHT DECORATOR (Desktop Only) */}
+            <div className="absolute left-full hidden lg:pl-10 lg:flex">
+              <span className="font-special lg:text-[15rem] leading-none text-foreground">
                 )
               </span>
             </div>

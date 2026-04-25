@@ -178,12 +178,12 @@ export function Works() {
           span="col-span-full md:col-span-4 lg:col-span-6"
           className="project-card group cursor-pointer mb-8"
         >
-          <div className="relative aspect-[4/5] lg:aspect-[16/10] overflow-hidden bg-card border border-border/50 mb-1">
+          <div className="relative aspect-[4/5] lg:aspect-[16/10] overflow-hidden bg-card border border-border/50 mb-1 hover-invert">
             <Image
               src={project.image}
               alt={project.title}
               fill
-              className="object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105"
+              className="object-cover grayscale transition-all duration-700 group-hover:grayscale-0"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
             <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -231,7 +231,7 @@ export function Works() {
 
       {/* VIEW ALL PROJECTS - PREMIUM ACTION BLOCK */}
       <GridItem span="col-span-full" className="mt-4 lg:mt-8">
-        <button className="group relative w-full h-16 lg:h-24 flex items-center justify-between px-6 lg:px-12 overflow-hidden border border-border/50 cursor-pointer">
+        <button className="group relative w-full h-16 lg:h-24 flex items-center justify-between px-6 lg:px-12 overflow-hidden border border-foreground/30 cursor-pointer">
           {/* BACKGROUND FILL ANIMATION */}
           <div className="absolute inset-0 bg-primary translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)]" />
 
@@ -255,14 +255,14 @@ export function Works() {
               Total {PROJECTS.length} Items
             </span>
 
-            <div className="w-10 h-10 lg:w-14 lg:h-14 rounded-full border border-border/30 group-hover:border-background/50 flex items-center justify-center transition-all duration-500">
+            <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-full border-[3px] border-foreground group-hover:border-background flex items-center justify-center transition-all duration-500">
               <svg 
-                className="w-7 h-7 lg:w-7 lg:h-7 text-foreground group-hover:text-background transition-all duration-500" 
+                className="w-4 h-4 lg:w-5 lg:h-5 text-foreground group-hover:text-background transition-all duration-500" 
                 fill="none" 
                 viewBox="0 0 24 24" 
                 stroke="currentColor"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 7h10v10M7 17L17 7" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M7 7h10v10M7 17L17 7" />
               </svg>
             </div>
           </div>
