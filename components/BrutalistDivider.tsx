@@ -35,14 +35,14 @@ export function BrutalistDivider() {
         <div ref={containerRef} className="flex flex-col items-center justify-center relative">
           
           {/* MOBILE TECHNICAL OVERLAYS - TOP */}
-          <div className="flex xl:hidden w-full justify-between items-end mb-3 px-0 font-mono text-[10px] uppercase tracking-widest text-foreground/40">
+          <div className="flex xl:hidden w-full justify-between items-end mb-3 px-0 font-mono text-xs uppercase tracking-widest text-foreground">
             <div className="flex flex-col">
-              <span className="text-primary font-bold">Location</span>
+              <span className="text-foreground font-bold">Location</span>
               <span>44.439628° N</span>
               <span>26.096306° E</span>
             </div>
             <div className="flex flex-col text-right">
-              <span className="text-primary font-bold">System</span>
+              <span className="text-foreground font-bold">System</span>
               <span>v2.0.4_boot</span>
             </div>
           </div>
@@ -85,41 +85,41 @@ export function BrutalistDivider() {
           </div>
 
           {/* MOBILE TECHNICAL OVERLAYS - BOTTOM */}
-          <div className="flex xl:hidden w-full justify-between items-start mt-3 px-0 font-mono text-[10px] uppercase tracking-widest text-foreground/40">
+          <div className="flex xl:hidden w-full justify-between items-start mt-3 px-0 font-mono text-xs uppercase tracking-widest text-foreground">
             <div className="flex flex-col">
-              <span className="text-primary font-bold">Status</span>
+              <span className="text-foreground font-bold">Status</span>
               <span>Active_Connection</span>
             </div>
             <div className="flex flex-col text-right">
-              <span className="text-primary font-bold">Scale</span>
+              <span className="text-foreground font-bold">Scale</span>
               <span>1:1.000_REF</span>
             </div>
           </div>
 
           {/* DESKTOP TECHNICAL OVERLAYS - LEFT */}
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 hidden xl:flex flex-col gap-4 font-mono text-[10px] uppercase tracking-widest text-foreground/40">
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 hidden xl:flex flex-col gap-4 font-mono text-xs uppercase tracking-widest text-foreground">
             <div className="flex flex-col">
-              <span className="text-primary font-bold">Location</span>
+              <span className="text-foreground font-bold">Location</span>
               <span>44.439628° N</span>
               <span>26.096306° E</span>
             </div>
             <div className="w-12 h-px bg-border" />
             <div className="flex flex-col">
-              <span className="text-primary font-bold">System</span>
+              <span className="text-foreground font-bold">System</span>
               <span>v2.0.4_boot</span>
             </div>
           </div>
 
           {/* DESKTOP TECHNICAL OVERLAYS - RIGHT */}
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 hidden xl:flex flex-col items-end gap-4 font-mono text-[10px] uppercase tracking-widest text-foreground/40 text-right">
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 hidden xl:flex flex-col items-end gap-4 font-mono text-xs uppercase tracking-widest text-foreground text-right">
             <div className="flex flex-col">
-              <span className="text-primary font-bold">Status</span>
+              <span className="text-foreground font-bold">Status</span>
               <span>Active_Connection</span>
               <span>Signal: Strong</span>
             </div>
             <div className="w-12 h-px bg-border" />
             <div className="flex flex-col">
-              <span className="text-primary font-bold">Scale</span>
+              <span className="text-foreground font-bold">Scale</span>
               <span>1:1.000_REF</span>
             </div>
           </div>
