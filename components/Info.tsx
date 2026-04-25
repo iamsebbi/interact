@@ -26,10 +26,23 @@ export function Info() {
         ease: "power3.out",
       });
 
-      // Infinite Marquee
-      const marquee = document.querySelector(".marquee-content");
-      if (marquee) {
-        gsap.to(marquee, {
+      // Top Marquee (Name) - Moves Right
+      const nameMarquee = document.querySelector(".name-marquee-content");
+      if (nameMarquee) {
+        gsap.set(nameMarquee, { xPercent: -50 });
+        gsap.to(nameMarquee, {
+          xPercent: 0,
+          repeat: -1,
+          duration: 30,
+          ease: "none",
+        });
+      }
+
+      // Bottom Marquee (Skills) - Moves Left
+      const skillsMarquee = document.querySelector(".skills-marquee-content");
+      if (skillsMarquee) {
+        gsap.set(skillsMarquee, { xPercent: 0 });
+        gsap.to(skillsMarquee, {
           xPercent: -50,
           repeat: -1,
           duration: 30,
@@ -48,7 +61,7 @@ export function Info() {
         container={false}
         padding={false}
         grid={false}
-        className="relative bg-white overflow-hidden min-h-[80vh] flex flex-col"
+        className="relative bg-white overflow-hidden min-h-screen lg:min-h-[80vh] flex flex-col"
       >
         {/* GLOBAL BACKGROUND PORTRAIT */}
         <div className="absolute inset-0 z-0 pointer-events-none opacity-90">
@@ -70,25 +83,23 @@ export function Info() {
           />
         </div>
 
-        {/* TOP CONTENT WRAPPER */}
-        <div className="relative z-10 w-full mx-auto max-w-[1920px] px-4 md:px-12 py-10 lg:py-16 flex-grow mix-blend-difference">
-          <div className="grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-5 md:gap-6 lg:gap-8">
-            
-            {/* NAME */}
-            <GridItem span="col-span-full" className="reveal-item relative pt-8 lg:pt-12 mb-2 lg:mb-4">
-              <svg viewBox="0 0 1000 120" className="w-full h-auto overflow-visible select-none">
-                <text
-                  x="0"
-                  y="95"
-                  textLength="1000"
-                  lengthAdjust="spacingAndGlyphs"
-                  className="font-special uppercase fill-white text-[120px] tracking-[-0.05em]"
-                >
-                  Sebastian
-                </text>
-              </svg>
-            </GridItem>
+        {/* TOP MARQUEE (Name) */}
+        <div className="absolute top-0 left-0 w-full pt-6 lg:pt-10 mix-blend-difference overflow-hidden">
+          <div className="relative flex whitespace-nowrap">
+            <div className="name-marquee-content flex items-center gap-12 text-4xl lg:text-7xl font-special uppercase tracking-tighter text-white">
+              {[...Array(12)].map((_, i) => (
+                <div key={i} className="flex items-center gap-12">
+                  <span>Sebastian</span>
+                  <span className="text-primary text-xl lg:text-3xl">•</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
 
+        {/* TOP CONTENT WRAPPER */}
+        <div className="relative z-10 w-full mx-auto max-w-[1920px] px-4 md:px-12 py-16 lg:py-20 flex-grow mix-blend-difference flex items-center">
+          <div className="grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-5 md:gap-6 lg:gap-8 w-full mt-24 lg:mt-80">
             <GridItem span="col-span-full" className="reveal-item relative">
               <div className="flex flex-col lg:flex-row gap-12 lg:gap-24 items-start">
                 {/* LEFT: DESCRIPTION & PILLS */}
@@ -116,7 +127,8 @@ export function Info() {
 
                 <div className="hidden lg:block lg:pt-2">
                   <a 
-                    href="#" 
+                    href="/CV_Prisecaru_Sebastian.pdf" 
+                    download="CV_Prisecaru_Sebastian.pdf"
                     className="group flex flex-row items-center gap-5 transition-all duration-500"
                   >
                     <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-full border-[3px] border-white flex items-center justify-center group-hover:bg-white group-hover:border-white transition-all duration-500 shrink-0">
@@ -135,10 +147,10 @@ export function Info() {
           </div>
         </div>
 
-        {/* BOTTOM MARQUEE (Pinned to absolute bottom) */}
+        {/* BOTTOM MARQUEE (Skills) */}
         <div className="absolute bottom-0 left-0 w-full pb-6 lg:pb-10 mix-blend-difference">
           <div className="relative flex whitespace-nowrap overflow-hidden">
-            <div className="marquee-content flex items-center gap-12 text-4xl lg:text-7xl font-special uppercase tracking-tighter text-white">
+            <div className="skills-marquee-content flex items-center gap-12 text-4xl lg:text-7xl font-special uppercase tracking-tighter text-white">
               {[
                 "React", "Next.js", "GSAP", "Tailwind CSS", "TypeScript", 
                 "UI/UX Design", "Three.js", "Node.js", "Framer Motion"
@@ -166,7 +178,8 @@ export function Info() {
       {/* MOBILE DOWNLOAD CV - OUTSIDE SECTION */}
       <div className="lg:hidden w-full py-6 px-4 bg-background border-b border-border/50">
         <a 
-          href="#" 
+          href="/CV_Prisecaru_Sebastian.pdf" 
+          download="CV_Prisecaru_Sebastian.pdf"
           className="group flex flex-row items-center justify-start gap-5 transition-all duration-500"
         >
           <div className="w-10 h-10 rounded-full border-[3px] border-foreground flex items-center justify-center transition-all duration-500 shrink-0">

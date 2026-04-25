@@ -2,103 +2,11 @@
 
 import { useState, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Section, GridItem } from "./Section";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-
-type Category = "web" | "design";
-
-interface Project {
-  id: string;
-  title: string;
-  category: Category;
-  image: string;
-  year: string;
-  tags: string[];
-}
-
-const PROJECTS: Project[] = [
-  {
-    id: "1",
-    title: "Nexus E-commerce",
-    category: "web",
-    image: "/hero_portrait_1.png", // Using existing portraits as placeholders
-    year: "2024",
-    tags: ["Next.js", "Shopify", "GSAP"],
-  },
-  {
-    id: "2",
-    title: "Aura Dashboard",
-    category: "web",
-    image: "/hero_portrait_2.png",
-    year: "2023",
-    tags: ["React", "D3.js", "Tailwind"],
-  },
-  {
-    id: "3",
-    title: "Brutal Identity",
-    category: "design",
-    image: "/hero_portrait_3.png",
-    year: "2024",
-    tags: ["Branding", "Typography"],
-  },
-  {
-    id: "4",
-    title: "Zen Mobile App",
-    category: "design",
-    image: "/hero_portrait_4.png",
-    year: "2023",
-    tags: ["UX/UI", "Product Design"],
-  },
-  {
-    id: "5",
-    title: "Vortex Labs",
-    category: "web",
-    image: "/hero_portrait_1.png",
-    year: "2024",
-    tags: ["Three.js", "GLSL"],
-  },
-  {
-    id: "6",
-    title: "Nova UI Kit",
-    category: "design",
-    image: "/hero_portrait_2.png",
-    year: "2023",
-    tags: ["Figma", "Systems"],
-  },
-  {
-    id: "7",
-    title: "Quantum Engine",
-    category: "web",
-    image: "/hero_portrait_3.png",
-    year: "2024",
-    tags: ["WebGL", "Performance"],
-  },
-  {
-    id: "8",
-    title: "Echo Sound System",
-    category: "web",
-    image: "/hero_portrait_4.png",
-    year: "2024",
-    tags: ["Audio API", "React"],
-  },
-  {
-    id: "9",
-    title: "Synthesis Branding",
-    category: "design",
-    image: "/hero_portrait_1.png",
-    year: "2023",
-    tags: ["Identity", "Layout"],
-  },
-  {
-    id: "10",
-    title: "Orbit Smart Watch",
-    category: "design",
-    image: "/hero_portrait_2.png",
-    year: "2024",
-    tags: ["Product", "UI/UX"],
-  },
-];
+import { PROJECTS, type Category } from "@/lib/projects";
 
 export function Works() {
   const [activeCategory, setActiveCategory] = useState<Category>("web");
@@ -176,56 +84,55 @@ export function Works() {
         <GridItem
           key={project.id}
           span="col-span-full md:col-span-4 lg:col-span-6"
-          className="project-card group cursor-pointer mb-8"
+          className="project-card group mb-8"
         >
-          <div className="relative aspect-[4/5] lg:aspect-[16/10] overflow-hidden bg-card border border-border/50 mb-1 hover-invert">
-            <Image
-              src={project.image}
-              alt={project.title}
-              fill
-              className="object-cover grayscale transition-all duration-700 group-hover:grayscale-0"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-            <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-          </div>
+          <Link href={`/works/${project.slug}`} className="block">
+            <div className="relative aspect-[4/5] lg:aspect-[16/10] overflow-hidden bg-card border border-border/50 mb-1 hover-invert">
+              <Image
+                src={project.image}
+                alt={project.title}
+                fill
+                className="object-cover grayscale transition-all duration-700 group-hover:grayscale-0"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
+              <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
 
-          <div className="flex items-center justify-between px-1 gap-4">
-            <div className="flex items-baseline gap-4 min-w-0">
-              <div className="h-8 lg:h-12 overflow-hidden">
-                <div className="flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-1/2">
-                  <h3 className="font-special text-2xl lg:text-4xl uppercase text-foreground truncate h-8 lg:h-12 flex items-center">
-                    {project.title}
-                  </h3>
-                  <h3 className="font-special text-2xl lg:text-4xl uppercase text-primary truncate h-8 lg:h-12 flex items-center">
-                    {project.title}
-                  </h3>
+            <div className="flex items-center justify-between px-1 gap-4">
+              <div className="flex items-baseline gap-4 min-w-0">
+                <div className="h-8 lg:h-12 overflow-hidden">
+                  <div className="flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-1/2">
+                    <h3 className="font-special text-2xl lg:text-4xl uppercase text-foreground truncate h-8 lg:h-12 flex items-center">
+                      {project.title}
+                    </h3>
+                    <h3 className="font-special text-2xl lg:text-4xl uppercase text-primary truncate h-8 lg:h-12 flex items-center">
+                      {project.title}
+                    </h3>
+                  </div>
+                </div>
+              </div>
+
+              <div className="h-8 lg:h-10 overflow-hidden flex-shrink-0">
+                <div className="flex flex-col items-end transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-1/2">
+                  <div className="h-8 lg:h-10 flex items-center">
+                    <span className="font-mono text-xs lg:text-sm font-bold tracking-tighter text-foreground/30 group-hover:text-primary transition-colors">
+                      [{project.year}]
+                    </span>
+                  </div>
+                  <div className="h-8 lg:h-10 flex items-center text-primary">
+                    <svg 
+                      className="w-6 h-6 lg:w-7 lg:h-7" 
+                      fill="none" 
+                      viewBox="0 0 24 24" 
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 7h10v10M7 17L17 7" />
+                    </svg>
+                  </div>
                 </div>
               </div>
             </div>
-
-            {/* YEAR TO ARROW SLIDE */}
-            <div className="h-8 lg:h-10 overflow-hidden flex-shrink-0">
-              <div className="flex flex-col items-end transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-1/2">
-                {/* STATE 1: YEAR */}
-                <div className="h-8 lg:h-10 flex items-center">
-                  <span className="font-mono text-xs lg:text-sm font-bold tracking-tighter text-foreground/30 group-hover:text-primary transition-colors">
-                    [{project.year}]
-                  </span>
-                </div>
-                {/* STATE 2: ARROW */}
-                <div className="h-8 lg:h-10 flex items-center text-primary">
-                  <svg 
-                    className="w-6 h-6 lg:w-7 lg:h-7" 
-                    fill="none" 
-                    viewBox="0 0 24 24" 
-                    stroke="currentColor"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 7h10v10M7 17L17 7" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
+          </Link>
         </GridItem>
       ))}
 

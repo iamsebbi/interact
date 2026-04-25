@@ -146,11 +146,12 @@ export function Contact() {
                 {[
                   { name: "Works", url: "#works" },
                   { name: "Experience", url: "#experience" },
-                  { name: "Resume", url: "#" },
+                  { name: "Resume", url: "/CV_Prisecaru_Sebastian.pdf", download: true },
                 ].map((item) => (
                   <a
                     key={item.name}
                     href={item.url}
+                    download={item.download ? "CV_Prisecaru_Sebastian.pdf" : undefined}
                     className="group relative h-7 lg:h-9 overflow-hidden"
                   >
                     <div className="flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-1/2">

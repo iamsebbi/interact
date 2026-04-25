@@ -43,13 +43,14 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${googleSans.variable} ${specialGothic.variable} antialiased transition-colors duration-300`}
       suppressHydrationWarning
     >
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght,MONO@0,300..800,1;1,300..800,1&display=swap" rel="stylesheet" />
+      </head>
       <body className="bg-background text-foreground selection:bg-brand/30">
         <ThemeProvider>
-          <Navbar />
-          <GridHelper />
-          <main>
-            {children}
-          </main>
+          {children}
         </ThemeProvider>
       </body>
     </html>

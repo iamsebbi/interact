@@ -3,6 +3,7 @@
 @theme {
   --font-sans: "Outfit", sans-serif;
   --font-special: "Special Gothic Expanded One", sans-serif;
+  --font-mono: "Google Sans Code", monospace;
   
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -57,12 +58,17 @@
     letter-spacing: var(--tracking-normal);
     min-height: 100dvh;
     overflow-x: hidden;
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 26V34M26 30H34' stroke='black' stroke-opacity='0.03' stroke-width='1'/%3E%3C/svg%3E");
-    background-repeat: repeat;
+    /* Removed global patterns to prevent flashes before loading */
+    background-color: var(--background);
+  }
+
+  [class*="font-mono"] {
+    font-variation-settings: "MONO" 1;
+    font-optical-sizing: auto;
   }
 
   .dark body {
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 26V34M26 30H34' stroke='white' stroke-opacity='0.03' stroke-width='1'/%3E%3C/svg%3E");
+    background-color: var(--background);
   }
 
   ::selection {
