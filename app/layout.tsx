@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Google_Sans, Special_Gothic_Expanded_One } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Google_Sans,
+  Special_Gothic_Expanded_One,
+} from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { GridHelper } from "@/components/GridHelper";
 import { GridToggle } from "@/components/GridToggle";
@@ -28,8 +33,8 @@ const specialGothic = Special_Gothic_Expanded_One({
 });
 
 export const metadata: Metadata = {
-  title: "Sebbi | Creative Developer",
-  description: "A premium digital experience built by Sebbi.",
+  title: "iamsebbi | Creative Developer",
+  description: "A premium digital experience built by iamsebbi.",
 };
 
 export default function RootLayout({
@@ -43,8 +48,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${googleSans.variable} ${specialGothic.variable} antialiased transition-colors duration-300`}
       suppressHydrationWarning
     >
-
-      <body className="bg-background text-foreground selection:bg-brand/30" suppressHydrationWarning>
+      <body
+        className="bg-background text-foreground selection:bg-brand/30"
+        suppressHydrationWarning
+      >
         <ThemeProvider>
           <GridHelper />
           {children}
