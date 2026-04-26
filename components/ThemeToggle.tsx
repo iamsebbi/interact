@@ -3,13 +3,20 @@
 import { useTheme } from "./ThemeProvider";
 
 export function ThemeToggle() {
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme, language } = useTheme();
+  const isRO = language === "RO";
+  const themeLabel = (() => {
+    if (theme === "dark") {
+      return isRO ? "Noapte" : "Dark";
+    }
+    return isRO ? "Zi" : "Light";
+  })();
 
   return (
     <button
       onClick={toggleTheme}
       className="relative flex items-center justify-center w-32 h-10 transition-all duration-500 rounded-full glass cursor-pointer group overflow-hidden hover:bg-foreground hover:text-background border-transparent"
-      aria-label="Toggle theme"
+      aria-label={isRO ? "Schimbă tema" : "Toggle theme"}
     >
       {/* Icon — absolutely positioned in a circle at the left edge */}
       <div className="absolute left-0 w-10 h-10 flex items-center justify-center">
@@ -24,7 +31,9 @@ export function ThemeToggle() {
             strokeLinecap="round"
             strokeLinejoin="round"
             className={`absolute inset-0 transition-all duration-500 transform ${
-              theme === "dark" ? "rotate-90 opacity-0 scale-0" : "rotate-0 opacity-100 scale-100"
+              theme === "dark"
+                ? "rotate-90 opacity-0 scale-0"
+                : "rotate-0 opacity-100 scale-100"
             }`}
           >
             <circle cx="12" cy="12" r="4" />
@@ -41,17 +50,19 @@ export function ThemeToggle() {
             strokeLinecap="round"
             strokeLinejoin="round"
             className={`absolute inset-0 transition-all duration-500 transform ${
-              theme === "dark" ? "rotate-0 opacity-100 scale-100" : "-rotate-90 opacity-0 scale-0"
+              theme === "dark"
+                ? "rotate-0 opacity-100 scale-100"
+                : "-rotate-90 opacity-0 scale-0"
             }`}
           >
             <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
           </svg>
         </div>
       </div>
-      
+
       {/* Text — offset right to optically center after the icon */}
-      <span className="pl-5 text-xs font-bold uppercase tracking-widest transition-opacity duration-300">
-        {theme === "dark" ? "Dark" : "Light"}
+      <span className="pl-5 text-xs font-bold uppercase tracking-wide transition-opacity duration-300">
+        {themeLabel}
       </span>
     </button>
   );

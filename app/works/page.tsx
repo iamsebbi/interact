@@ -6,15 +6,18 @@ import Link from "next/link";
 import { PROJECTS, Category } from "@/lib/projects";
 import { Section, GridItem } from "@/components/Section";
 import { Navbar } from "@/components/Navbar";
+import { useTheme } from "@/components/ThemeProvider";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
 export default function AllWorks() {
+  const { language } = useTheme();
+  const isRO = language === "RO";
   const [filter, setFilter] = useState<Category | "all">("all");
   const containerRef = useRef<HTMLDivElement>(null);
 
   const filteredProjects = PROJECTS.filter(
-    (p) => filter === "all" || p.category === filter
+    (p) => filter === "all" || p.category === filter,
   );
 
   useGSAP(
@@ -27,7 +30,7 @@ export default function AllWorks() {
         ease: "expo.out",
       });
     },
-    { scope: containerRef }
+    { scope: containerRef },
   );
 
   useGSAP(
@@ -41,52 +44,60 @@ export default function AllWorks() {
         ease: "power2.out",
       });
     },
-    { scope: containerRef, dependencies: [filter] }
+    { scope: containerRef, dependencies: [filter] },
   );
 
   return (
     <div ref={containerRef} className="min-h-screen bg-background">
       <Navbar />
-      
+
       <main className="pt-32 pb-20">
         <Section className="mb-20 lg:mb-32">
           <GridItem span="col-span-full lg:col-span-9">
             <header className="works-header space-y-4">
               <div className="flex items-center gap-3">
                 <span className="font-mono text-xs uppercase tracking-widest text-primary">
-                  Archive
+                  {isRO ? "Arhivă" : "Archive"}
                 </span>
                 <span className="h-px w-12 bg-primary/30" />
                 <span className="font-mono text-xs text-muted-foreground uppercase">
-                  [{filteredProjects.length.toString().padStart(2, "0")}] Projects
+                  [{filteredProjects.length.toString().padStart(2, "0")}]{" "}
+                  {isRO ? "Lucrări" : "Projects"}
                 </span>
               </div>
               <h1 className="font-special text-6xl lg:text-9xl uppercase tracking-tighter leading-none">
-                All Works
+                {isRO ? "Toate lucrările" : "All Works"}
               </h1>
             </header>
           </GridItem>
-          
+
           <GridItem span="col-span-full lg:col-span-3 lg:flex lg:items-end lg:justify-end">
             <div className="flex flex-wrap gap-2 lg:mb-4">
-              {(["all", "web", "design"] as const).map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setFilter(cat)}
-                  className={`px-6 py-2 rounded-none border font-mono text-[10px] uppercase tracking-widest transition-all duration-300 ${
-                    filter === cat
-                      ? "bg-foreground text-background border-foreground"
-                      : "border-border/40 hover:border-foreground/40 text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
+              {(["all", "web", "design"] as const).map((cat) => {
+                const categoryLabel = cat === "all" && isRO ? "toate" : cat;
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => setFilter(cat)}
+                    className={`px-6 py-2 rounded-none border font-mono text-[10px] uppercase tracking-widest transition-all duration-300 ${
+                      filter === cat
+                        ? "bg-foreground text-background border-foreground"
+                        : "border-border/40 hover:border-foreground/40 text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {categoryLabel}
+                  </button>
+                );
+              })}
             </div>
           </GridItem>
         </Section>
 
-        <Section grid={false} padding={false} className="border-t border-border/40">
+        <Section
+          grid={false}
+          padding={false}
+          className="border-t border-border/40"
+        >
           <div className="flex flex-col">
             {filteredProjects.map((project, index) => (
               <Link
@@ -127,19 +138,19 @@ export default function AllWorks() {
                     </span>
                   </div>
 
-                    {/* IMAGE PREVIEW ON HOVER (DESKTOP) */}
-                    <div className="hidden lg:block absolute right-[15%] top-1/2 -translate-y-1/2 w-48 aspect-4/3 overflow-hidden opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500 pointer-events-none z-20 shadow-2xl">
-                      <Image
-                        src={project.image}
-                        alt={project.title}
-                        fill
-                        className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                      />
-                    </div>
+                  {/* IMAGE PREVIEW ON HOVER (DESKTOP) */}
+                  <div className="hidden lg:block absolute right-[15%] top-1/2 -translate-y-1/2 w-48 aspect-4/3 overflow-hidden opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500 pointer-events-none z-20 shadow-2xl">
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                    />
                   </div>
-                </Link>
-              ))}
-            </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </Section>
       </main>
     </div>

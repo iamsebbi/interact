@@ -5,8 +5,11 @@ import Image from "next/image";
 import { Section, GridItem } from "./Section";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { useTheme } from "./ThemeProvider";
 
 export function Info() {
+  const { language } = useTheme();
+  const isRO = language === "RO";
   const containerRef = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -111,9 +114,9 @@ export function Info() {
                 {/* LEFT: DESCRIPTION & PILLS */}
                 <div className="flex-1">
                   <p className="text-xl lg:text-2xl text-white max-w-2xl leading-tight mb-6">
-                    A creative developer and designer obsessed with the
-                    intersection of art and high-performance technology. I build
-                    digital spaces that feel alive.
+                    {isRO
+                      ? "Sunt un developer și designer creativ, pasionat de zona dintre artă și tehnologie performantă. Creez experiențe digitale care par vii."
+                      : "A creative developer and designer obsessed with the intersection of art and high-performance technology. I build digital spaces that feel alive."}
                   </p>
 
                   <div className="flex flex-wrap gap-3 mt-8">
@@ -121,17 +124,19 @@ export function Info() {
                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-none border border-emerald-500/20 bg-emerald-500/5 text-emerald-500/70 filter-[invert(1)]">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                       <span className="text-[10px] lg:text-xs font-mono uppercase tracking-wider">
-                        Available for projects
+                        {isRO
+                          ? "Disponibil pentru proiecte noi"
+                          : "Available for projects"}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-none border border-white/20 bg-white/5 text-white">
                       <span className="text-[10px] lg:text-xs font-mono uppercase tracking-wider">
-                        Based in Romania
+                        {isRO ? "Stabilit în România" : "Based in Romania"}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-none border border-white/20 bg-white/5 text-white">
                       <span className="text-[10px] lg:text-xs font-mono uppercase tracking-wider">
-                        Creative Technologist
+                        {isRO ? "Creator digital" : "Creative Technologist"}
                       </span>
                     </div>
                   </div>
@@ -164,7 +169,7 @@ export function Info() {
                           Curriculum Vitae
                         </span>
                         <span className="font-special text-xl lg:text-2xl uppercase text-white">
-                          Download CV*
+                          {isRO ? "Descarcă CV-ul*" : "Download CV*"}
                         </span>
                       </div>
                     </a>
@@ -190,10 +195,10 @@ export function Info() {
                       </div>
                       <div className="flex flex-col items-start">
                         <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">
-                          Say hello
+                          {isRO ? "Hai să vorbim" : "Say hello"}
                         </span>
                         <span className="font-special text-xl lg:text-2xl uppercase text-white">
-                          Mail me*
+                          {isRO ? "Scrie-mi*" : "Mail me*"}
                         </span>
                       </div>
                     </a>
@@ -276,7 +281,7 @@ export function Info() {
               Curriculum Vitae
             </span>
             <span className="font-special text-xl uppercase text-foreground">
-              Download CV*
+              {isRO ? "Descarcă CV-ul*" : "Download CV*"}
             </span>
           </div>
         </a>
@@ -302,10 +307,10 @@ export function Info() {
           </div>
           <div className="flex flex-col items-start">
             <span className="text-[10px] font-bold uppercase tracking-widest text-foreground/40">
-              Say hello
+              {isRO ? "Hai să vorbim" : "Say hello"}
             </span>
             <span className="font-special text-xl uppercase text-foreground">
-              Mail me*
+              {isRO ? "Scrie-mi*" : "Mail me*"}
             </span>
           </div>
         </a>

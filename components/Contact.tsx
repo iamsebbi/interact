@@ -2,8 +2,11 @@
 
 import React from "react";
 import { Section, GridItem } from "./Section";
+import { useTheme } from "./ThemeProvider";
 
 export function Contact() {
+  const { language } = useTheme();
+  const isRO = language === "RO";
   const currentYear = new Date().getFullYear();
 
   return (
@@ -23,7 +26,9 @@ export function Contact() {
               {[...Array(6)].map((_, i) => (
                 <span key={i} className="flex items-center">
                   <span className="font-special text-7xl lg:text-9xl uppercase leading-none text-background/20">
-                    Let&apos;s build something great
+                    {isRO
+                      ? "Hai să construim ceva memorabil"
+                      : "Let&apos;s build something great"}
                   </span>
                   <span className="mx-12 lg:mx-16 text-primary/30 text-7xl lg:text-9xl font-bold">
                     *
@@ -40,7 +45,7 @@ export function Contact() {
         {/* MOBILE HINT */}
         <GridItem span="col-span-full" className="lg:hidden mb-4">
           <span className="text-[12px] font-bold uppercase tracking-widest text-background/30 block">
-            ( Tap to email )
+            {isRO ? "( Atinge pentru email )" : "( Tap to email )"}
           </span>
         </GridItem>
 
@@ -74,7 +79,7 @@ export function Contact() {
           >
             <div className="rounded-full bg-primary px-4 py-1.5 text-foreground translate-x-4 -translate-y-6">
               <span className="font-special text-[10px] lg:text-xs uppercase tracking-wider whitespace-nowrap">
-                Email me
+                {isRO ? "Trimite-mi un email" : "Email me"}
               </span>
             </div>
           </div>
@@ -140,18 +145,27 @@ export function Contact() {
             {/* NAVIGATION LIST */}
             <div className="flex flex-col gap-6">
               <h3 className="text-[12px] lg:text-xs font-bold uppercase tracking-widest text-background/40">
-                Navigation*
+                {isRO ? "Navigare*" : "Navigation*"}
               </h3>
               <div className="flex flex-col gap-3">
                 {[
-                  { name: "Works", url: "#works" },
-                  { name: "Experience", url: "#experience" },
-                  { name: "Resume", url: "/CV_Prisecaru_Sebastian.pdf", download: true },
+                  { name: isRO ? "Lucrări" : "Works", url: "#works" },
+                  {
+                    name: isRO ? "Experiență" : "Experience",
+                    url: "#experience",
+                  },
+                  {
+                    name: isRO ? "CV" : "Resume",
+                    url: "/CV_Prisecaru_Sebastian.pdf",
+                    download: true,
+                  },
                 ].map((item) => (
                   <a
                     key={item.name}
                     href={item.url}
-                    download={item.download ? "CV_Prisecaru_Sebastian.pdf" : undefined}
+                    download={
+                      item.download ? "CV_Prisecaru_Sebastian.pdf" : undefined
+                    }
                     className="group relative h-7 lg:h-9 overflow-hidden"
                   >
                     <div className="flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-1/2">
@@ -169,12 +183,20 @@ export function Contact() {
           </div>
 
           {/* SECONDARY INFO */}
-          <div className="flex flex-col items-start md:items-end gap-4 text-[10px] lg:text-xs font-mono uppercase tracking-[0.2em] text-background/40">
-            <span>Based in Romania, Europe</span>
+          <div className="flex flex-col items-start md:items-end gap-4 text-[10px] lg:text-xs font-mono uppercase tracking-[0.1em] text-background/40">
+            <span>
+              {isRO
+                ? "Stabilit în România, Europa"
+                : "Based in Romania, Europe"}
+            </span>
 
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-none border border-emerald-500/20 bg-emerald-500/5 text-emerald-500/70">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Available for freelance / {currentYear}</span>
+              <span>
+                {isRO
+                  ? `Disponibil pentru colaborări freelance / ${currentYear}`
+                  : `Available for freelance / ${currentYear}`}
+              </span>
             </div>
           </div>
         </div>
@@ -186,8 +208,16 @@ export function Contact() {
         className="mt-8 lg:mt-10 pt-4 border-t border-background/5 z-10"
       >
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] lg:text-xs font-mono uppercase tracking-widest text-background/20">
-          <span>©{currentYear} ALL RIGHTS RESERVED</span>
-          <span>DESIGNED & BUILT BY SEBASTIAN</span>
+          <span>
+            {isRO
+              ? `©${currentYear} TOATE DREPTURILE REZERVATE`
+              : `©${currentYear} ALL RIGHTS RESERVED`}
+          </span>
+          <span>
+            {isRO
+              ? "CONCEPUT ȘI REALIZAT DE SEBASTIAN"
+              : "DESIGNED & BUILT BY SEBASTIAN"}
+          </span>
         </div>
       </GridItem>
     </Section>

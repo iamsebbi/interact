@@ -2,16 +2,9 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
 import { Section, GridItem } from "./Section";
 
-const FRAME_IMAGES = [
-  "/1.jpg",
-  "/2.jpg",
-  "/3.jpg",
-  "/4.jpg",
-];
+const FRAME_IMAGES = ["/1.jpg", "/2.jpg", "/3.jpg", "/4.jpg"];
 
 export function BrutalistDivider() {
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -21,19 +14,17 @@ export function BrutalistDivider() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIdx((prev) => (prev + 1) % FRAME_IMAGES.length);
-    }, 400); 
+    }, 400);
     return () => clearInterval(interval);
   }, []);
-
-  useGSAP(() => {
-    // Parallax removed
-  }, { scope: containerRef });
 
   return (
     <Section className="py-24 lg:py-48 overflow-hidden">
       <GridItem span="col-span-full">
-        <div ref={containerRef} className="flex flex-col items-center justify-center relative">
-          
+        <div
+          ref={containerRef}
+          className="flex flex-col items-center justify-center relative"
+        >
           {/* MOBILE TECHNICAL OVERLAYS - TOP */}
           <div className="flex xl:hidden w-full justify-between items-end mb-3 px-0 font-mono text-xs uppercase tracking-widest text-foreground">
             <div className="flex flex-col">
@@ -61,7 +52,7 @@ export function BrutalistDivider() {
             {/* PORTRAIT CONTAINER */}
             <div className="portrait-container relative w-full aspect-square lg:w-96 lg:h-96 overflow-hidden bg-card border border-border shrink-0 z-10">
               {FRAME_IMAGES.map((src, i) => (
-                <div 
+                <div
                   key={src}
                   className={`absolute inset-0 transition-none ${i === currentIdx ? "opacity-100" : "opacity-0"}`}
                 >

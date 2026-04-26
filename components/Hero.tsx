@@ -7,16 +7,11 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
-if (typeof window !== "undefined") {
+if (globalThis.window !== undefined) {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const FRAME_IMAGES = [
-  "/1.jpg",
-  "/2.jpg",
-  "/3.jpg",
-  "/4.jpg",
-];
+const FRAME_IMAGES = ["/1.jpg", "/2.jpg", "/3.jpg", "/4.jpg"];
 
 export function Hero() {
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -25,8 +20,8 @@ export function Hero() {
     // Rapid sequence interval (strobe effect)
     const interval = setInterval(() => {
       setCurrentIdx((prev) => (prev + 1) % FRAME_IMAGES.length);
-    }, 400); 
-    
+    }, 400);
+
     return () => clearInterval(interval);
   }, []);
 
@@ -36,7 +31,7 @@ export function Hero() {
       duration: 1.2,
       stagger: 0.1,
       ease: "power4.out",
-      delay: 0.2
+      delay: 0.2,
     });
   });
 
@@ -45,9 +40,7 @@ export function Hero() {
       grid={false}
       className="min-h-screen pt-20 md:pt-32 pb-20 flex items-center justify-center overflow-hidden relative"
     >
-      
       <div className="w-full max-w-7xl mx-auto px-6 flex flex-col items-center text-center">
-
         {/* ROW 1: THE ART */}
         <div className="w-full overflow-hidden">
           <h1 className="hero-reveal font-special text-[15vw] lg:text-[10rem] uppercase leading-[0.8] tracking-tighter text-foreground">
@@ -67,7 +60,7 @@ export function Hero() {
               </span>
               <div className="relative w-[25vw] h-[25vw] lg:w-32 lg:h-32 mx-2 overflow-hidden bg-card border border-border shrink-0">
                 {FRAME_IMAGES.map((src, i) => (
-                  <div 
+                  <div
                     key={src}
                     className={`absolute inset-0 transition-none ${i === currentIdx ? "opacity-100" : "opacity-0"}`}
                   >
@@ -106,9 +99,7 @@ export function Hero() {
             IT WORK
           </h2>
         </div>
-
       </div>
     </Section>
   );
 }
-

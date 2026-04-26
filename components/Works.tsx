@@ -7,8 +7,11 @@ import { Section, GridItem } from "./Section";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { PROJECTS, type Category } from "@/lib/projects";
+import { useTheme } from "./ThemeProvider";
 
 export function Works() {
+  const { language } = useTheme();
+  const isRO = language === "RO";
   const [activeCategory, setActiveCategory] = useState<Category>("web");
   const [isTabAnimating, setIsTabAnimating] = useState(false);
   const containerRef = useRef<HTMLElement>(null);
@@ -66,7 +69,7 @@ export function Works() {
         <div className="works-header flex flex-col md:flex-row md:items-end justify-between gap-12 mb-4 md:mb-6 text-left">
           <div className="flex flex-col items-start">
             <h2 className="text-xs font-bold uppercase tracking-widest text-foreground/40 mb-4">
-              Selected Works*
+              {isRO ? "Lucrări alese*" : "Selected Works*"}
             </h2>
 
             {/* SHARP TAB SWITCHER (GLASSMORPHISM) */}
@@ -82,25 +85,35 @@ export function Works() {
                 <div className="slider-bg w-full h-full bg-foreground rounded-none" />
               </div>
 
-              {(["web", "design"] as const).map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => handleCategoryChange(cat)}
-                  className={`relative z-10 flex-1 flex items-center justify-center rounded-none text-sm lg:text-base font-bold tracking-tight transition-colors duration-300 active:scale-95 ${
-                    activeCategory === cat
-                      ? "text-background"
-                      : "text-foreground/40 hover:text-foreground/60"
-                  }`}
-                >
-                  {cat === "web" ? "Web Development" : "Visual Design"}
-                </button>
-              ))}
+              {(["web", "design"] as const).map((cat) => {
+                let categoryLabel: string;
+                if (cat === "web") {
+                  categoryLabel = isRO ? "Dezvoltare web" : "Web Development";
+                } else {
+                  categoryLabel = isRO ? "Design Vizual" : "Visual Design";
+                }
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => handleCategoryChange(cat)}
+                    className={`relative z-10 flex-1 flex items-center justify-center rounded-none text-sm lg:text-base font-bold tracking-tight transition-colors duration-300 active:scale-95 ${
+                      activeCategory === cat
+                        ? "text-background"
+                        : "text-foreground/40 hover:text-foreground/60"
+                    }`}
+                  >
+                    {categoryLabel}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
           <div className="hidden md:block text-right">
             <p className="text-sm font-medium text-foreground/40 uppercase tracking-widest">
-              Showing 4 of {filteredProjects.length} Projects
+              {isRO
+                ? `Afișez 4 din ${filteredProjects.length} lucrări`
+                : `Showing 4 of ${filteredProjects.length} Projects`}
             </p>
           </div>
         </div>
@@ -146,13 +159,18 @@ export function Works() {
                     </span>
                   </div>
                   <div className="h-8 lg:h-10 flex items-center text-primary">
-                    <svg 
-                      className="w-6 h-6 lg:w-7 lg:h-7" 
-                      fill="none" 
-                      viewBox="0 0 24 24" 
+                    <svg
+                      className="w-6 h-6 lg:w-7 lg:h-7"
+                      fill="none"
+                      viewBox="0 0 24 24"
                       stroke="currentColor"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 7h10v10M7 17L17 7" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M7 7h10v10M7 17L17 7"
+                      />
                     </svg>
                   </div>
                 </div>
@@ -164,7 +182,10 @@ export function Works() {
 
       {/* VIEW ALL PROJECTS - PREMIUM ACTION BLOCK */}
       <GridItem span="col-span-full" className="mt-4 lg:mt-8">
-        <Link href="/works" className="group relative w-full h-16 lg:h-24 flex items-center justify-between px-6 lg:px-12 overflow-hidden border border-foreground/30 cursor-pointer">
+        <Link
+          href="/works"
+          className="group relative w-full h-16 lg:h-24 flex items-center justify-between px-6 lg:px-12 overflow-hidden border border-foreground/30 cursor-pointer"
+        >
           {/* BACKGROUND FILL ANIMATION */}
           <div className="absolute inset-0 bg-primary translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)]" />
 
@@ -173,10 +194,10 @@ export function Works() {
             <div className="h-8 lg:h-12 overflow-hidden">
               <div className="flex flex-col transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-1/2">
                 <h2 className="font-special text-xl lg:text-4xl uppercase text-foreground h-8 lg:h-12 flex items-center">
-                  All Works*
+                  {isRO ? "Toate lucrările*" : "All Works*"}
                 </h2>
                 <h2 className="font-special text-xl lg:text-4xl uppercase text-background h-8 lg:h-12 flex items-center">
-                  See Archive
+                  {isRO ? "Vezi arhiva" : "See Archive"}
                 </h2>
               </div>
             </div>
@@ -185,17 +206,24 @@ export function Works() {
           {/* RIGHT: REVEAL ELEMENTS */}
           <div className="relative z-10 flex items-center gap-6 lg:gap-8">
             <span className="hidden md:block text-[10px] lg:text-xs font-bold uppercase tracking-widest text-foreground group-hover:text-background transition-colors duration-500 delay-100">
-              Total {PROJECTS.length} Items
+              {isRO
+                ? `Total ${PROJECTS.length} lucrări`
+                : `Total ${PROJECTS.length} Items`}
             </span>
 
             <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-full border-[3px] border-foreground group-hover:border-background flex items-center justify-center transition-all duration-500">
-              <svg 
-                className="w-4 h-4 lg:w-5 lg:h-5 text-foreground group-hover:text-background transition-all duration-500" 
-                fill="none" 
-                viewBox="0 0 24 24" 
+              <svg
+                className="w-4 h-4 lg:w-5 lg:h-5 text-foreground group-hover:text-background transition-all duration-500"
+                fill="none"
+                viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M7 7h10v10M7 17L17 7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={3}
+                  d="M7 7h10v10M7 17L17 7"
+                />
               </svg>
             </div>
           </div>
