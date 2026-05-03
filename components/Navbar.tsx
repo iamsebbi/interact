@@ -50,7 +50,7 @@ export function Navbar() {
 
       const isDesktop = window.innerWidth >= 768;
       // Ultra-wide optimization: use 1400px for a perfectly balanced Pill
-      const pillWidth = isDesktop ? "1400px" : "90vw";
+      const pillWidth = isDesktop ? "1400px" : `${window.innerWidth - 32}px`;
       const duration = isDesktop ? 1.2 : 0.8;
 
       if (scrolled) {
@@ -216,11 +216,11 @@ export function Navbar() {
     >
       <div
         ref={innerRef}
-        className="flex items-center justify-between py-3 relative z-120 border-border/50 transition-none"
+        className="flex items-center justify-between py-4 relative z-120 transition-none"
         style={
           {
             // Default CSS Variable Initial Values (Prevents FOUC & Enables Smooth Return)
-            "--nav-width": "100%",
+            "--nav-width": "100vw",
             "--nav-y": "0px",
             "--nav-radius": "0px",
             "--nav-padding-x": mounted
@@ -235,7 +235,7 @@ export function Navbar() {
 
             // Theme-aware RGB variables
             "--nav-bg-rgb": theme === "dark" ? "0, 0, 0" : "255, 255, 255",
-            "--border-rgb": theme === "dark" ? "56, 56, 58" : "237, 237, 237",
+            "--foreground-rgb": theme === "dark" ? "255, 255, 255" : "13, 13, 13",
 
             // Layout Mapping
             width: "var(--nav-width)",
@@ -249,9 +249,8 @@ export function Navbar() {
             backgroundColor: `rgba(var(--nav-bg-rgb, 255, 255, 255), var(--nav-bg-opacity))`,
             backdropFilter: "blur(var(--nav-blur)) saturate(1.8)",
             WebkitBackdropFilter: "blur(var(--nav-blur)) saturate(1.8)",
-            borderWidth: scrolled ? "1px" : "0px",
-            borderColor: `rgba(var(--border-rgb, 237, 237, 237), var(--nav-border-opacity))`,
-            boxShadow: `0 10px 15px -3px rgba(0,0,0,calc(0.1 * var(--nav-shadow-opacity))), 0 4px 6px -2px rgba(0,0,0,calc(0.05 * var(--nav-shadow-opacity)))`,
+            borderWidth: "0px",
+            boxShadow: `inset 0 0 0 2px rgba(var(--foreground-rgb), var(--nav-border-opacity)), 0 10px 15px -2px rgba(0,0,0,calc(0.1 * var(--nav-shadow-opacity))), 0 4px 6px -2px rgba(0,0,0,calc(0.05 * var(--nav-shadow-opacity)))`,
 
             willChange: "transform, width, padding, border-radius",
           } as React.CSSProperties
@@ -297,7 +296,7 @@ export function Navbar() {
           <button
             ref={buttonRef}
             onClick={() => setIsOpen(!isOpen)}
-            className="w-12 h-12 flex items-center justify-center text-foreground rounded-full focus:outline-none active:scale-90 transition-transform"
+            className="w-12 h-12 flex items-center justify-center text-foreground rounded-full focus:outline-none active:scale-90 transition-all duration-500"
             style={{ WebkitTapHighlightColor: "transparent" }}
             aria-label={isRO ? "Deschide meniul" : "Toggle menu"}
           >
@@ -324,7 +323,7 @@ export function Navbar() {
         />
         <div
           ref={menuRef}
-          className="relative mt-24 glass rounded-3xl p-6 flex flex-col gap-4 shadow-2xl border border-border/50 w-full max-w-350"
+          className="relative mt-24 bg-background rounded-[32px] p-8 flex flex-col gap-4 shadow-2xl border-[2px] border-foreground w-full max-w-350"
         >
           {navLinks.map((link) => (
             <Link

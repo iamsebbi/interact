@@ -294,7 +294,7 @@ export function DesignProjectLayout({
             <span className="font-mono text-xs uppercase tracking-widest text-foreground/40 group-hover:text-primary transition-colors">
               {isRO ? "Înapoi la arhivă" : "Continue Exploration / Archive"}
             </span>
-            <div className="w-20 h-20 lg:w-32 lg:h-32 rounded-full border-[3px] border-foreground flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-all duration-700">
+            <div className="w-20 h-20 lg:w-32 lg:h-32 rounded-full border-[2px] border-foreground flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-all duration-700">
               <svg
                 className="w-8 h-8 lg:w-12 lg:h-12 text-foreground group-hover:text-background transition-colors transform rotate-180"
                 fill="none"

@@ -28,7 +28,7 @@ export default function NotFound() {
               href="/"
               className="group flex flex-col items-center gap-4 transition-all duration-500"
             >
-              <div className="w-14 h-14 lg:w-20 lg:h-20 rounded-full border-[3px] border-foreground flex items-center justify-center group-hover:bg-foreground group-hover:border-foreground transition-all duration-500">
+              <div className="w-14 h-14 lg:w-20 lg:h-20 rounded-full border-[2px] border-foreground flex items-center justify-center group-hover:bg-foreground group-hover:border-foreground transition-all duration-500">
                 <svg
                   className="w-5 h-5 lg:w-8 lg:h-8 text-foreground group-hover:text-background transition-colors transform rotate-180"
                   fill="none"

@@ -8,6 +8,12 @@ export function Contact() {
   const { language } = useTheme();
   const isRO = language === "RO";
   const currentYear = new Date().getFullYear();
+  const marqueeHeaderRepeats = ["header-1", "header-2"];
+  const marqueeEmailRepeats = ["email-1", "email-2"];
+  const marqueeEmailWords = Array.from(
+    { length: 10 },
+    (_, index) => `email-word-${index}`,
+  );
 
   return (
     <Section
@@ -21,14 +27,17 @@ export function Contact() {
       {/* HEADER MARQUEE (Reverse Scroll) */}
       <div className="col-span-full w-screen relative left-1/2 -ml-[50vw] overflow-hidden pt-4 lg:pt-6 bg-transparent z-10">
         <div className="flex whitespace-nowrap w-fit animate-marquee-reverse">
-          {[...Array(2)].map((_, idx) => (
-            <div key={idx} className="flex items-center">
-              {[...Array(6)].map((_, i) => (
-                <span key={i} className="flex items-center">
+          {marqueeHeaderRepeats.map((repeatId) => (
+            <div key={repeatId} className="flex items-center">
+              {Array.from(
+                { length: 6 },
+                (_, index) => `header-word-${index}`,
+              ).map((wordId) => (
+                <span key={wordId} className="flex items-center">
                   <span className="font-special text-7xl lg:text-9xl uppercase leading-none text-background/20">
                     {isRO
                       ? "Hai să construim ceva memorabil"
-                      : "Let&apos;s build something great"}
+                      : "Let's build something great"}
                   </span>
                   <span className="mx-12 lg:mx-16 text-primary/30 text-7xl lg:text-9xl font-bold">
                     *
@@ -49,28 +58,7 @@ export function Contact() {
           </span>
         </GridItem>
 
-        <div
-          className="w-screen relative left-1/2 -ml-[50vw] overflow-hidden pb-4 lg:pb-6 bg-transparent lg:cursor-none"
-          onMouseMove={(e) => {
-            if (window.innerWidth < 1024) return;
-            const rect = e.currentTarget.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const cursor = document.getElementById("custom-cursor");
-            if (cursor) {
-              cursor.style.transform = `translate(${x}px, ${y}px)`;
-            }
-          }}
-          onMouseEnter={() => {
-            if (window.innerWidth < 1024) return;
-            const cursor = document.getElementById("custom-cursor");
-            if (cursor) cursor.style.opacity = "1";
-          }}
-          onMouseLeave={() => {
-            const cursor = document.getElementById("custom-cursor");
-            if (cursor) cursor.style.opacity = "0";
-          }}
-        >
+        <div className="w-screen relative left-1/2 -ml-[50vw] overflow-hidden pb-4 lg:pb-6 bg-transparent lg:cursor-none">
           {/* CUSTOM PILL CURSOR (DESKTOP ONLY) */}
           <div
             id="custom-cursor"
@@ -85,16 +73,37 @@ export function Contact() {
           </div>
 
           <a
-            href="mailto:hello@iamsebbi.com"
+            href="mailto:hello.iamsebbi@gmail.com"
             className="flex whitespace-nowrap w-fit animate-marquee hover:text-primary transition-colors"
+            onMouseMove={(e) => {
+              if (window.innerWidth < 1024) return;
+              const parent = e.currentTarget.parentElement;
+              if (!parent) return;
+              const rect = parent.getBoundingClientRect();
+              const x = e.clientX - rect.left;
+              const y = e.clientY - rect.top;
+              const cursor = document.getElementById("custom-cursor");
+              if (cursor) {
+                cursor.style.transform = `translate(${x}px, ${y}px)`;
+              }
+            }}
+            onMouseEnter={() => {
+              if (window.innerWidth < 1024) return;
+              const cursor = document.getElementById("custom-cursor");
+              if (cursor) cursor.style.opacity = "1";
+            }}
+            onMouseLeave={() => {
+              const cursor = document.getElementById("custom-cursor");
+              if (cursor) cursor.style.opacity = "0";
+            }}
           >
             {/* Two identical blocks for a perfect loop */}
-            {[...Array(2)].map((_, idx) => (
-              <div key={idx} className="flex items-center">
-                {[...Array(10)].map((_, i) => (
-                  <span key={i} className="flex items-center">
+            {marqueeEmailRepeats.map((repeatId) => (
+              <div key={repeatId} className="flex items-center">
+                {marqueeEmailWords.map((wordId) => (
+                  <span key={wordId} className="flex items-center">
                     <span className="font-special text-7xl lg:text-9xl uppercase leading-none">
-                      hello@iamsebbi.com
+                      hello.iamsebbi@gmail.com
                     </span>
                     <span className="mx-12 lg:mx-16 text-primary text-7xl lg:text-9xl font-bold">
                       *
@@ -183,14 +192,14 @@ export function Contact() {
           </div>
 
           {/* SECONDARY INFO */}
-          <div className="flex flex-col items-start md:items-end gap-4 text-[10px] lg:text-xs font-mono uppercase tracking-[0.1em] text-background/40">
+          <div className="flex flex-col items-start md:items-end gap-4 text-[10px] lg:text-xs font-mono uppercase tracking-widest text-background/40">
             <span>
               {isRO
                 ? "Stabilit în România, Europa"
                 : "Based in Romania, Europe"}
             </span>
 
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-none border border-emerald-500/20 bg-emerald-500/5 text-emerald-500/70">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 text-emerald-500/70">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               <span>
                 {isRO

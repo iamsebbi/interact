@@ -11,6 +11,10 @@ export function Info() {
   const { language } = useTheme();
   const isRO = language === "RO";
   const containerRef = useRef<HTMLElement>(null);
+  const marqueeNameItems = Array.from(
+    { length: 12 },
+    (_, index) => `name-${index}`,
+  );
 
   useGSAP(
     () => {
@@ -64,7 +68,7 @@ export function Info() {
         container={false}
         padding={false}
         grid={false}
-        className="relative bg-white overflow-hidden min-h-screen lg:min-h-[80vh] flex flex-col"
+        className="relative bg-white overflow-hidden min-h-screen lg:min-h-[80vh] flex flex-col scroll-mt-20"
       >
         {/* GLOBAL BACKGROUND PORTRAIT */}
         <div className="absolute inset-0 z-0 pointer-events-none">
@@ -96,8 +100,8 @@ export function Info() {
         <div className="absolute top-0 left-0 w-full pt-6 lg:pt-10 mix-blend-difference overflow-hidden">
           <div className="relative flex whitespace-nowrap">
             <div className="name-marquee-content flex items-center gap-12 text-4xl lg:text-7xl font-special uppercase tracking-tighter text-white">
-              {[...Array(12)].map((_, i) => (
-                <div key={i} className="flex items-center gap-12">
+              {marqueeNameItems.map((itemId) => (
+                <div key={itemId} className="flex items-center gap-12">
                   <span>Sebastian</span>
                   <span className="text-primary text-xl lg:text-3xl">•</span>
                 </div>
@@ -119,9 +123,9 @@ export function Info() {
                       : "A creative developer and designer obsessed with the intersection of art and high-performance technology. I build digital spaces that feel alive."}
                   </p>
 
-                  <div className="flex flex-wrap gap-3 mt-8">
+                    <div className="flex flex-wrap gap-3 mt-8">
                     {/* PILLS */}
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-none border border-emerald-500/20 bg-emerald-500/5 text-emerald-500/70 filter-[invert(1)]">
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 text-emerald-500/70 filter-[invert(1)]">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                       <span className="text-[10px] lg:text-xs font-mono uppercase tracking-wider">
                         {isRO
@@ -129,12 +133,12 @@ export function Info() {
                           : "Available for projects"}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-none border border-white/20 bg-white/5 text-white">
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 bg-white/5 text-white">
                       <span className="text-[10px] lg:text-xs font-mono uppercase tracking-wider">
                         {isRO ? "Stabilit în România" : "Based in Romania"}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-none border border-white/20 bg-white/5 text-white">
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 bg-white/5 text-white">
                       <span className="text-[10px] lg:text-xs font-mono uppercase tracking-wider">
                         {isRO ? "Creator digital" : "Creative Technologist"}
                       </span>
@@ -149,7 +153,7 @@ export function Info() {
                       download="CV_Prisecaru_Sebastian.pdf"
                       className="group flex flex-row items-center gap-5 transition-all duration-500"
                     >
-                      <div className="w-12 h-12 lg:w-12 lg:h-12 rounded-full border-[3px] border-white flex items-center justify-center group-hover:bg-white group-hover:border-white group-active:bg-white group-active:scale-90 transition-all duration-500 shrink-0">
+                      <div className="w-12 h-12 lg:w-12 lg:h-12 rounded-full border-[2px] border-white flex items-center justify-center group-hover:bg-white group-hover:border-white group-active:bg-white group-active:scale-90 transition-all duration-500 shrink-0">
                         <svg
                           className="w-5 h-5 lg:w-6 lg:h-6 text-white group-hover:text-black group-active:text-black transition-colors"
                           fill="none"
@@ -175,10 +179,10 @@ export function Info() {
                     </a>
 
                     <a
-                      href="mailto:hello@iamsebbi.com"
+                      href="mailto:hello.iamsebbi@gmail.com"
                       className="group flex flex-row items-center gap-5 transition-all duration-500"
                     >
-                      <div className="w-12 h-12 lg:w-12 lg:h-12 rounded-full border-[3px] border-white flex items-center justify-center group-hover:bg-white group-hover:border-white group-active:bg-white group-active:scale-90 transition-all duration-500 shrink-0">
+                      <div className="w-12 h-12 lg:w-12 lg:h-12 rounded-full border-[2px] border-white flex items-center justify-center group-hover:bg-white group-hover:border-white group-active:bg-white group-active:scale-90 transition-all duration-500 shrink-0">
                         <svg
                           className="w-5 h-5 lg:w-6 lg:h-6 text-white group-hover:text-black group-active:text-black transition-colors"
                           fill="none"
@@ -261,7 +265,7 @@ export function Info() {
           download="CV_Prisecaru_Sebastian.pdf"
           className="group flex flex-row items-center justify-start gap-5 transition-all duration-500"
         >
-          <div className="w-12 h-12 rounded-full border-[3px] border-foreground flex items-center justify-center group-active:bg-foreground group-active:scale-90 transition-all duration-500 shrink-0">
+          <div className="w-12 h-12 rounded-full border-[2px] border-foreground flex items-center justify-center group-active:bg-foreground group-active:scale-90 transition-all duration-500 shrink-0">
             <svg
               className="w-5 h-5 text-foreground group-active:text-background transition-colors"
               fill="none"
@@ -287,10 +291,10 @@ export function Info() {
         </a>
 
         <a
-          href="mailto:hello@iamsebbi.com"
+          href="mailto:hello.iamsebbi@gmail.com"
           className="group flex flex-row items-center justify-start gap-5 transition-all duration-500"
         >
-          <div className="w-12 h-12 rounded-full border-[3px] border-foreground flex items-center justify-center group-active:bg-foreground group-active:scale-90 transition-all duration-500 shrink-0">
+          <div className="w-12 h-12 rounded-full border-[2px] border-foreground flex items-center justify-center group-active:bg-foreground group-active:scale-90 transition-all duration-500 shrink-0">
             <svg
               className="w-5 h-5 text-foreground group-active:text-background transition-colors"
               fill="none"

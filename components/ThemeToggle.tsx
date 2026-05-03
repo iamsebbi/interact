@@ -15,11 +15,11 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="relative flex items-center justify-center w-32 h-10 transition-all duration-500 rounded-full glass cursor-pointer group overflow-hidden hover:bg-foreground hover:text-background border-transparent"
+      className="relative flex items-center justify-center w-32 h-12 transition-all duration-500 rounded-full bg-background border-[2px] border-foreground cursor-pointer group overflow-hidden hover:bg-foreground hover:text-background hover:border-background"
       aria-label={isRO ? "Schimbă tema" : "Toggle theme"}
     >
       {/* Icon — absolutely positioned in a circle at the left edge */}
-      <div className="absolute left-0 w-10 h-10 flex items-center justify-center">
+      <div className="absolute left-0 w-12 h-12 flex items-center justify-center">
         <div className="relative w-5 h-5">
           {/* Sun Icon */}
           <svg
