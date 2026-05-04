@@ -124,7 +124,7 @@ export function Navbar() {
             width: "min(100%, 1400px)",
             height: "auto",
             borderRadius: "24px",
-            marginTop: "6rem",
+            marginTop: "5rem",
             duration: 0.6,
             ease: "expo.inOut",
           },
@@ -194,7 +194,7 @@ export function Navbar() {
       const elem = document.getElementById(targetId);
       if (elem) {
         if (isOpen) setIsOpen(false);
-        const top = elem.getBoundingClientRect().top + window.scrollY - 80;
+        const top = elem.getBoundingClientRect().top + window.scrollY - 64;
         window.scrollTo({
           top,
           behavior: "smooth",
@@ -216,7 +216,7 @@ export function Navbar() {
     >
       <div
         ref={innerRef}
-        className="flex items-center justify-between py-4 relative z-120 transition-none"
+        className="flex items-center justify-between py-3 relative z-120 transition-none"
         style={
           {
             // Default CSS Variable Initial Values (Prevents FOUC & Enables Smooth Return)
@@ -296,7 +296,7 @@ export function Navbar() {
           <button
             ref={buttonRef}
             onClick={() => setIsOpen(!isOpen)}
-            className="w-12 h-12 flex items-center justify-center text-foreground rounded-full focus:outline-none active:scale-90 transition-all duration-500"
+            className="w-10 h-10 flex items-center justify-center text-foreground rounded-full focus:outline-none active:scale-90 transition-all duration-500"
             style={{ WebkitTapHighlightColor: "transparent" }}
             aria-label={isRO ? "Deschide meniul" : "Toggle menu"}
           >
@@ -323,7 +323,7 @@ export function Navbar() {
         />
         <div
           ref={menuRef}
-          className="relative mt-24 bg-background rounded-[32px] p-8 flex flex-col gap-4 shadow-2xl border-[2px] border-foreground w-full max-w-350"
+          className="relative mt-20 bg-background rounded-[32px] p-8 flex flex-col gap-4 shadow-2xl border-[2px] border-foreground w-full max-w-350"
         >
           {navLinks.map((link) => (
             <Link
