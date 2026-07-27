@@ -141,7 +141,7 @@ export default function AllWorks() {
                   {/* IMAGE PREVIEW ON HOVER (DESKTOP) */}
                   <div className="hidden lg:block absolute right-[15%] top-1/2 -translate-y-1/2 w-48 aspect-4/3 overflow-hidden opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500 pointer-events-none z-20 shadow-2xl">
                     <Image
-                      src={project.image}
+                      src={project.coverImage || project.image}
                       alt={project.title}
                       fill
                       className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"

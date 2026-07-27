@@ -6,7 +6,7 @@ import { Section, GridItem } from "@/components/Section";
 import { Project } from "@/lib/projects";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useTheme } from "./ThemeProvider";
 
 interface WebProjectLayoutProps {
@@ -17,38 +17,35 @@ export function WebProjectLayout({ project }: WebProjectLayoutProps) {
   const { language } = useTheme();
   const isRO = language === "RO";
   const containerRef = useRef(null);
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0, opacity: 0 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setCursorPos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+      opacity: 1,
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setCursorPos((prev) => ({ ...prev, opacity: 0 }));
+  };
 
   useGSAP(
     () => {
       const tl = gsap.timeline();
 
-      tl.from(".web-hero-title", {
-        y: 50,
-        opacity: 0,
-        duration: 1,
-        ease: "power3.out",
-      })
-        .from(
-          ".browser-mockup",
-          {
-            y: 100,
-            opacity: 0,
-            duration: 1.2,
-            ease: "expo.out",
-          },
-          "-=0.6",
-        )
-        .from(
-          ".tech-card",
-          {
-            y: 20,
-            opacity: 0,
-            duration: 0.8,
-            stagger: 0.1,
-            ease: "power2.out",
-          },
-          "-=0.8",
-        );
+      tl.fromTo(
+        ".web-hero-title",
+        { y: 50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1, ease: "power3.out" }
+      ).fromTo(
+        ".tech-card",
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: "power2.out" },
+        "-=0.6"
+      );
     },
     { scope: containerRef },
   );
@@ -102,30 +99,110 @@ export function WebProjectLayout({ project }: WebProjectLayoutProps) {
       {/* BROWSER MOCKUP SECTION */}
       <Section className="py-0">
         <GridItem span="col-span-full">
-          <div className="browser-mockup relative w-full border border-border/40 rounded-xl overflow-hidden bg-card shadow-2xl">
-            {/* Browser Header */}
-            <div className="flex items-center gap-4 px-4 md:px-6 py-3 md:py-4 border-b border-border/40 bg-muted/20">
-              <div className="flex gap-1.5">
-                <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-border/40" />
-                <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-border/40" />
-                <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-border/40" />
+          <div
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            className="browser-mockup group relative w-full border border-border/40 rounded-xl overflow-hidden bg-card bg-background opacity-100 shadow-2xl transition-all duration-500 hover:border-primary/50 hover:shadow-primary/10 lg:hover:cursor-none"
+          >
+            {(() => {
+              const isInteractive = Boolean(project.liveUrl);
+              const mockupContent = (
+                <>
+                  {/* Browser Header */}
+                  <div className="flex items-center gap-4 px-4 md:px-6 py-3 md:py-4 border-b border-border/40 bg-muted/20 group-hover:bg-muted/40 transition-colors">
+                    {/* Traffic Light Buttons */}
+                    <div className="flex gap-1.5">
+                      <div
+                        className={`w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-border/40 transition-colors duration-300 shadow-sm ${
+                          isInteractive ? "group-hover:bg-[#FF5F56]" : ""
+                        }`}
+                      />
+                      <div
+                        className={`w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-border/40 transition-colors duration-300 shadow-sm ${
+                          isInteractive ? "group-hover:bg-[#FFBD2E]" : ""
+                        }`}
+                      />
+                      <div
+                        className={`w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-border/40 transition-colors duration-300 shadow-sm ${
+                          isInteractive ? "group-hover:bg-[#27C93F]" : ""
+                        }`}
+                      />
+                    </div>
+                    {/* Address bar */}
+                    <div className="flex-1 max-w-xl mx-auto h-6 md:h-7 bg-background border border-border/20 rounded-md flex items-center justify-between px-3 md:px-4 group-hover:border-primary/40 group-hover:bg-background/90 transition-all">
+                      <span
+                        className={`font-mono text-[9px] md:text-[10px] truncate transition-colors ${
+                          isInteractive
+                            ? "text-foreground/40 group-hover:text-primary"
+                            : "text-foreground/30"
+                        }`}
+                      >
+                        {project.liveUrl || `https://${project.slug}.com`}
+                      </span>
+                      {isInteractive && (
+                        <span className="font-mono text-[9px] md:text-[10px] text-primary opacity-0 group-hover:opacity-100 transition-opacity font-bold ml-2 shrink-0">
+                          LIVE ↗
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  {/* Browser Content */}
+                  <div className="relative aspect-video lg:aspect-[21/9] overflow-hidden bg-background">
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      className={`object-cover object-top ${
+                        isInteractive
+                          ? "transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                          : ""
+                      }`}
+                      priority
+                    />
+                  </div>
+                </>
+              );
+
+              return isInteractive ? (
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block relative cursor-pointer lg:cursor-none"
+                >
+                  {mockupContent}
+                </a>
+              ) : (
+                <div>{mockupContent}</div>
+              );
+            })()}
+
+            {/* CURSOR TOOLTIP FOLLOWING MOUSE (DESKTOP) */}
+            {project.liveUrl && (
+              <div
+                style={{
+                  left: `${cursorPos.x}px`,
+                  top: `${cursorPos.y}px`,
+                  opacity: cursorPos.opacity,
+                }}
+                className="pointer-events-none absolute z-30 hidden lg:flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-full bg-primary px-4 py-2 text-background font-mono text-[11px] font-bold uppercase tracking-wider shadow-2xl transition-opacity duration-300 ease-out"
+              >
+                <span>{isRO ? "Vezi site-ul live" : "Visit Live Site"}</span>
+                <svg
+                  className="w-3.5 h-3.5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2.5}
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
               </div>
-              <div className="flex-1 max-w-xl mx-auto h-6 md:h-7 bg-background border border-border/20 rounded-md flex items-center px-4">
-                <span className="font-mono text-[9px] md:text-[10px] text-foreground/30 truncate">
-                  {project.liveUrl || `https://${project.slug}.com`}
-                </span>
-              </div>
-            </div>
-            {/* Browser Content */}
-            <div className="relative aspect-video lg:aspect-[21/9] overflow-hidden">
-              <Image
-                src={project.image}
-                alt={project.title}
-                fill
-                className="object-cover object-top"
-                priority
-              />
-            </div>
+            )}
           </div>
         </GridItem>
       </Section>

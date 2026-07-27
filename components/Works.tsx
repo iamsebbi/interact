@@ -124,7 +124,7 @@ export function Works() {
           <Link href={`/works/${project.slug}`} className="block">
             <div className="relative aspect-4/5 lg:aspect-16/10 overflow-hidden bg-card border border-border/50 mb-4 hover-invert">
               <Image
-                src={project.image}
+                src={project.coverImage || project.image}
                 alt={project.title}
                 fill
                 className="object-cover grayscale transition-transform duration-[1000ms] ease-out group-hover:grayscale-0 group-hover:scale-105"
