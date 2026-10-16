@@ -6,7 +6,7 @@ export function LanguageSwitcher() {
   const { language, setLanguage } = useTheme();
 
   return (
-    <div className="relative flex w-32 h-12 p-1.5 bg-background border-[2px] border-foreground rounded-full overflow-hidden transition-all duration-500">
+    <div className="relative flex w-32 h-12 p-1.5 bg-background border border-foreground rounded-full overflow-hidden transition-all duration-500">
       {/* Sliding Background */}
       <div
         className="absolute top-1.5 bottom-1.5 left-1.5 bg-foreground transition-transform duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] rounded-full"

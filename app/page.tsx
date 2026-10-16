@@ -15,12 +15,16 @@ export default function Home() {
 
   useEffect(() => {
     // Check if user has already seen the loader in this session
-    const hasVisited = sessionStorage.getItem("hasVisited");
-    if (hasVisited) {
-      setIsLoading(false);
-    } else {
-      setShowLoader(true);
-    }
+    const timer = setTimeout(() => {
+      const hasVisited = sessionStorage.getItem("hasVisited");
+      if (hasVisited) {
+        setIsLoading(false);
+      } else {
+        setShowLoader(true);
+      }
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const handleLoaderComplete = () => {

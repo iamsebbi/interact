@@ -15,7 +15,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="relative flex items-center justify-center w-32 h-12 transition-all duration-500 rounded-full bg-background border-[2px] border-foreground cursor-pointer group overflow-hidden hover:bg-foreground hover:text-background hover:border-background"
+      className="relative flex items-center justify-center w-32 h-12 transition-all duration-500 rounded-full bg-background border border-foreground cursor-pointer group overflow-hidden hover:bg-foreground hover:text-background hover:border-background"
       aria-label={isRO ? "Schimbă tema" : "Toggle theme"}
     >
       {/* Icon — absolutely positioned in a circle at the left edge */}
