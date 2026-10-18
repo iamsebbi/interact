@@ -69,7 +69,7 @@ export function Works() {
             </h2>
 
             {/* ROUNDED TAB SWITCHER (PREMIUM - MATCHES ALL WORKS) */}
-            <div className="relative flex w-full md:w-[520px] h-14 lg:h-16 p-1.5 bg-background border-[2px] border-foreground rounded-full origin-left transition-all duration-500">
+            <div className="relative flex w-full md:w-[520px] h-14 lg:h-16 p-1.5 bg-background border border-foreground/20 rounded-full origin-left transition-all duration-500">
               {/* SLIDING BACKGROUND (PRIMARY) */}
               <div
                 ref={sliderRef}
@@ -141,7 +141,7 @@ export function Works() {
 
             <div className="flex items-start justify-between px-1 gap-4">
               <div className="flex flex-col gap-3 min-w-0">
-                <div className="relative inline-flex items-center px-6 py-2 rounded-full w-fit overflow-hidden border-[2px] border-foreground group-hover:border-primary transition-colors duration-500">
+                <div className="relative inline-flex items-center px-6 py-2 rounded-full w-fit overflow-hidden border border-foreground/20 group-hover:border-primary transition-colors duration-500">
                   {/* Background Fill (matching All Works button) */}
                   <div className="absolute inset-0 bg-primary translate-y-[102%] group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)]" />
 
@@ -206,7 +206,7 @@ export function Works() {
       >
         <Link
           href="/works"
-          className="group relative w-full lg:w-fit h-16 lg:h-18 flex items-center justify-between pl-8 pr-2 lg:pl-14 lg:pr-2.5 overflow-hidden border-[2px] border-foreground hover:border-background rounded-full cursor-pointer transition-all duration-500"
+          className="group relative w-full lg:w-fit h-16 lg:h-18 flex items-center justify-between pl-8 pr-2 lg:pl-14 lg:pr-2.5 overflow-hidden border border-foreground/20 hover:border-foreground/50 rounded-full cursor-pointer transition-all duration-500"
         >
           {/* BACKGROUND FILL ANIMATION */}
           <div className="absolute inset-0 bg-primary translate-y-[102%] group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)]" />
@@ -227,7 +227,7 @@ export function Works() {
 
           {/* RIGHT: REVEAL ELEMENTS */}
           <div className="relative z-10 flex items-center">
-            <div className="w-12 h-12 rounded-full border-[2px] border-foreground group-hover:border-background flex items-center justify-center transition-all duration-500">
+            <div className="w-12 h-12 rounded-full border border-foreground/20 group-hover:border-background flex items-center justify-center transition-all duration-500">
               <svg
                 className="w-5 h-5 lg:w-6 lg:h-6 text-foreground group-hover:text-background transition-all duration-500"
                 fill="none"

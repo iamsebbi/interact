@@ -153,7 +153,7 @@ export function Info() {
                       download="CV_Prisecaru_Sebastian.pdf"
                       className="group flex flex-row items-center gap-5 transition-all duration-500"
                     >
-                      <div className="w-12 h-12 lg:w-12 lg:h-12 rounded-full border-[2px] border-white flex items-center justify-center group-hover:bg-white group-hover:border-white group-active:bg-white group-active:scale-90 transition-all duration-500 shrink-0">
+                      <div className="w-12 h-12 lg:w-12 lg:h-12 rounded-full border border-white/30 flex items-center justify-center group-hover:bg-white group-hover:border-white group-active:bg-white group-active:scale-90 transition-all duration-500 shrink-0">
                         <svg
                           className="w-5 h-5 lg:w-6 lg:h-6 text-white group-hover:text-black group-active:text-black transition-colors"
                           fill="none"
@@ -182,7 +182,7 @@ export function Info() {
                       href="mailto:hello.iamsebbi@gmail.com"
                       className="group flex flex-row items-center gap-5 transition-all duration-500"
                     >
-                      <div className="w-12 h-12 lg:w-12 lg:h-12 rounded-full border-[2px] border-white flex items-center justify-center group-hover:bg-white group-hover:border-white group-active:bg-white group-active:scale-90 transition-all duration-500 shrink-0">
+                      <div className="w-12 h-12 lg:w-12 lg:h-12 rounded-full border border-white/30 flex items-center justify-center group-hover:bg-white group-hover:border-white group-active:bg-white group-active:scale-90 transition-all duration-500 shrink-0">
                         <svg
                           className="w-5 h-5 lg:w-6 lg:h-6 text-white group-hover:text-black group-active:text-black transition-colors"
                           fill="none"
@@ -265,7 +265,7 @@ export function Info() {
           download="CV_Prisecaru_Sebastian.pdf"
           className="group flex flex-row items-center justify-start gap-5 transition-all duration-500"
         >
-          <div className="w-12 h-12 rounded-full border-[2px] border-foreground flex items-center justify-center group-active:bg-foreground group-active:scale-90 transition-all duration-500 shrink-0">
+          <div className="w-12 h-12 rounded-full border border-foreground/20 flex items-center justify-center group-active:bg-foreground group-active:scale-90 transition-all duration-500 shrink-0">
             <svg
               className="w-5 h-5 text-foreground group-active:text-background transition-colors"
               fill="none"
@@ -294,7 +294,7 @@ export function Info() {
           href="mailto:hello.iamsebbi@gmail.com"
           className="group flex flex-row items-center justify-start gap-5 transition-all duration-500"
         >
-          <div className="w-12 h-12 rounded-full border-[2px] border-foreground flex items-center justify-center group-active:bg-foreground group-active:scale-90 transition-all duration-500 shrink-0">
+          <div className="w-12 h-12 rounded-full border border-foreground/20 flex items-center justify-center group-active:bg-foreground group-active:scale-90 transition-all duration-500 shrink-0">
             <svg
               className="w-5 h-5 text-foreground group-active:text-background transition-colors"
               fill="none"

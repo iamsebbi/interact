@@ -1,24 +1,13 @@
 import type { Metadata } from "next";
 import {
-  Geist,
-  Geist_Mono,
   Google_Sans,
   Special_Gothic_Expanded_One,
+  Lekton,
 } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { GridHelper } from "@/components/GridHelper";
 import { GridToggle } from "@/components/GridToggle";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 const googleSans = Google_Sans({
   variable: "--font-google-sans",
@@ -30,6 +19,12 @@ const specialGothic = Special_Gothic_Expanded_One({
   variable: "--font-special",
   subsets: ["latin"],
   weight: ["400"],
+});
+
+const lekton = Lekton({
+  variable: "--font-lekton",
+  subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
@@ -45,7 +40,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${googleSans.variable} ${specialGothic.variable} antialiased transition-colors duration-300`}
+      className={`${googleSans.variable} ${specialGothic.variable} ${lekton.variable} antialiased transition-colors duration-300`}
       suppressHydrationWarning
     >
       <body

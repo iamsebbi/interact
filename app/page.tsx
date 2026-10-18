@@ -1,8 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Hero } from "@/components/Hero";
-import { Info } from "@/components/Info";
-import { Works } from "@/components/Works";
+// import { Info } from "@/components/Info";
+// import { Works } from "@/components/Works";
+import { ProjectMarquee } from "@/components/ProjectMarquee";
+import { ProjectIndex } from "@/components/ProjectIndex";
+import { DESIGN_MARQUEE_ITEMS } from "@/lib/marquee-data";
 import { Experience } from "@/components/Experience";
 import { BrutalistDivider } from "@/components/BrutalistDivider";
 import { Contact } from "@/components/Contact";
@@ -39,10 +42,17 @@ export default function Home() {
         <Navbar />
         <main>
           <Hero />
-          <Info />
-          <Works />
+          {/* <Info /> */}
+          <ProjectIndex />
           <BrutalistDivider />
-          <Experience />
+          <ProjectMarquee
+            id="design"
+            badge="02 / Design"
+            title="Visual Design & Branding Architecture • 2024–2026"
+            items={DESIGN_MARQUEE_ITEMS}
+            baseSpeed={42}
+          />
+          {/* <Experience /> — moved to dedicated /history page */}
           <Contact />
         </main>
       </div>

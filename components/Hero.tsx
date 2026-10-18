@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import { Section } from "./Section";
+import { useTheme } from "./ThemeProvider";
+import { ProjectMarquee } from "./ProjectMarquee";
+import { WEB_MARQUEE_ITEMS } from "@/lib/marquee-data";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -11,95 +11,56 @@ if (globalThis.window !== undefined) {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const FRAME_IMAGES = ["/1.jpg", "/2.jpg", "/3.jpg", "/4.jpg"];
-
 export function Hero() {
-  const [currentIdx, setCurrentIdx] = useState(0);
-
-  useEffect(() => {
-    // Rapid sequence interval (strobe effect)
-    const interval = setInterval(() => {
-      setCurrentIdx((prev) => (prev + 1) % FRAME_IMAGES.length);
-    }, 400);
-
-    return () => clearInterval(interval);
-  }, []);
+  const { language } = useTheme();
+  const isRO = language === "RO";
 
   useGSAP(() => {
     gsap.from(".hero-reveal", {
-      yPercent: 100,
-      duration: 1.2,
+      y: 25,
+      opacity: 0,
+      duration: 1.1,
       stagger: 0.1,
-      ease: "power4.out",
-      delay: 0.2,
+      ease: "power3.out",
+      delay: 0.15,
     });
   });
 
   return (
-    <Section
-      grid={false}
-      className="min-h-screen pt-20 md:pt-32 pb-20 flex items-center justify-center overflow-hidden relative"
-    >
-      <div className="w-full max-w-7xl mx-auto px-6 flex flex-col items-center text-center">
-        {/* ROW 1: THE ART */}
-        <div className="w-full overflow-hidden">
-          <h1 className="hero-reveal font-special text-[15vw] lg:text-[10rem] uppercase leading-[0.8] tracking-tighter text-foreground">
-            THE ART
+    <section className="min-h-screen min-h-[100dvh] flex flex-col justify-between pt-20 sm:pt-24 md:pt-28 pb-4 md:pb-6 overflow-hidden relative">
+      {/* UPPER AREA: THE ART OF — [ABOUT ME LEKTON] — MAKING IT WORK. */}
+      <div className="my-auto py-4 md:py-6 lg:py-8 w-full max-w-480 mx-auto px-4 md:px-12 flex flex-col items-center justify-center text-center">
+        <div className="hero-reveal flex flex-col md:flex-row items-center justify-center gap-5 sm:gap-6 md:gap-10 lg:gap-12 xl:gap-16 select-none">
+          {/* LEFT PART: THE ART OF */}
+          <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-[44px] xl:text-[52px] font-light uppercase tracking-tight text-foreground whitespace-nowrap leading-none">
+            THE ART OF
           </h1>
-        </div>
 
-        {/* ROW 2: *( [IMG] ) portfolio */}
-        <div className="w-full overflow-hidden">
-          <div className="hero-reveal flex items-center justify-center gap-4 my-4 lg:my-8">
-            <span className="font-special text-[12vw] lg:text-[5rem] text-foreground">
-              *
-            </span>
-            <div className="flex items-center">
-              <span className="font-special text-[18vw] lg:text-[6rem] leading-none text-foreground">
-                (
-              </span>
-              <div className="relative w-[25vw] h-[25vw] lg:w-32 lg:h-32 mx-2 overflow-hidden bg-card border border-border shrink-0">
-                {FRAME_IMAGES.map((src, i) => (
-                  <div
-                    key={src}
-                    className={`absolute inset-0 transition-none ${i === currentIdx ? "opacity-100" : "opacity-0"}`}
-                  >
-                    <Image
-                      src={src}
-                      alt={`Portrait ${i + 1}`}
-                      fill
-                      className="object-cover"
-                      priority={i === 0}
-                      sizes="(max-width: 768px) 50vw, 25vw"
-                    />
-                  </div>
-                ))}
-              </div>
-              <span className="font-special text-[18vw] lg:text-[6rem] leading-none text-foreground">
-                )
-              </span>
-            </div>
-
-            <span className="font-sans text-xl lg:text-3xl font-semibold text-foreground self-end mb-2 lg:mb-4">
-              Portfolio
-            </span>
+          {/* MIDDLE ELEMENT: ABOUT ME TEXT BLOCK (LEKTON, JUSTIFIED) */}
+          <div className="max-w-[280px] sm:max-w-[310px] md:max-w-[340px] lg:max-w-[380px] xl:max-w-[400px] px-1 md:px-0 my-2 md:my-0">
+            <p className="font-body text-[13.5px] sm:text-[14.5px] md:text-[15.5px] lg:text-[16.5px] xl:text-[17.5px] leading-[1.4] text-justify text-foreground/85 select-text tracking-tight">
+              {isRO
+                ? "Sebastian Prisecaru — developer & designer creativ explorând intersecția dintre artă și inginerie digitală. Construiesc experiențe digitale și sisteme interactive care par vii."
+                : "Sebastian Prisecaru — creative developer & designer exploring the intersection of art and digital engineering. Crafting bespoke experiences and interactive systems that feel alive."}
+            </p>
           </div>
-        </div>
 
-        {/* ROW 3: OF MAKING */}
-        <div className="w-full overflow-hidden">
-          <h2 className="hero-reveal font-special text-[15vw] lg:text-[10rem] uppercase leading-[0.8] tracking-tighter text-foreground">
-            OF MAKING
-          </h2>
-        </div>
-
-        {/* ROW 4: IT WORK */}
-        <div className="w-full overflow-hidden">
-          <h2 className="hero-reveal font-special text-[15vw] lg:text-[10rem] uppercase leading-[0.8] tracking-tighter text-foreground">
-            IT WORK
+          {/* RIGHT PART: MAKING IT WORK. */}
+          <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-[44px] xl:text-[52px] font-light uppercase tracking-tight text-foreground whitespace-nowrap leading-none">
+            MAKING IT WORK.
           </h2>
         </div>
       </div>
-    </Section>
+
+      {/* LOWER AREA: FIRST MARQUEE (WEB) INCLUDED DIRECTLY IN HERO VIEWPORT */}
+      <div className="w-full shrink-0">
+        <ProjectMarquee
+          id="works"
+          items={WEB_MARQUEE_ITEMS}
+          baseSpeed={48}
+          className="py-0"
+        />
+      </div>
+    </section>
   );
 }

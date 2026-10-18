@@ -48,7 +48,7 @@ export function LanguageToggle() {
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className={`relative flex items-center justify-center w-12 h-12 transition-all duration-300 rounded-full border border-foreground cursor-pointer group ${
+        className={`relative flex items-center justify-center w-12 h-12 transition-all duration-300 rounded-full border border-foreground/20 hover:border-foreground/40 cursor-pointer group ${
           isOpen
             ? "bg-foreground text-background"
             : "bg-background text-foreground hover:bg-foreground hover:text-background"
@@ -79,7 +79,7 @@ export function LanguageToggle() {
         <div
           role="listbox"
           aria-label={language === "RO" ? "Opțiuni limbă" : "Language options"}
-          className="absolute top-full mt-2.5 right-0 min-w-36 p-1.5 bg-background/95 backdrop-blur-md border border-foreground rounded-2xl shadow-xl z-50 flex flex-col gap-1 animate-in fade-in zoom-in-95 duration-150"
+          className="absolute top-full mt-2.5 right-0 min-w-36 p-1.5 bg-background/95 backdrop-blur-md border border-border rounded-2xl shadow-xl z-50 flex flex-col gap-1 animate-in fade-in zoom-in-95 duration-150"
         >
           {LANGUAGES.map((item) => {
             const isSelected = language === item.code;

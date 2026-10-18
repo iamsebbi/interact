@@ -14,7 +14,7 @@ export function Navbar() {
   const isRO = language === "RO";
   const navLinks = [
     { name: isRO ? "Lucrari" : "Work", href: "/#works" },
-    { name: isRO ? "Despre mine" : "About", href: "/#about" },
+    { name: isRO ? "Istoric" : "History", href: "/history" },
     { name: "Contact", href: "/#contact" },
   ];
   const [isOpen, setIsOpen] = useState(false);
@@ -62,7 +62,7 @@ export function Navbar() {
           "--nav-padding-x": isDesktop ? "64px" : "20px",
           "--nav-bg-opacity": isDesktop ? "0.8" : "0.7",
           "--nav-blur": "24px",
-          "--nav-border-opacity": "1",
+          "--nav-border-opacity": "0.15",
           "--nav-shadow-opacity": "1",
           duration,
           ease: "power3.inOut",
@@ -185,6 +185,8 @@ export function Navbar() {
   }, [isOpen]);
 
   const handleScroll = (e: React.MouseEvent, href: string) => {
+    if (isOpen) setIsOpen(false);
+
     const isAnchor = href.includes("#");
     const isHomePage = window.location.pathname === "/";
 
@@ -193,15 +195,12 @@ export function Navbar() {
       const targetId = href.split("#")[1];
       const elem = document.getElementById(targetId);
       if (elem) {
-        if (isOpen) setIsOpen(false);
         const top = elem.getBoundingClientRect().top + window.scrollY - 64;
         window.scrollTo({
           top,
           behavior: "smooth",
         });
       }
-    } else if (isAnchor) {
-      if (isOpen) setIsOpen(false);
     }
   };
 
@@ -247,10 +246,10 @@ export function Navbar() {
 
             // Visuals Mapping
             backgroundColor: `rgba(var(--nav-bg-rgb, 255, 255, 255), var(--nav-bg-opacity))`,
-            backdropFilter: "blur(var(--nav-blur)) saturate(1.8)",
-            WebkitBackdropFilter: "blur(var(--nav-blur)) saturate(1.8)",
+            backdropFilter: "blur(var(--nav-blur)) saturate(180%)",
+            WebkitBackdropFilter: "blur(var(--nav-blur)) saturate(180%)",
             borderWidth: "0px",
-            boxShadow: `inset 0 0 0 2px rgba(var(--foreground-rgb), var(--nav-border-opacity)), 0 10px 15px -2px rgba(0,0,0,calc(0.1 * var(--nav-shadow-opacity))), 0 4px 6px -2px rgba(0,0,0,calc(0.05 * var(--nav-shadow-opacity)))`,
+            boxShadow: `inset 0 0 0 1px rgba(var(--foreground-rgb), var(--nav-border-opacity)), 0 10px 15px -2px rgba(0,0,0,calc(0.1 * var(--nav-shadow-opacity))), 0 4px 6px -2px rgba(0,0,0,calc(0.05 * var(--nav-shadow-opacity)))`,
 
             willChange: "transform, width, padding, border-radius",
           } as React.CSSProperties
@@ -259,8 +258,7 @@ export function Navbar() {
         {/* Logo - Force stretch prevention */}
         <Link
           href="/"
-          className="shrink-0 text-2xl tracking-tighter text-foreground"
-          style={{ fontFamily: "var(--font-special)" }}
+          className="shrink-0 font-special text-2xl tracking-tighter text-foreground"
         >
           <span>iam</span>
           <span>sebbi</span>
@@ -318,12 +316,12 @@ export function Navbar() {
         className="fixed inset-0 z-100 px-4 flex flex-col items-center invisible pointer-events-none overscroll-contain"
       >
         <div
-          className="absolute inset-0 bg-background/80 backdrop-blur-md backdrop-saturate-[1.8]"
+          className="absolute inset-0 bg-background/80 backdrop-blur-md backdrop-saturate-[180%]"
           onClick={() => setIsOpen(false)}
         />
         <div
           ref={menuRef}
-          className="relative mt-20 bg-background rounded-[32px] p-8 flex flex-col gap-4 shadow-2xl border-[2px] border-foreground w-full max-w-350"
+          className="relative mt-20 bg-background rounded-[32px] p-8 flex flex-col gap-4 shadow-2xl border border-foreground/15 w-full max-w-350"
         >
           {navLinks.map((link) => (
             <Link

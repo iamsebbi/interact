@@ -5,9 +5,17 @@ html {
 }
 
 @theme {
-  --font-sans: "Outfit", sans-serif;
-  --font-special: "Special Gothic Expanded One", sans-serif;
-  --font-mono: "Google Sans Code", monospace;
+  /* FONT FAMILIES */
+  --font-sans: var(--font-lekton), "Lekton", monospace;
+  --font-mono: var(--font-lekton), "Lekton", monospace;
+  --font-lekton: var(--font-lekton), "Lekton", monospace;
+  --font-google-sans: var(--font-google-sans), sans-serif;
+  --font-special: var(--font-special), "Special Gothic Expanded One", sans-serif;
+
+  /* SEMANTIC FONT ROLES */
+  --font-display: var(--font-special), "Special Gothic Expanded One", sans-serif;
+  --font-heading: var(--font-google-sans), sans-serif;
+  --font-body: var(--font-lekton), "Lekton", monospace;
   
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -23,11 +31,14 @@ html {
   --radius-lg: 8px;
   --radius-full: 9999px;
 
+  /* TRACKING TOKENS */
   --tracking-tighter: -0.05em;
   --tracking-tight: -0.025em;
   --tracking-normal: 0em;
+  --tracking-editorial: 0.04em;
   --tracking-wide: 0.025em;
   --tracking-wider: 0.05em;
+  --tracking-caps: 0.08em;
   --tracking-widest: 0.1em;
 }
 
@@ -123,6 +134,43 @@ html {
     font-family: var(--font-special);
     font-weight: 400;
     font-style: normal;
+  }
+
+  /* TYPOGRAPHY PRESETS / TOKENS */
+  .type-hero {
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    font-weight: 300;
+    letter-spacing: var(--tracking-tight);
+    line-height: 1;
+  }
+
+  .type-statement {
+    font-family: var(--font-body);
+    letter-spacing: var(--tracking-tight);
+    line-height: 1.4;
+    text-align: justify;
+  }
+
+  .type-section-title {
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    font-weight: 400;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .type-meta {
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-editorial);
+    font-weight: 400;
+  }
+
+  .type-display {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-tighter);
+    line-height: 1;
   }
 
   .noise-overlay {
