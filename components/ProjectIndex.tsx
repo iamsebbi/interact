@@ -2,7 +2,6 @@
 
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { INDEX_PROJECTS, IndexProject } from "@/lib/index-projects";
 import { Section } from "./Section";
 
@@ -13,10 +12,7 @@ interface ProjectIndexCardProps {
 function ProjectIndexCard({ project }: ProjectIndexCardProps) {
   return (
     <article className="w-full flex flex-col">
-      <Link
-        href={`/works/${project.slug}`}
-        className="block group outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-foreground select-text"
-      >
+      <div className="block group select-text">
         {/* 1. Image container: sharp square corners, no border radius, no borders, no shadows */}
         <div
           className={`relative w-full overflow-hidden bg-muted/20 ${project.aspectClass}`}
@@ -61,7 +57,7 @@ function ProjectIndexCard({ project }: ProjectIndexCardProps) {
             {project.services}
           </p>
         </div>
-      </Link>
+      </div>
     </article>
   );
 }
@@ -88,10 +84,10 @@ export function ProjectIndex() {
         <div className="grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-5 md:gap-6 lg:gap-8 items-start mb-[95px] lg:mb-[200px]">
           {/* Left Block: 8 columns on desktop */}
           <div className="col-span-4 md:col-span-5 lg:col-span-8 flex flex-col text-left">
-            <span className="font-lekton text-sm lg:text-xs uppercase tracking-editorial font-normal text-[#6b645b] dark:text-[#9c9489]">
+            <span className="font-lekton text-xs uppercase tracking-editorial font-normal text-foreground/60 block">
               TOLD DIFFERENT, EVERY TIME.
             </span>
-            <h2 className="font-heading text-[22px] lg:text-xl font-normal tracking-tight text-[#2b2825] dark:text-[#e6e2dc] leading-tight mt-1">
+            <h2 className="font-heading text-xl sm:text-2xl lg:text-3xl font-normal uppercase tracking-tight text-foreground leading-tight mt-1">
               WE’RE VISUAL STORYTELLERS
             </h2>
           </div>

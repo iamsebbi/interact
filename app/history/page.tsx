@@ -202,7 +202,7 @@ export default function HistoryPage() {
             {CAPABILITIES.map((group, idx) => (
               <div key={idx} className="flex flex-col gap-4">
                 <span className="font-lekton text-xs uppercase tracking-wider text-foreground/50">
-                  // {isRO ? group.category.ro : group.category.en}
+                  {"// "}{isRO ? group.category.ro : group.category.en}
                 </span>
                 <ul className="space-y-2">
                   {group.items.map((skill) => (
@@ -218,28 +218,6 @@ export default function HistoryPage() {
               </div>
             ))}
           </section>
-
-          {/* BOTTOM FOOTER / CTA */}
-          <footer className="history-reveal pt-12 border-t border-border/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-            <span className="font-lekton text-xs uppercase tracking-widest text-foreground/40">
-              © {new Date().getFullYear()} iamsebbi. {isRO ? "Toate drepturile rezervate." : "All rights reserved."}
-            </span>
-
-            <div className="flex items-center gap-6">
-              <Link
-                href="/#contact"
-                className="font-lekton text-xs uppercase tracking-wider text-foreground hover:text-primary transition-colors border-b border-foreground/30 hover:border-primary pb-0.5"
-              >
-                {isRO ? "Contactează-mă →" : "Get in touch →"}
-              </Link>
-              <Link
-                href="/"
-                className="font-lekton text-xs uppercase tracking-wider text-foreground/60 hover:text-foreground transition-colors"
-              >
-                {isRO ? "Înapoi acasă" : "Back home"}
-              </Link>
-            </div>
-          </footer>
         </div>
       </main>
     </div>

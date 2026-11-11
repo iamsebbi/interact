@@ -7,6 +7,8 @@ import {
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { GridHelper } from "@/components/GridHelper";
 import { GridToggle } from "@/components/GridToggle";
+import { ContactCTA } from "@/components/ContactCTA";
+import { Footer } from "@/components/Footer";
 import "./globals.css";
 
 const googleSans = Google_Sans({
@@ -50,6 +52,8 @@ export default function RootLayout({
         <ThemeProvider>
           <GridHelper />
           {children}
+          <ContactCTA />
+          <Footer />
           {/* Floating Grid Toggle — bottom-right corner */}
           <div className="fixed bottom-6 right-6 z-50">
             <GridToggle />

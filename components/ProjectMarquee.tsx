@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { MarqueeItem } from "@/lib/marquee-data";
 
 interface ProjectMarqueeProps {
@@ -144,10 +143,8 @@ export function ProjectMarquee({
               setHoveredCardId(null);
             }}
           >
-            <Link
-              href={item.href}
+            <div
               className="block group"
-              tabIndex={setIndex > 0 ? -1 : 0}
             >
               {/* Image container: sharp square corners, no border radius, no borders, no shadows */}
               <div
@@ -172,7 +169,7 @@ export function ProjectMarquee({
                   {item.title} <span className="mx-1">•</span> {item.year}
                 </span>
               </div>
-            </Link>
+            </div>
           </article>
         );
       })}
@@ -192,24 +189,24 @@ export function ProjectMarquee({
         setHoveredCardId(null);
       }}
     >
-      {/* Editorial Header using Google Sans (optional, default hidden) */}
+      {/* Editorial Header using standardized tokens */}
       {showHeader && (badge || title) && (
         <div className="w-full max-w-480 mx-auto px-4 md:px-12 mb-6 md:mb-8">
           <div className="flex items-center justify-between border-b border-border/40 pb-3">
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4">
               {badge && (
-                <span className="font-heading text-xs font-medium uppercase tracking-widest text-foreground/50">
+                <span className="font-lekton text-xs uppercase tracking-editorial font-normal text-foreground/60 block">
                   {badge}
                 </span>
               )}
               {title && (
-                <h2 className="font-heading text-xs md:text-sm font-medium uppercase tracking-caps text-foreground/70">
+                <h2 className="font-heading text-xl sm:text-2xl lg:text-3xl font-normal uppercase tracking-tight text-foreground leading-tight">
                   {title}
                 </h2>
               )}
             </div>
 
-            <span className="font-lekton text-xs uppercase tracking-widest text-foreground/40">
+            <span className="font-lekton text-xs uppercase tracking-editorial text-foreground/50">
               [ {items.length} works ]
             </span>
           </div>
