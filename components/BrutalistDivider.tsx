@@ -41,10 +41,10 @@ export function BrutalistDivider() {
           <div className="relative w-full lg:w-max flex items-center justify-center">
             {/* LARGE DECORATORS */}
             <div className="absolute right-full hidden lg:flex items-center gap-8 pr-10">
-              <span className="font-special text-6xl lg:text-[8rem] text-foreground">
+              <span className="font-heading font-light text-6xl lg:text-[8rem] text-foreground">
                 *
               </span>
-              <span className="font-special text-8xl lg:text-[15rem] leading-none text-foreground">
+              <span className="font-heading font-light text-8xl lg:text-[15rem] leading-none text-foreground">
                 (
               </span>
             </div>
@@ -69,7 +69,7 @@ export function BrutalistDivider() {
 
             {/* RIGHT DECORATOR */}
             <div className="absolute left-full hidden lg:pl-10 lg:flex">
-              <span className="font-special text-8xl lg:text-[15rem] leading-none text-foreground">
+              <span className="font-heading font-light text-8xl lg:text-[15rem] leading-none text-foreground">
                 )
               </span>
             </div>

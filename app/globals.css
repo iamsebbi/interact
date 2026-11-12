@@ -10,10 +10,10 @@ html {
   --font-mono: var(--font-lekton), "Lekton", monospace;
   --font-lekton: var(--font-lekton), "Lekton", monospace;
   --font-google-sans: var(--font-google-sans), sans-serif;
-  --font-special: var(--font-special), "Special Gothic Expanded One", sans-serif;
+  --font-google-sans-flex: var(--font-google-sans), sans-serif;
 
   /* SEMANTIC FONT ROLES */
-  --font-display: var(--font-special), "Special Gothic Expanded One", sans-serif;
+  --font-display: var(--font-google-sans), sans-serif;
   --font-heading: var(--font-google-sans), sans-serif;
   --font-body: var(--font-lekton), "Lekton", monospace;
   
@@ -90,6 +90,88 @@ html {
     font-optical-sizing: auto;
   }
 
+  /* ========================================================
+     TYPOGRAPHY POLISH: CSS SWITCHES (PROGRESSIVE ENHANCEMENT)
+     ======================================================== */
+
+  /* 1. Headings break into even lines (no lonely orphan words) */
+  h1, h2, h3, h4, h5, h6,
+  .type-hero,
+  .type-section-title,
+  .type-display,
+  [data-heading] {
+    text-wrap: balance;
+  }
+
+  /* 2. No lone word at the end of a paragraph / description */
+  p, li, dd, figcaption, blockquote, .type-statement {
+    text-wrap: pretty;
+  }
+
+  /* 3. Numbers that change keep their width */
+  table,
+  [role="table"],
+  time,
+  .tabular-nums,
+  [data-counter],
+  .font-mono,
+  [class*="font-mono"] {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 4. Button labels stay on one line in flex rows */
+  button,
+  [role="button"],
+  .btn,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* 5. Safe truncation for flex items and text nodes */
+  .truncate-ellipsis {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  /* 6. Justified body text paired with hyphens */
+  :is(html:lang(ro), html:lang(en)) .text-justify,
+  :is(html:lang(ro), html:lang(en)) .type-statement {
+    hyphens: auto;
+    overflow-wrap: break-word;
+  }
+
+  /* 7 & 8. Ideographic scripts: autospace between Hanzi/Kanji and Latin/digits, plus bracket trim */
+  :is(:lang(zh), :lang(ja)) {
+    text-autospace: normal;
+    text-spacing-trim: trim-start;
+  }
+
+  :is(:lang(zh), :lang(ja)) :is(code, kbd, samp, pre, input, textarea, .font-mono, [class*="font-mono"]) {
+    text-autospace: no-autospace;
+  }
+
+  /* 9. Headings in no-space scripts break between words */
+  :is(:lang(zh), :lang(ja), :lang(th)) :is(h1, h2, h3, h4, h5, h6) {
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+
+  :lang(ko) :is(h1, h2, h3, h4, h5, h6) {
+    word-break: keep-all;
+    text-wrap: balance;
+  }
+
+  /* 10. Kinsoku punctuation safety: prevent arbitrary mid-word/punctuation breaking */
+  body {
+    overflow-wrap: anywhere;
+  }
+
   .dark body {
     background-color: var(--background);
   }
@@ -130,12 +212,6 @@ html {
     box-shadow: 0 0 20px rgba(255, 107, 53, 0.2);
   }
 
-  .special-gothic-expanded-one-regular {
-    font-family: var(--font-special);
-    font-weight: 400;
-    font-style: normal;
-  }
-
   /* TYPOGRAPHY PRESETS / TOKENS */
   .type-hero {
     font-family: var(--font-heading);
@@ -150,6 +226,8 @@ html {
     letter-spacing: var(--tracking-tight);
     line-height: 1.4;
     text-align: justify;
+    hyphens: auto;
+    text-wrap: pretty;
   }
 
   .type-section-title {

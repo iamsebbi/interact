@@ -168,20 +168,21 @@ export function ContactCTA() {
 
           <div className="space-y-2 pt-1">
             {/* ROW 1: MAIL */}
-            <div className="flex items-baseline gap-1.5">
+            <div className="flex items-baseline gap-1.5 min-w-0">
               <span className="font-lekton text-xs uppercase tracking-editorial text-foreground/50 shrink-0">
                 MAIL:
               </span>
               <a
                 href="mailto:hello.iamsebbi@gmail.com"
-                className="font-heading text-xs sm:text-sm uppercase tracking-tight text-foreground hover:text-primary transition-colors"
+                title="hello.iamsebbi@gmail.com"
+                className="font-heading text-xs sm:text-sm uppercase tracking-tight text-foreground hover:text-primary transition-colors truncate-ellipsis"
               >
                 HELLO.IAMSEBBI@GMAIL.COM
               </a>
             </div>
 
             {/* ROW 2: WHATSAPP */}
-            <div className="flex items-baseline gap-1.5">
+            <div className="flex items-baseline gap-1.5 min-w-0">
               <span className="font-lekton text-xs uppercase tracking-editorial text-foreground/50 shrink-0">
                 WHATSAPP:
               </span>
@@ -189,7 +190,8 @@ export function ContactCTA() {
                 href="https://wa.me/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-heading text-xs sm:text-sm uppercase tracking-tight text-foreground hover:text-primary transition-colors"
+                title="CLICK TO CHAT"
+                className="font-heading text-xs sm:text-sm uppercase tracking-tight text-foreground hover:text-primary transition-colors truncate-ellipsis"
               >
                 CLICK TO CHAT
               </a>

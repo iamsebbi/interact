@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import {
-  Google_Sans,
-  Special_Gothic_Expanded_One,
+  Google_Sans_Flex,
   Lekton,
 } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -11,16 +10,9 @@ import { ContactCTA } from "@/components/ContactCTA";
 import { Footer } from "@/components/Footer";
 import "./globals.css";
 
-const googleSans = Google_Sans({
+const googleSansFlex = Google_Sans_Flex({
   variable: "--font-google-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
-});
-
-const specialGothic = Special_Gothic_Expanded_One({
-  variable: "--font-special",
-  subsets: ["latin"],
-  weight: ["400"],
 });
 
 const lekton = Lekton({
@@ -42,7 +34,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${googleSans.variable} ${specialGothic.variable} ${lekton.variable} antialiased transition-colors duration-300`}
+      className={`${googleSansFlex.variable} ${lekton.variable} antialiased transition-colors duration-300`}
       suppressHydrationWarning
     >
       <body

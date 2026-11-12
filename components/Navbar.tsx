@@ -258,10 +258,28 @@ export function Navbar() {
         {/* Logo - Force stretch prevention */}
         <Link
           href="/"
-          className="shrink-0 font-special text-2xl tracking-tighter text-foreground"
+          className="shrink-0 font-heading font-normal text-2xl tracking-tighter text-foreground flex items-center gap-1.5"
         >
-          <span>iam</span>
-          <span>sebbi</span>
+          <svg
+            viewBox="0 0 150 150"
+            className="w-6 h-6 text-foreground shrink-0"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <g transform="translate(75, 75)">
+              <rect x="-13" y="-57" width="26" height="57" transform="rotate(0)" />
+              <rect x="-13" y="-57" width="26" height="57" transform="rotate(72)" />
+              <rect x="-13" y="-57" width="26" height="57" transform="rotate(144)" />
+              <rect x="-13" y="-57" width="26" height="57" transform="rotate(216)" />
+              <rect x="-13" y="-57" width="26" height="57" transform="rotate(288)" />
+              <circle r="13" />
+            </g>
+          </svg>
+          <div className="flex">
+            <span>iam</span>
+            <span>sebbi</span>
+          </div>
         </Link>
 
         {/* Desktop - Links with spacing protection */}

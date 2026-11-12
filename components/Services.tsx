@@ -109,7 +109,7 @@ export function Services() {
           {/* COLOANA 3 (DREAPTA): 4 RÂNDURI CU TAG LEKTON + BORDER DESPĂRȚITOR IMEDIAT DUPĂ TAG + DESCRIERE */}
           <GridItem
             span="col-span-full md:col-span-8 lg:col-span-4"
-            className="flex flex-col w-full text-left space-y-8 sm:space-y-10"
+            className="flex flex-col w-full text-left space-y-5 sm:space-y-6"
           >
             {services.map((service, index) => (
               <div key={index} className="flex flex-col w-full">
@@ -119,10 +119,10 @@ export function Services() {
                 </span>
 
                 {/* BORDER DESPĂRȚITOR IMEDIAT DUPĂ TAG */}
-                <div className="w-full border-t border-border/80 mt-1 sm:mt-1.5 mb-2.5 sm:mb-3" />
+                <div className="w-full border-t border-border/80 mt-1 mb-2" />
 
                 {/* TEXT DESCRIERE SERVICIU (FONT GOOGLE SANS) */}
-                <p className="font-google-sans text-sm sm:text-base leading-relaxed text-foreground/80 max-w-xl">
+                <p className="font-google-sans text-sm sm:text-base leading-normal text-foreground/80 max-w-xl">
                   {service.description}
                 </p>
               </div>

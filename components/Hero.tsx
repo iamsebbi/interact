@@ -38,10 +38,10 @@ export function Hero() {
 
           {/* MIDDLE ELEMENT: ABOUT ME TEXT BLOCK (LEKTON, JUSTIFIED) */}
           <div className="max-w-[280px] sm:max-w-[310px] md:max-w-[340px] lg:max-w-[380px] xl:max-w-[400px] px-1 md:px-0 my-2 md:my-0">
-            <p className="font-body text-[13.5px] sm:text-[14.5px] md:text-[15.5px] lg:text-[16.5px] xl:text-[17.5px] leading-[1.4] text-justify text-foreground/85 select-text tracking-tight">
+            <p className="font-body text-[13.5px] sm:text-[14.5px] md:text-[15.5px] lg:text-[16.5px] xl:text-[17.5px] leading-[1.4] text-justify hyphens-auto text-foreground/85 select-text tracking-tight">
               {isRO
-                ? "Sebastian Prisecaru — developer & designer creativ explorând intersecția dintre artă și inginerie digitală. Construiesc experiențe digitale și sisteme interactive care par vii."
-                : "Sebastian Prisecaru — creative developer & designer exploring the intersection of art and digital engineering. Crafting bespoke experiences and interactive systems that feel alive."}
+                ? "Sebastian\u00A0Prisecaru\u00A0— developer & designer creativ explorând intersecția dintre artă și inginerie digitală. Construiesc experiențe digitale și sisteme interactive care par vii."
+                : "Sebastian\u00A0Prisecaru\u00A0— creative developer & designer exploring the intersection of art and digital engineering. Crafting bespoke experiences and interactive systems that feel alive."}
             </p>
           </div>
 

@@ -9,7 +9,7 @@ import { useRef } from "react";
 
 const HISTORY_RO = [
   {
-    period: "2023 — Prezent",
+    period: "2023\u00A0—\u00A0Prezent",
     role: "Senior Creative Developer",
     company: "Unbren Studio",
     location: "București / Remote",
@@ -18,7 +18,7 @@ const HISTORY_RO = [
     tags: ["Next.js", "GSAP", "TypeScript", "Creative Direction", "Performance"],
   },
   {
-    period: "2021 — 2023",
+    period: "2021\u00A0—\u00A02023",
     role: "Full Stack Developer",
     company: "Digital Edge",
     location: "Remote",
@@ -27,7 +27,7 @@ const HISTORY_RO = [
     tags: ["React", "Node.js", "Motion Design", "REST APIs", "Tailwind CSS"],
   },
   {
-    period: "2019 — 2021",
+    period: "2019\u00A0—\u00A02021",
     role: "UI/UX Designer & Frontend Dev",
     company: "Freelance",
     location: "România",
@@ -39,7 +39,7 @@ const HISTORY_RO = [
 
 const HISTORY_EN = [
   {
-    period: "2023 — Present",
+    period: "2023\u00A0—\u00A0Present",
     role: "Senior Creative Developer",
     company: "Unbren Studio",
     location: "Bucharest / Remote",
@@ -48,7 +48,7 @@ const HISTORY_EN = [
     tags: ["Next.js", "GSAP", "TypeScript", "Creative Direction", "Performance"],
   },
   {
-    period: "2021 — 2023",
+    period: "2021\u00A0—\u00A02023",
     role: "Full Stack Developer",
     company: "Digital Edge",
     location: "Remote",
@@ -57,7 +57,7 @@ const HISTORY_EN = [
     tags: ["React", "Node.js", "Motion Design", "REST APIs", "Tailwind CSS"],
   },
   {
-    period: "2019 — 2021",
+    period: "2019\u00A0—\u00A02021",
     role: "UI/UX Designer & Frontend Dev",
     company: "Freelance",
     location: "Romania",
@@ -123,7 +123,7 @@ export default function HistoryPage() {
                 [ {isRO ? "Arhivă Carieră" : "Career Trajectory"} ]
               </span>
               <span className="hidden sm:inline-block font-lekton text-xs uppercase tracking-widest text-foreground/40">
-                • 2019 — {isRO ? "Prezent" : "Present"}
+                • 2019&nbsp;—&nbsp;{isRO ? "Prezent" : "Present"}
               </span>
             </div>
 
@@ -138,7 +138,7 @@ export default function HistoryPage() {
 
           {/* PAGE HEADER */}
           <header className="history-reveal mb-14 md:mb-20">
-            <h1 className="font-special text-5xl sm:text-7xl md:text-8xl lg:text-9xl uppercase tracking-tighter leading-none mb-6 text-foreground">
+            <h1 className="font-heading font-medium text-5xl sm:text-7xl md:text-8xl lg:text-9xl uppercase tracking-tighter leading-none mb-6 text-foreground">
               {isRO ? "Istoric" : "History"}
             </h1>
             <p className="font-lekton text-sm sm:text-base md:text-lg max-w-2xl text-foreground/75 leading-relaxed">

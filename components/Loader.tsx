@@ -82,7 +82,7 @@ export function Loader({ onComplete }: { onComplete: () => void }) {
         {/* Unitary Logo Wrapper */}
         <div ref={logoRef} className="flex flex-col items-center will-change-transform">
           <div className="flex mb-4 pb-4 px-4">
-            <span className="font-special text-[14vw] lg:text-[7.5rem] text-foreground select-none tracking-tighter inline-block">
+            <span className="font-heading font-bold text-[14vw] lg:text-[7.5rem] text-foreground select-none tracking-tighter inline-block">
               {logoText}
             </span>
           </div>

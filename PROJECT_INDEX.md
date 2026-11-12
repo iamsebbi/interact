@@ -28,7 +28,7 @@ From `package.json`:
 ## Root Composition
 
 - `app/layout.tsx`
-  - Loads fonts (Geist, Geist Mono, Google Sans, Special Gothic)
+  - Loads fonts (Google Sans Flex, Lekton)
   - Wraps app with `ThemeProvider`
   - Mounts `GridHelper` + `GridToggle`
   - Imports global styles from `app/globals.css`
