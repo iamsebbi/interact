@@ -6,12 +6,12 @@ export function LanguageSwitcher() {
   const { language, setLanguage } = useTheme();
 
   return (
-    <div className="relative flex w-32 h-12 p-1.5 bg-background border border-foreground/20 rounded-full overflow-hidden transition-all duration-500">
+    <div className="relative flex w-28 h-10 p-1 bg-background border border-foreground/20 rounded-full overflow-hidden transition-all duration-500">
       {/* Sliding Background */}
       <div
-        className="absolute top-1.5 bottom-1.5 left-1.5 bg-foreground transition-transform duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] rounded-full"
+        className="absolute top-1 bottom-1 left-1 bg-foreground transition-transform duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] rounded-full"
         style={{
-          width: "calc(50% - 6px)",
+          width: "calc(50% - 4px)",
           transform: `translateX(${language === "EN" ? "100%" : "0"})`,
         }}
       />

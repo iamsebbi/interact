@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import {
   Google_Sans_Flex,
   Lekton,
@@ -24,7 +24,47 @@ const lekton = Lekton({
 export const metadata: Metadata = {
   title: "iamsebbi | Creative Developer",
   description: "A premium digital experience built by iamsebbi.",
+  appleWebApp: {
+    capable: true,
+    title: "iamsebbi",
+    statusBarStyle: "black-translucent",
+  },
 };
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0d0d0d" },
+  ],
+};
+
+const themeInitScript = `
+(function() {
+  try {
+    var savedTheme = localStorage.getItem("theme");
+    var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var theme = (savedTheme === "dark" || savedTheme === "light") ? savedTheme : (prefersDark ? "dark" : "light");
+    var root = document.documentElement;
+    if (theme === "dark") {
+      root.classList.add("dark");
+      root.style.colorScheme = "dark";
+    } else {
+      root.classList.remove("dark");
+      root.style.colorScheme = "light";
+    }
+    var themeColor = theme === "dark" ? "#0d0d0d" : "#ffffff";
+    var metas = document.querySelectorAll('meta[name="theme-color"]');
+    for (var i = 0; i < metas.length; i++) {
+      metas[i].setAttribute("content", themeColor);
+    }
+    var savedLang = localStorage.getItem("language");
+    if (savedLang === "RO") root.lang = "ro";
+  } catch (e) {}
+})();
+`;
 
 export default function RootLayout({
   children,
@@ -37,8 +77,11 @@ export default function RootLayout({
       className={`${googleSansFlex.variable} ${lekton.variable} antialiased transition-colors duration-300`}
       suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body
-        className="bg-background text-foreground selection:bg-brand/30"
+        className="bg-background text-foreground"
         suppressHydrationWarning
       >
         <ThemeProvider>
@@ -47,7 +90,13 @@ export default function RootLayout({
           <ContactCTA />
           <Footer />
           {/* Floating Grid Toggle — bottom-right corner */}
-          <div className="fixed bottom-6 right-6 z-50">
+          <div
+            className="fixed z-50"
+            style={{
+              bottom: "calc(1.5rem + env(safe-area-inset-bottom))",
+              right: "calc(1.5rem + env(safe-area-inset-right))",
+            }}
+          >
             <GridToggle />
           </div>
         </ThemeProvider>

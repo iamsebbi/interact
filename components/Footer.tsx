@@ -11,7 +11,10 @@ export function Footer() {
   const isRO = language === "RO";
 
   return (
-    <footer className="relative w-full min-h-[480px] md:min-h-[520px] lg:h-[480px] overflow-hidden flex items-center justify-center text-[#F5F2EB] select-none">
+    <footer
+      className="relative w-full min-h-[480px] md:min-h-[520px] lg:h-[480px] overflow-hidden flex items-center justify-center text-[#F5F2EB] select-none"
+      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+    >
       {/* BACKGROUND IMAGE */}
       <Image
         src="/footer-img.avif"
@@ -50,7 +53,7 @@ export function Footer() {
           <div className="flex items-center justify-center gap-6 mt-6 text-[#F5F2EB]/80">
             {/* Instagram */}
             <a
-              href="https://instagram.com"
+              href="https://www.instagram.com/iamsebbi/"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
@@ -76,7 +79,7 @@ export function Footer() {
 
             {/* LinkedIn */}
             <a
-              href="https://linkedin.com"
+              href="https://www.linkedin.com/in/sebastian-prisecaru/"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"
@@ -87,23 +90,18 @@ export function Footer() {
               </svg>
             </a>
 
-            {/* Behance */}
+            {/* X (Twitter) */}
             <a
-              href="https://behance.net"
+              href="https://x.com/iamsebb00"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Behance"
+              aria-label="X"
               className="hover:text-white hover:scale-110 transition-all"
             >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M22 7h-7v-2h7v2zm1.726 10c-.442 1.297-2.029 3-4.971 3-3.457 0-5.755-2.5-5.755-6.002 0-3.497 2.146-5.998 5.755-5.998 3.414 0 5.487 2.303 5.487 5.752 0 .614-.07 1.248-.07 1.248h-8.151c.148 1.583 1.34 2.502 2.923 2.502 1.365 0 2.235-.615 2.627-1.502h2.155zm-7.705-4h5.719c-.113-1.424-1.129-2.186-2.593-2.186-1.531 0-2.812.809-3.126 2.186zm-10.021 7h-6v-14h6.398c2.909 0 4.602 1.488 4.602 3.823 0 1.401-.734 2.551-1.921 3.125 1.637.525 2.521 1.954 2.521 3.654 0 2.396-1.87 3.398-5.6 3.398zm-3-8h2.895c1.332 0 2.105-.633 2.105-1.633 0-1.066-.844-1.617-2.105-1.617h-2.895v3.25zm0 5.25h3.047c1.393 0 2.291-.703 2.291-1.792 0-1.144-.898-1.808-2.291-1.808h-3.047v3.6z"/>
+              <svg className="w-4.5 h-4.5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
               </svg>
             </a>
-
-            {/* W. (Awwwards / Web) */}
-            <span className="font-heading font-bold text-base sm:text-lg tracking-tighter leading-none hover:text-white cursor-default transition-colors">
-              W.
-            </span>
           </div>
         </GridItem>
 
@@ -159,7 +157,7 @@ export function Footer() {
                   download="CV_Prisecaru_Sebastian.pdf"
                   className="font-lekton text-sm sm:text-base uppercase tracking-normal text-[#F5F2EB]/75 hover:text-white transition-colors"
                 >
-                  {isRO ? "CV" : "JOURNAL"}
+                  {isRO ? "CV" : "RESUME"}
                 </a>
               </div>
             </div>

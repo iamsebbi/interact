@@ -8,6 +8,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import { useIsClient } from "@/lib/use-is-client";
 
 type Theme = "dark" | "light";
 type Language = "EN" | "RO";
@@ -20,6 +21,8 @@ interface ThemeContextType {
   language: Language;
   setLanguage: (language: Language) => void;
   toggleLanguage: () => void;
+  isMenuOpen: boolean;
+  setIsMenuOpen: (open: boolean) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -60,21 +63,21 @@ export function ThemeProvider({
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
   const [showGrid, setShowGrid] = useState<boolean>(getInitialGrid);
   const [language, setLanguage] = useState<Language>(getInitialLanguage);
-  const [hydrated, setHydrated] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setHydrated(true);
-    }, 0);
-
-    return () => clearTimeout(timer);
-  }, []);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const hydrated = useIsClient();
 
   const effectiveTheme: Theme = hydrated ? theme : "dark";
   const effectiveLanguage: Language = hydrated ? language : "EN";
   const effectiveShowGrid = hydrated ? showGrid : false;
 
   useEffect(() => {
+    const color = isMenuOpen
+      ? effectiveTheme === "dark"
+        ? "#1a1a1a"
+        : "#f9f9f9"
+      : effectiveTheme === "dark"
+        ? "#0d0d0d"
+        : "#ffffff";
     if (effectiveTheme === "dark") {
       document.documentElement.classList.add("dark");
       document.documentElement.style.colorScheme = "dark";
@@ -82,8 +85,16 @@ export function ThemeProvider({
       document.documentElement.classList.remove("dark");
       document.documentElement.style.colorScheme = "light";
     }
+    document.documentElement.style.backgroundColor = isMenuOpen ? color : "";
     document.documentElement.lang = effectiveLanguage === "RO" ? "ro" : "en";
-  }, [effectiveTheme, effectiveLanguage]);
+
+    const themeMetas = document.querySelectorAll<HTMLMetaElement>(
+      'meta[name="theme-color"]',
+    );
+    themeMetas.forEach((meta) => {
+      meta.content = color;
+    });
+  }, [effectiveTheme, effectiveLanguage, isMenuOpen]);
 
   const toggleTheme = useCallback(() => {
     const newTheme = theme === "dark" ? "light" : "dark";
@@ -116,6 +127,8 @@ export function ThemeProvider({
       language: effectiveLanguage,
       setLanguage: updateLanguage,
       toggleLanguage,
+      isMenuOpen,
+      setIsMenuOpen,
     }),
     [
       effectiveTheme,
@@ -125,6 +138,7 @@ export function ThemeProvider({
       effectiveLanguage,
       updateLanguage,
       toggleLanguage,
+      isMenuOpen,
     ],
   );
 

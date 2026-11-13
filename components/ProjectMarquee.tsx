@@ -32,16 +32,9 @@ export function ProjectMarquee({
   const multiplierRef = useRef(1.0);
   const lastTimeRef = useRef<number | null>(null);
   const singleWidthRef = useRef(0);
-  const [isClient, setIsClient] = useState(false);
   const [hoveredCardId, setHoveredCardId] = useState<string | null>(null);
 
   useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  useEffect(() => {
-    if (!isClient) return;
-
     // Check prefers-reduced-motion
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -104,7 +97,7 @@ export function ProjectMarquee({
       window.removeEventListener("resize", measureWidth);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [baseSpeed, isClient]);
+  }, [baseSpeed]);
 
   const renderCardList = (setIndex: number) => (
     <div
@@ -125,7 +118,7 @@ export function ProjectMarquee({
         return (
           <article
             key={`${item.id}-set${setIndex}-${itemIndex}`}
-            className={`shrink-0 flex flex-col cursor-pointer transition-all duration-500 ease-out ${
+            className={`shrink-0 flex flex-col cursor-default transition-all duration-500 ease-out ${
               isInactive
                 ? "opacity-25 filter grayscale-[40%] scale-[0.98]"
                 : isFocused

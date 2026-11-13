@@ -3,7 +3,6 @@ export interface MarqueeItem {
   title: string;
   year: string;
   image: string;
-  href: string;
   width?: number; // optional custom desktop width (defaults to 220)
   mobileWidth?: number; // optional custom mobile width (defaults to 160)
   height: number; // in pixels (desktop)
@@ -18,7 +17,6 @@ export const POSTER_MARQUEE_ITEMS: MarqueeItem[] = [
     title: "PICTURES IN BRUGES",
     year: "2025",
     image: "/posters/012712120c3940c52d6f6350a99b399b.jpg",
-    href: "/works",
     width: 220,
     mobileWidth: 160,
     height: 275,
@@ -31,7 +29,6 @@ export const POSTER_MARQUEE_ITEMS: MarqueeItem[] = [
     title: "FISH SMOKING",
     year: "2026",
     image: "/posters/02418dc1a9d0521ae22e42380bdf016d.jpg",
-    href: "/works",
     width: 330, // Landscape horizontal
     mobileWidth: 235,
     height: 236,
@@ -44,7 +41,6 @@ export const POSTER_MARQUEE_ITEMS: MarqueeItem[] = [
     title: "HOFT / FENCE",
     year: "2026",
     image: "/posters/ac337eca3b87098bf717cd2aa7f3028d.jpg",
-    href: "/works",
     width: 250, // Square
     mobileWidth: 180,
     height: 250,
@@ -57,7 +53,6 @@ export const POSTER_MARQUEE_ITEMS: MarqueeItem[] = [
     title: "UMBERTO ECO",
     year: "2025",
     image: "/posters/213e12ec5cd9d79a3ed26616b105d33b.jpg",
-    href: "/works",
     width: 210,
     mobileWidth: 150,
     height: 328, // Tall portrait
@@ -70,7 +65,6 @@ export const POSTER_MARQUEE_ITEMS: MarqueeItem[] = [
     title: "I NEED TO CREATE®",
     year: "2026",
     image: "/posters/ba3cbf92f53a06e7b7826ea86bdb19ff.jpg",
-    href: "/works",
     width: 250, // Square
     mobileWidth: 180,
     height: 250,
@@ -83,7 +77,6 @@ export const POSTER_MARQUEE_ITEMS: MarqueeItem[] = [
     title: "RED STAR",
     year: "2025",
     image: "/posters/76bee34c78e73d692eba7127c4bb8f84.jpg",
-    href: "/works",
     width: 330, // Landscape horizontal
     mobileWidth: 235,
     height: 237,
@@ -96,7 +89,6 @@ export const POSTER_MARQUEE_ITEMS: MarqueeItem[] = [
     title: "HIGGSFIELD",
     year: "2026",
     image: "/posters/3a4ff23806ebc8357a056bb376582029.jpg",
-    href: "/works",
     width: 220,
     mobileWidth: 160,
     height: 275,
@@ -109,7 +101,6 @@ export const POSTER_MARQUEE_ITEMS: MarqueeItem[] = [
     title: "INSANITY",
     year: "2025",
     image: "/posters/53be2b63420caf7a55827ad5c400e788.jpg",
-    href: "/works",
     width: 210,
     mobileWidth: 150,
     height: 324, // Tall portrait
@@ -122,7 +113,6 @@ export const POSTER_MARQUEE_ITEMS: MarqueeItem[] = [
     title: "DIVINE SOUL",
     year: "2025",
     image: "/posters/b5578ff0aa91a111abea1858f782466f.jpg",
-    href: "/works",
     width: 250, // Square
     mobileWidth: 180,
     height: 250,
@@ -135,7 +125,6 @@ export const POSTER_MARQUEE_ITEMS: MarqueeItem[] = [
     title: "TODAY'S MESS",
     year: "2026",
     image: "/posters/887ee1f233969b77015e6d6aaba752fd.jpg",
-    href: "/works",
     width: 220,
     mobileWidth: 160,
     height: 275,
@@ -148,7 +137,6 @@ export const POSTER_MARQUEE_ITEMS: MarqueeItem[] = [
     title: "HIKE & CLIMB",
     year: "2026",
     image: "/posters/eadb09513a540600b9541293099658bf.jpg",
-    href: "/works",
     width: 220,
     mobileWidth: 160,
     height: 310,
@@ -161,7 +149,6 @@ export const POSTER_MARQUEE_ITEMS: MarqueeItem[] = [
     title: "HIDDEN STORIES",
     year: "2025",
     image: "/posters/8dc80c4f32ac38b5f1cd92176c95c12d.jpg",
-    href: "/works",
     width: 220,
     mobileWidth: 160,
     height: 275,
@@ -174,7 +161,6 @@ export const POSTER_MARQUEE_ITEMS: MarqueeItem[] = [
     title: "BURGERS & MATCHA",
     year: "2026",
     image: "/posters/9d67681b4c7f30fa045ceab55a19b9d6.jpg",
-    href: "/works",
     width: 220,
     mobileWidth: 160,
     height: 293,
@@ -187,7 +173,6 @@ export const POSTER_MARQUEE_ITEMS: MarqueeItem[] = [
     title: "DICHO Y HECHO",
     year: "2025",
     image: "/posters/a1c3543eee1ab89b2f23c7f86bb41213.jpg",
-    href: "/works",
     width: 220,
     mobileWidth: 160,
     height: 314,
@@ -200,7 +185,6 @@ export const POSTER_MARQUEE_ITEMS: MarqueeItem[] = [
     title: "STATE OF MIND",
     year: "2026",
     image: "/posters/f86304ea4713f5d595bef6246e59b0f0.jpg",
-    href: "/works",
     width: 220,
     mobileWidth: 160,
     height: 310,
@@ -213,7 +197,6 @@ export const POSTER_MARQUEE_ITEMS: MarqueeItem[] = [
     title: "CRUSH",
     year: "2025",
     image: "/posters/fa9933d267aa6e1a146dfde8d6203a2a.jpg",
-    href: "/works",
     width: 220,
     mobileWidth: 160,
     height: 275,
@@ -226,7 +209,6 @@ export const POSTER_MARQUEE_ITEMS: MarqueeItem[] = [
     title: "TOTEM BIRDS",
     year: "2026",
     image: "/posters/fedc2e1d8400d0a4373cfed654b36303.jpg",
-    href: "/works",
     width: 220,
     mobileWidth: 160,
     height: 280,

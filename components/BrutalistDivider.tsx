@@ -10,8 +10,11 @@ export function BrutalistDivider() {
   const [currentIdx, setCurrentIdx] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Strobe effect logic
+  // Strobe effect logic (respects prefers-reduced-motion)
   useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (mediaQuery.matches) return;
+
     const interval = setInterval(() => {
       setCurrentIdx((prev) => (prev + 1) % FRAME_IMAGES.length);
     }, 400);

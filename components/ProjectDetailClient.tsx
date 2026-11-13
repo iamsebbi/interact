@@ -73,7 +73,7 @@ export function ProjectDetailClient({
     >
       <Navbar />
 
-      <main className="grow pt-28 sm:pt-36 pb-20 md:pb-28">
+      <main className="grow pt-[calc(7rem+env(safe-area-inset-top))] sm:pt-[calc(9rem+env(safe-area-inset-top))] pb-20 md:pb-28">
         <div className="w-full max-w-480 mx-auto px-4 md:px-12">
           {/* PROJECT HERO (2 COLUMNS: INFO + TABLE | HERO IMAGE) */}
           <header className="project-reveal grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-stretch mb-14 md:mb-24">

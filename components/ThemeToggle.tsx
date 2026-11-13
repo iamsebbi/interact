@@ -9,7 +9,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="relative flex items-center justify-center w-12 h-12 transition-all duration-300 rounded-full bg-background border border-foreground/20 hover:border-foreground/40 cursor-pointer group overflow-hidden hover:bg-foreground hover:text-background"
+      className="relative flex items-center justify-center w-10 h-10 transition-all duration-300 rounded-full bg-background border border-foreground/20 hover:border-foreground/40 cursor-pointer group overflow-hidden hover:bg-foreground hover:text-background"
       aria-label={
         isRO
           ? theme === "dark"
@@ -20,7 +20,7 @@ export function ThemeToggle() {
             : "Switch to dark mode"
       }
     >
-      <div className="relative w-5 h-5 flex items-center justify-center">
+      <div className="relative w-4.5 h-4.5 flex items-center justify-center">
         {/* Sun Icon */}
         <svg
           xmlns="http://www.w3.org/2000/svg"

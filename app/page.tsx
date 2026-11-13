@@ -1,42 +1,32 @@
 "use client";
-import { useState, useEffect } from "react";
+
+import { useState, useCallback } from "react";
 import { Hero } from "@/components/Hero";
 import { ProjectMarquee } from "@/components/ProjectMarquee";
 import { ProjectIndex } from "@/components/ProjectIndex";
 import { DESIGN_MARQUEE_ITEMS } from "@/lib/marquee-data";
-import { Experience } from "@/components/Experience";
 import { BrutalistDivider } from "@/components/BrutalistDivider";
 import { Services } from "@/components/Services";
 import { Loader } from "@/components/Loader";
 import { Navbar } from "@/components/Navbar";
+import { useIsClient } from "@/lib/use-is-client";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [showLoader, setShowLoader] = useState(false);
+  const isClient = useIsClient();
+  const [loaderDone, setLoaderDone] = useState(false);
 
-  useEffect(() => {
-    // Check if user has already seen the loader in this session
-    const timer = setTimeout(() => {
-      const hasVisited = sessionStorage.getItem("hasVisited");
-      if (hasVisited) {
-        setIsLoading(false);
-      } else {
-        setShowLoader(true);
-      }
-    }, 0);
+  const showLoader =
+    isClient && !loaderDone && !sessionStorage.getItem("hasVisited");
 
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleLoaderComplete = () => {
-    setIsLoading(false);
+  const handleLoaderComplete = useCallback(() => {
     sessionStorage.setItem("hasVisited", "true");
-  };
+    setLoaderDone(true);
+  }, []);
 
   return (
     <>
-      {showLoader && isLoading && <Loader onComplete={handleLoaderComplete} />}
-      <div className={`relative min-h-screen transition-opacity duration-1000 ${isLoading ? "opacity-0" : "opacity-100"}`}>
+      {showLoader && <Loader onComplete={handleLoaderComplete} />}
+      <div className="relative min-h-screen">
         <Navbar />
         <main>
           <Hero />
@@ -50,7 +40,6 @@ export default function Home() {
             items={DESIGN_MARQUEE_ITEMS}
             baseSpeed={42}
           />
-          {/* <Experience /> — moved to dedicated /history page */}
         </main>
       </div>
     </>

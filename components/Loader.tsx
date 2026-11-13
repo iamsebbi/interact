@@ -14,15 +14,18 @@ export function Loader({ onComplete }: { onComplete: () => void }) {
   useEffect(() => {
     let currentProgress = 0;
     let frameId: number;
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    let isCancelled = false;
 
     const updateProgress = () => {
-      const increment = Math.random() * (currentProgress > 80 ? 1.5 : 4) + 1;
+      if (isCancelled) return;
+      const increment = Math.random() * (currentProgress > 80 ? 2.5 : 6) + 2;
       currentProgress = Math.min(100, currentProgress + increment);
       setProgress(Math.floor(currentProgress));
 
       if (currentProgress < 100) {
-        const delay = Math.random() * 20 + (currentProgress > 90 ? 40 : 0);
-        setTimeout(() => {
+        const delay = Math.random() * 15 + (currentProgress > 90 ? 25 : 0);
+        timeoutId = setTimeout(() => {
           frameId = requestAnimationFrame(updateProgress);
         }, delay);
       }
@@ -33,15 +36,19 @@ export function Loader({ onComplete }: { onComplete: () => void }) {
     // Initial Reveal with GSAP (Replaces CSS animation to prevent jumps)
     gsap.fromTo(logoRef.current, 
       { opacity: 0, y: 40, filter: "blur(20px)" },
-      { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.5, ease: "power4.out", delay: 0.2 }
+      { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.1, ease: "power4.out", delay: 0.1 }
     );
     
     gsap.fromTo(progressRef.current,
       { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 1, ease: "power3.out", delay: 0.6 }
+      { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", delay: 0.3 }
     );
 
-    return () => cancelAnimationFrame(frameId);
+    return () => {
+      isCancelled = true;
+      cancelAnimationFrame(frameId);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, []);
 
   // 2. Unitary Exit Animation
@@ -104,7 +111,7 @@ export function Loader({ onComplete }: { onComplete: () => void }) {
         </div>
       </div>
 
-      <div className="absolute inset-0 opacity-[0.015] pointer-events-none mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+      <div className="noise-overlay opacity-[0.02]" />
     </div>
   );
 }

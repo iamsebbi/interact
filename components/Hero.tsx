@@ -27,7 +27,7 @@ export function Hero() {
   });
 
   return (
-    <section className="min-h-screen min-h-[100dvh] flex flex-col justify-between pt-20 sm:pt-24 md:pt-28 pb-4 md:pb-6 overflow-hidden relative">
+    <section className="min-h-screen min-h-[100dvh] flex flex-col justify-between pt-[calc(5rem+env(safe-area-inset-top))] sm:pt-[calc(6rem+env(safe-area-inset-top))] md:pt-[calc(7rem+env(safe-area-inset-top))] pb-[calc(1rem+env(safe-area-inset-bottom))] md:pb-6 overflow-hidden relative">
       {/* UPPER AREA: THE ART OF — [ABOUT ME LEKTON] — MAKING IT WORK. */}
       <div className="my-auto py-4 md:py-6 lg:py-8 w-full max-w-480 mx-auto px-4 md:px-12 flex flex-col items-center justify-center text-center">
         <div className="hero-reveal flex flex-col md:flex-row items-center justify-center gap-5 sm:gap-6 md:gap-10 lg:gap-12 xl:gap-16 select-none">

@@ -114,7 +114,7 @@ export default function HistoryPage() {
     <div ref={containerRef} className="min-h-screen bg-background text-foreground flex flex-col">
       <Navbar />
 
-      <main className="grow pt-28 sm:pt-36 pb-20 md:pb-28">
+      <main className="grow pt-[calc(7rem+env(safe-area-inset-top))] sm:pt-[calc(9rem+env(safe-area-inset-top))] pb-20 md:pb-28">
         <div className="w-full max-w-480 mx-auto px-4 md:px-12">
           {/* TOP TAG & BACK LINK */}
           <div className="history-reveal flex items-center justify-between border-b border-border/40 pb-4 mb-10 md:mb-16">

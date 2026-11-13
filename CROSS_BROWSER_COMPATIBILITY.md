@@ -4,49 +4,22 @@ Audit pentru suportul în Chrome, Firefox, Safari și Edge, cu focus pe ultimele
 
 ## Rezumat
 
-Am identificat 3 probleme reale de compatibilitate, toate în CSS. Nu am găsit API-uri JavaScript sau elemente HTML cu suport limitat care să fie folosite direct în codebase.
+După curățarea CSS-ului din [app/globals.css](app/globals.css), problemele legate de `100dvh` fără fallback și proprietatea individuală `scale` în keyframes au fost remediate. Singurul feature CSS modern rămas pentru layout-uri este `aspect-ratio` (folosit prin utilitare Tailwind pe containere media).
 
-Scor general: 87/100.
+## Status elemente verificate
 
-## Probleme identificate
+### 1. `100dvh` cu fallback (Rezolvat)
+- **Fișier:** [app/globals.css](app/globals.css) și [components/Hero.tsx](components/Hero.tsx)
+- **Status:** Există `min-height: 100vh;` înainte de `min-height: 100dvh;` în `globals.css`, iar `Hero.tsx` folosește `min-h-screen min-h-[100dvh]`.
 
-### 1. `100dvh` fără fallback
-
-- Fișier: [app/globals.css](app/globals.css#L71)
-- Problemă: `min-height: 100dvh`
-- Browsere afectate: Safari 14.x și iOS Safari 14.x
-- Observație: unitățile dynamic viewport nu sunt suportate complet înainte de Safari 15.4
-- Fix recomandat: adaugă fallback la `100vh` și aplică `100dvh` prin `@supports` sau printr-o variabilă CSS
-
-### 2. Proprietatea individuală `scale` în keyframes
-
-- Fișier: [app/globals.css](app/globals.css#L170-L172)
-- Problemă: keyframes folosesc `scale: 1 1`
-- Browsere afectate: Safari 14.0 și iOS Safari 14.0-14.4
-- Observație: suportul stabil pentru proprietățile transform individuale este incomplet în aceste versiuni
-- Fix recomandat: înlocuiește cu `transform: scale(...)`
+### 2. Proprietatea individuală `scale` în keyframes (Rezolvat)
+- **Fișier:** [app/globals.css](app/globals.css)
+- **Status:** Keyframe-ul nefolosit `@keyframes slider-pulse` (care folosea `scale: 1 1`) a fost eliminat.
 
 ### 3. `aspect-ratio` prin utilitare Tailwind
-
-- Fișier: [app/works/page.tsx](app/works/page.tsx#L142)
-- Fișier: [components/Works.tsx](components/Works.tsx#L129)
-- Fișier: [components/DesignProjectLayout.tsx](components/DesignProjectLayout.tsx#L118)
-- Fișier: [components/DesignProjectLayout.tsx](components/DesignProjectLayout.tsx#L134)
-- Fișier: [components/DesignProjectLayout.tsx](components/DesignProjectLayout.tsx#L142)
-- Fișier: [components/DesignProjectLayout.tsx](components/DesignProjectLayout.tsx#L201)
-- Fișier: [components/DesignProjectLayout.tsx](components/DesignProjectLayout.tsx#L255)
-- Fișier: [components/DesignProjectLayout.tsx](components/DesignProjectLayout.tsx#L263)
-- Problemă: utilitare precum `aspect-4/3`, `aspect-4/5`, `aspect-16/10`, `aspect-3/4`, `aspect-21/9`
-- Browsere afectate: Safari 14.x și iOS Safari 14.x
-- Observație: `aspect-ratio` nu este disponibil complet în Safari 14; Chrome 88+, Firefox 89+, Edge 88+ și Safari 15+ sunt ok
-- Fix recomandat: wrapper cu padding-top sau dimensiuni explicite pe breakpoint-uri
-
-## Priorități recomandate
-
-1. Elimină dependența de `aspect-ratio` în zonele cu imagini, deoarece afectează direct layout-ul principal.
-2. Adaugă fallback pentru `100dvh`, ca să eviți probleme de înălțime în Safari 14.
-3. Rescrie keyframes-urile cu `scale` individual în `transform: scale(...)`, pentru a păstra animația pe Safari 14.
-
-## Concluzie
-
-Codebase-ul este în stare bună pentru browserele moderne, dar are o dependență vizibilă de CSS modern care rupe parțial suportul pentru Safari 14.x. Dacă Safari 14+ rămâne o țintă reală, merită rezolvate primele două probleme înainte de optimizări suplimentare.
+- **Fișiere:**
+  - [components/ProjectIndex.tsx](components/ProjectIndex.tsx) (via `project.aspectClass` din [lib/index-projects.ts](lib/index-projects.ts))
+  - [components/ProjectDetailClient.tsx](components/ProjectDetailClient.tsx) (`aspect-[16/10]`, `aspect-[21/9]`, `aspect-[2560/1098]`)
+  - [components/Services.tsx](components/Services.tsx) (`aspect-[491/508]`)
+  - [components/BrutalistDivider.tsx](components/BrutalistDivider.tsx) (`aspect-square`)
+- **Observație:** Suport nativ în Chrome 88+, Firefox 89+, Edge 88+ și Safari 15+. Safari 14.x nu suportă complet `aspect-ratio` pe containere flex/grid fără înălțime explicită; dacă Safari 14 rămâne țintă obligatorie, aceste containere pot primi fallback cu `padding-bottom` procentual.

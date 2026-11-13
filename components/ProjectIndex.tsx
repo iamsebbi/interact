@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { INDEX_PROJECTS, IndexProject } from "@/lib/index-projects";
 import { Section } from "./Section";
+import { useTheme } from "./ThemeProvider";
 
 interface ProjectIndexCardProps {
   project: IndexProject;
@@ -71,12 +72,15 @@ function ProjectIndexCard({ project }: ProjectIndexCardProps) {
 }
 
 export function ProjectIndex() {
+  const { language } = useTheme();
+  const isRO = language === "RO";
+
   // Keep exactly 6 projects (2 rows of 3 on desktop, 3 rows of 2 on mobile)
   const projects = INDEX_PROJECTS.slice(0, 6);
 
   // Mobile (4 cols) & Tablet (8 cols) 2-column distribution:
-  // Col 1: 0, 2, 4 (República Reserve, QXT Energy, Domino Travel)
-  // Col 2: 1, 3, 5 (En Haus, Fuga, Anastomosis)
+  // Col 1: 0, 2, 4 (UNBREN Events, QXT Energy, Domino Travel)
+  // Col 2: 1, 3, 5 (UNBREN Studio, Fuga, Anastomosis)
   const mobileCol1 = projects.filter((_, idx) => idx % 2 === 0);
   const mobileCol2 = projects.filter((_, idx) => idx % 2 === 1);
 
@@ -92,15 +96,15 @@ export function ProjectIndex() {
         <div className="grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-5 md:gap-6 lg:gap-8 items-start mb-12 md:mb-16 lg:mb-20">
           <div className="col-span-full lg:col-span-8 flex flex-col text-left">
             <span className="font-lekton text-xs uppercase tracking-editorial font-normal text-foreground/60 block">
-              TOLD DIFFERENT, EVERY TIME.
+              {isRO ? "SPUS DIFERIT, DE FIECARE DATĂ." : "TOLD DIFFERENT, EVERY TIME."}
             </span>
             <h2 className="font-heading text-xl sm:text-2xl lg:text-3xl font-normal uppercase tracking-tight text-foreground leading-tight mt-1">
-              WE’RE VISUAL STORYTELLERS
+              {isRO ? "CONSTRUIM POVEȘTI VIZUALE" : "WE’RE VISUAL STORYTELLERS"}
             </h2>
             <p className="font-lekton text-sm uppercase tracking-editorial font-normal text-foreground/70 leading-relaxed max-w-xl mt-3">
-              EVERY BRAND HAS ITS OWN STORY, AUDIENCE, PERSONALITY, AND
-              AMBITION. OUR JOB IS TO FIND WHAT MAKES IT DISTINCT AND BUILD
-              FROM THERE.
+              {isRO
+                ? "FIECARE BRAND ARE PROPRIA POVESTE, AUDIENȚĂ, PERSONALITATE ȘI AMBIȚIE. ROLUL MEU ESTE SĂ GĂSESC CE ÎL FACE DISTINCT ȘI SĂ CONSTRUIESC DE ACOLO."
+                : "EVERY BRAND HAS ITS OWN STORY, AUDIENCE, PERSONALITY, AND AMBITION. OUR JOB IS TO FIND WHAT MAKES IT DISTINCT AND BUILD FROM THERE."}
             </p>
           </div>
         </div>

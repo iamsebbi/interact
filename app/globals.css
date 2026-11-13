@@ -63,6 +63,7 @@ html {
   
   html {
     /* Removed smooth scroll as it can conflict with GSAP ScrollTrigger */
+    background-color: var(--background);
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
     /* TOUCH OPTIMIZATIONS */
@@ -79,6 +80,7 @@ html {
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
     letter-spacing: var(--tracking-normal);
+    min-height: 100vh;
     min-height: 100dvh;
     overflow-x: hidden;
     /* Removed global patterns to prevent flashes before loading */
@@ -200,13 +202,6 @@ html {
   .glass {
     @apply bg-background/60 backdrop-blur-md backdrop-saturate-[1.8] border border-border/50;
   }
-  
-  .text-gradient {
-    background: var(--accent-gradient);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
 
   .glow {
     box-shadow: 0 0 20px rgba(255, 107, 53, 0.2);
@@ -292,13 +287,20 @@ html {
     animation: marquee-reverse 80s linear infinite;
   }
 
-  @keyframes slider-pulse {
-    0% { scale: 1 1; }
-    50% { scale: 1.05 1.1; }
-    100% { scale: 1 1; }
+  .nav-morph-bar {
+    --nav-width: 100%;
+    --nav-y: 0px;
+    --nav-radius: 0px;
+    --nav-padding-x: 24px;
+    --nav-bg-opacity: 0;
+    --nav-blur: 0px;
+    --nav-border-opacity: 0;
+    --nav-shadow-opacity: 0;
   }
 
-  .animate-slider-pulse {
-    animation: slider-pulse 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+  @media (min-width: 768px) {
+    .nav-morph-bar {
+      --nav-padding-x: 48px;
+    }
   }
 }

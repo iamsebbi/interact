@@ -48,7 +48,7 @@ export function LanguageToggle() {
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className={`relative flex items-center justify-center w-12 h-12 transition-all duration-300 rounded-full border border-foreground/20 hover:border-foreground/40 cursor-pointer group ${
+        className={`relative flex items-center justify-center w-10 h-10 transition-all duration-300 rounded-full border border-foreground/20 hover:border-foreground/40 cursor-pointer group ${
           isOpen
             ? "bg-foreground text-background"
             : "bg-background text-foreground hover:bg-foreground hover:text-background"
@@ -66,7 +66,7 @@ export function LanguageToggle() {
           strokeWidth="1.75"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="w-5 h-5 transition-transform duration-300 group-hover:scale-110"
+          className="w-4.5 h-4.5 transition-transform duration-300 group-hover:scale-110"
         >
           <circle cx="12" cy="12" r="10" />
           <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
