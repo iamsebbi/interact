@@ -133,18 +133,26 @@ export function ProjectDetailClient({
             </div>
           </header>
 
-          {/* VIDEO STRIP */}
-          {project.video && (
-            <section className="project-reveal w-full mb-14 md:mb-24">
-              <div className="relative w-full aspect-[21/9] max-h-[420px] overflow-hidden bg-card border border-border">
-                <video
-                  src={project.video}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="w-full h-full object-cover"
-                />
+          {/* VERTICAL REELS (9:16): Horizontal snap scroll on < lg, 12-col grid (3 x 4 cols) on lg+ */}
+          {project.verticalVideos && project.verticalVideos.length > 0 && (
+            <section className="project-reveal mb-14 md:mb-24 -mx-4 md:-mx-12 lg:mx-0">
+              <div className="no-scrollbar flex lg:grid lg:grid-cols-12 gap-5 md:gap-6 lg:gap-8 overflow-x-auto lg:overflow-visible snap-x snap-mandatory lg:snap-none px-4 md:px-12 lg:px-0 scroll-px-4 md:scroll-px-12">
+                {project.verticalVideos.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="shrink-0 w-[76%] sm:w-[60%] md:w-[44%] lg:w-auto lg:col-span-4 snap-start relative aspect-[9/16] overflow-hidden bg-card border border-border"
+                  >
+                    <video
+                      src={item.src}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      aria-label={item.alt}
+                      className="w-full h-full object-cover object-center"
+                    />
+                  </div>
+                ))}
               </div>
             </section>
           )}

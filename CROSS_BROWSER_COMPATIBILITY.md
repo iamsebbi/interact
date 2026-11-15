@@ -19,7 +19,7 @@ După curățarea CSS-ului din [app/globals.css](app/globals.css), problemele le
 ### 3. `aspect-ratio` prin utilitare Tailwind
 - **Fișiere:**
   - [components/ProjectIndex.tsx](components/ProjectIndex.tsx) (via `project.aspectClass` din [lib/index-projects.ts](lib/index-projects.ts))
-  - [components/ProjectDetailClient.tsx](components/ProjectDetailClient.tsx) (`aspect-[16/10]`, `aspect-[21/9]`, `aspect-[2560/1098]`)
+  - [components/ProjectDetailClient.tsx](components/ProjectDetailClient.tsx) (`aspect-[16/10]`, `aspect-[9/16]`, `aspect-[2560/1098]`)
   - [components/Services.tsx](components/Services.tsx) (`aspect-[491/508]`)
   - [components/BrutalistDivider.tsx](components/BrutalistDivider.tsx) (`aspect-square`)
 - **Observație:** Suport nativ în Chrome 88+, Firefox 89+, Edge 88+ și Safari 15+. Safari 14.x nu suportă complet `aspect-ratio` pe containere flex/grid fără înălțime explicită; dacă Safari 14 rămâne țintă obligatorie, aceste containere pot primi fallback cu `padding-bottom` procentual.

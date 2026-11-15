@@ -6,6 +6,11 @@ export interface ProjectGalleryItem {
   caption?: { en: string; ro: string };
 }
 
+export interface ProjectVideoItem {
+  src: string;
+  alt: string;
+}
+
 export interface IndexProject {
   id: string;
   slug: string;
@@ -20,7 +25,7 @@ export interface IndexProject {
   href?: string;
   heroImage?: string;
   heroVideo?: string;
-  video?: string;
+  verticalVideos?: ProjectVideoItem[];
   showcaseMedia?: { type: "video" | "image"; src: string; alt: string }[];
   outroVideo?: string;
   client?: string;
@@ -45,8 +50,21 @@ export const INDEX_PROJECTS: IndexProject[] = [
     aspectClass: "aspect-[16/11.5]",
     alt: "UNBREN EVENTS — Creative Photo & Video Agency Cover",
     href: "https://unbren.events.ro",
-    video: `${R2_BASE_URL}/unbren-events/unbren-events-strip.mp4`,
     client: "UNBREN",
+    verticalVideos: [
+      {
+        src: "/projects/unbren-events-reel-1.mp4",
+        alt: "UNBREN Events Vertical Preview 1",
+      },
+      {
+        src: "/projects/unbren-events-reel-2.mp4",
+        alt: "UNBREN Events Vertical Preview 2",
+      },
+      {
+        src: "/projects/unbren-events-reel-3.mp4",
+        alt: "UNBREN Events Vertical Preview 3",
+      },
+    ],
     about: {
       en: "Creative Photo & Video Agency for Events",
       ro: "Agenție Creativă de Foto & Video pentru Evenimente",
@@ -134,12 +152,25 @@ export const INDEX_PROJECTS: IndexProject[] = [
     category: "Mobile App, Entertainment & Media",
     services: "Brand Identity, Mobile App Design & Development",
     accent: "#f26a4b",
-    image: "/projects/kurogane.png",
+    image: "/projects/kurogane-logo-banner.jpg",
     aspectClass: "aspect-square",
     alt: "KUROGANE — Editorial Mobile App for Anime, Donghua & Manga",
-    heroVideo: "/projects/videoheader3.mp4",
-    video: "/projects/stripevideo.mp4",
+    heroImage: "/projects/kurogane-logo-header.jpg",
     client: "KUROGANE",
+    verticalVideos: [
+      {
+        src: "/projects/kurogane-reel-1.mp4",
+        alt: "Kurogane Mobile Interface Preview 1",
+      },
+      {
+        src: "/projects/kurogane-reel-2.mp4",
+        alt: "Kurogane Mobile Interface Preview 2",
+      },
+      {
+        src: "/projects/kurogane-reel-3.mp4",
+        alt: "Kurogane Mobile Interface Preview 3",
+      },
+    ],
     about: {
       en: "Editorial Mobile App for Anime, Donghua & Manga",
       ro: "Aplicație Mobilă Editorială pentru Anime, Donghua și Manga",
