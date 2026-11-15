@@ -12,7 +12,7 @@ import type { IndexProject } from "@/lib/index-projects";
 
 interface ProjectDetailClientProps {
   project: IndexProject;
-  nextProject: IndexProject;
+  nextProject: Pick<IndexProject, "slug" | "title">;
 }
 
 export function ProjectDetailClient({
@@ -108,16 +108,28 @@ export function ProjectDetailClient({
               </div>
             </div>
 
-            {/* HERO COVER IMAGE */}
+            {/* HERO COVER MEDIA */}
             <div className="relative w-full aspect-[16/10] overflow-hidden bg-card border border-border">
-              <Image
-                src={project.heroImage || project.image}
-                alt={project.alt}
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover object-center"
-              />
+              {project.heroVideo ? (
+                <video
+                  src={project.heroVideo}
+                  poster={project.heroImage || project.image}
+                  autoPlay
+                  muted
+                  playsInline
+                  onEnded={(e) => e.currentTarget.pause()}
+                  className="w-full h-full object-cover object-center"
+                />
+              ) : (
+                <Image
+                  src={project.heroImage || project.image}
+                  alt={project.alt}
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover object-center"
+                />
+              )}
             </div>
           </header>
 

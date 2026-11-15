@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { ArrowUpRight } from "lucide-react";
-import { ThemeToggle } from "./ThemeToggle";
-import { LanguageToggle } from "./LanguageToggle";
-import { LanguageSwitcher } from "./LanguageSwitcher";
+import { PreferenceRows } from "./LanguageSwitcher";
+import { DesktopPreferencesMenu } from "./DesktopPreferencesMenu";
+import { SocialLinks } from "./SocialLinks";
 import { useTheme } from "./ThemeProvider";
 import { useIsClient } from "@/lib/use-is-client";
 import gsap from "gsap";
@@ -20,9 +20,10 @@ export function Navbar() {
   } = useTheme();
   const isRO = language === "RO";
   const navLinks = [
-    { num: "01", name: isRO ? "Lucrări" : "Work", href: "/#works" },
-    { num: "02", name: isRO ? "Istoric" : "History", href: "/history" },
-    { num: "03", name: "Contact", href: "/#contact-cta" },
+    { name: isRO ? "Lucrări" : "Work", href: "/#project-index" },
+    { name: isRO ? "Servicii" : "Services", href: "/#services" },
+    { name: isRO ? "Istoric" : "History", href: "/history" },
+    { name: "Contact", href: "/#contact-cta" },
   ];
   const [scrolled, setScrolled] = useState(false);
   const mounted = useIsClient();
@@ -363,9 +364,8 @@ export function Navbar() {
               </div>
             </Link>
           ))}
-          <div className="pl-4 border-l border-border/50 flex items-center gap-3">
-            <LanguageToggle />
-            <ThemeToggle />
+          <div className="pl-4 border-l border-border/50 flex items-center">
+            <DesktopPreferencesMenu />
           </div>
         </div>
 
@@ -407,13 +407,8 @@ export function Navbar() {
           paddingRight: "max(1.25rem, env(safe-area-inset-right))",
         }}
       >
-        {/* TOP SECTION: META TAG + EDITORIAL LINKS */}
+        {/* TOP SECTION: EDITORIAL LINKS */}
         <div className="relative z-10 w-full flex flex-col">
-          <div className="menu-reveal flex items-center justify-between pb-3 text-[11px] font-lekton uppercase tracking-editorial text-foreground/60">
-            <span>[ {isRO ? "NAVIGARE" : "NAVIGATION"} ]</span>
-            <span>BUCHAREST • 44.44° N</span>
-          </div>
-
           <div className="border-t border-border flex flex-col">
             {navLinks.map((link) => (
               <Link
@@ -422,14 +417,9 @@ export function Navbar() {
                 onClick={(e) => handleScroll(e, link.href)}
                 className="menu-reveal group py-5 sm:py-6 border-b border-border flex items-center justify-between gap-4 active:bg-foreground/[0.04] transition-colors"
               >
-                <div className="flex items-baseline gap-4">
-                  <span className="font-lekton text-xs text-foreground/55 tabular-nums group-active:text-primary transition-colors">
-                    {link.num}
-                  </span>
-                  <span className="font-heading text-4xl sm:text-5xl font-light uppercase tracking-tight leading-none text-foreground group-active:text-primary transition-colors">
-                    {link.name}
-                  </span>
-                </div>
+                <span className="font-heading text-4xl sm:text-5xl font-light uppercase tracking-tight leading-none text-foreground group-active:text-primary transition-colors">
+                  {link.name}
+                </span>
 
                 <ArrowUpRight className="w-5 h-5 text-foreground/50 group-active:text-primary group-active:translate-x-0.5 group-active:-translate-y-0.5 transition-all shrink-0" />
               </Link>
@@ -440,20 +430,8 @@ export function Navbar() {
         {/* BOTTOM SECTION: PREFERENCES + DIRECT CONTACT & SOCIALS */}
         <div className="relative z-10 w-full flex flex-col gap-5 pt-8">
           {/* Language & Theme */}
-          <div className="menu-reveal grid grid-cols-2 gap-4 py-4 border-y border-border">
-            <div className="flex flex-col gap-2 items-start">
-              <span className="font-lekton text-[11px] uppercase tracking-editorial text-foreground/60">
-                {isRO ? "LIMBĂ" : "LANGUAGE"}
-              </span>
-              {mounted && <LanguageSwitcher />}
-            </div>
-
-            <div className="flex flex-col gap-2 items-end">
-              <span className="font-lekton text-[11px] uppercase tracking-editorial text-foreground/60">
-                {isRO ? "TEMĂ" : "THEME"}
-              </span>
-              {mounted && <ThemeToggle />}
-            </div>
+          <div className="menu-reveal">
+            {mounted && <PreferenceRows />}
           </div>
 
           {/* Direct Contact + Socials */}
@@ -471,44 +449,14 @@ export function Navbar() {
                 rel="noopener noreferrer"
                 className="font-lekton text-xs uppercase tracking-editorial text-foreground/65 hover:text-primary transition-colors"
               >
-                WHATSAPP • +40 769 695 933
+                WHATSAPP • CLICK TO CHAT
               </a>
             </div>
 
-            <div className="flex items-center gap-5 pt-1 font-lekton text-xs uppercase tracking-editorial text-foreground/65">
-              <a
-                href="https://www.instagram.com/iamsebbi/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-foreground transition-colors"
-              >
-                IG
-              </a>
-              <a
-                href="https://github.com/iamsebbi"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-foreground transition-colors"
-              >
-                GH
-              </a>
-              <a
-                href="https://www.linkedin.com/in/sebastian-prisecaru/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-foreground transition-colors"
-              >
-                LI
-              </a>
-              <a
-                href="https://x.com/iamsebb00"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-foreground transition-colors"
-              >
-                X
-              </a>
-            </div>
+            <SocialLinks
+              className="flex items-center gap-5 pt-1.5 text-foreground/65"
+              linkClassName="hover:text-foreground hover:scale-110 transition-all"
+            />
           </div>
         </div>
       </div>

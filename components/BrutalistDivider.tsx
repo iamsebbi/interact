@@ -10,15 +10,54 @@ export function BrutalistDivider() {
   const [currentIdx, setCurrentIdx] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Strobe effect logic (respects prefers-reduced-motion)
+  // Strobe effect logic (respects prefers-reduced-motion and pauses when off-screen or hidden)
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (mediaQuery.matches) return;
 
-    const interval = setInterval(() => {
-      setCurrentIdx((prev) => (prev + 1) % FRAME_IMAGES.length);
-    }, 400);
-    return () => clearInterval(interval);
+    let interval: ReturnType<typeof setInterval> | null = null;
+    let isVisible = true;
+    let isTabVisible = !document.hidden;
+
+    const syncInterval = () => {
+      if (isVisible && isTabVisible) {
+        if (!interval) {
+          interval = setInterval(() => {
+            setCurrentIdx((prev) => (prev + 1) % FRAME_IMAGES.length);
+          }, 400);
+        }
+      } else if (interval) {
+        clearInterval(interval);
+        interval = null;
+      }
+    };
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry?.isIntersecting ?? true;
+        syncInterval();
+      },
+      { threshold: 0 },
+    );
+    if (containerRef.current) {
+      io.observe(containerRef.current);
+    }
+
+    const handleVisibilityChange = () => {
+      isTabVisible = !document.hidden;
+      syncInterval();
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    syncInterval();
+
+    return () => {
+      io.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
   }, []);
 
   return (

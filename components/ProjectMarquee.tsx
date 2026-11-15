@@ -12,6 +12,7 @@ interface ProjectMarqueeProps {
   baseSpeed?: number; // px per second
   className?: string;
   showHeader?: boolean;
+  eagerFirstSet?: boolean;
 }
 
 export function ProjectMarquee({
@@ -22,6 +23,7 @@ export function ProjectMarquee({
   baseSpeed = 50,
   className = "",
   showHeader = false,
+  eagerFirstSet = false,
 }: ProjectMarqueeProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -60,9 +62,16 @@ export function ProjectMarquee({
     }
     window.addEventListener("resize", measureWidth);
 
-    let animationFrameId: number;
+    let animationFrameId: number | null = null;
+    let isVisible = true;
+    let isTabVisible = !document.hidden;
 
     const animate = (now: number) => {
+      if (!isVisible || !isTabVisible) {
+        animationFrameId = null;
+        return;
+      }
+
       if (lastTimeRef.current === null) {
         lastTimeRef.current = now;
       }
@@ -90,12 +99,46 @@ export function ProjectMarquee({
       animationFrameId = requestAnimationFrame(animate);
     };
 
-    animationFrameId = requestAnimationFrame(animate);
+    const syncLoop = () => {
+      if (isVisible && isTabVisible) {
+        if (animationFrameId === null) {
+          lastTimeRef.current = null;
+          animationFrameId = requestAnimationFrame(animate);
+        }
+      } else if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+        lastTimeRef.current = null;
+      }
+    };
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry?.isIntersecting ?? true;
+        syncLoop();
+      },
+      { threshold: 0 },
+    );
+    if (containerRef.current) {
+      io.observe(containerRef.current);
+    }
+
+    const handleVisibilityChange = () => {
+      isTabVisible = !document.hidden;
+      syncLoop();
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    syncLoop();
 
     return () => {
+      io.disconnect();
       ro.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("resize", measureWidth);
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId);
+      }
     };
   }, [baseSpeed]);
 
@@ -152,7 +195,7 @@ export function ProjectMarquee({
                   fill
                   sizes="(max-width: 768px) 240px, 360px"
                   className="object-cover object-center select-none pointer-events-none"
-                  loading="lazy"
+                  loading={setIndex === 0 && eagerFirstSet ? "eager" : "lazy"}
                 />
               </div>
 

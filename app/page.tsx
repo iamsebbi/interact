@@ -1,36 +1,37 @@
-"use client";
-
-import { useState, useCallback } from "react";
 import { Hero } from "@/components/Hero";
 import { ProjectMarquee } from "@/components/ProjectMarquee";
-import { ProjectIndex } from "@/components/ProjectIndex";
+import { ProjectIndex, type ProjectCardSummary } from "@/components/ProjectIndex";
+import { INDEX_PROJECTS } from "@/lib/index-projects";
 import { DESIGN_MARQUEE_ITEMS } from "@/lib/marquee-data";
 import { BrutalistDivider } from "@/components/BrutalistDivider";
 import { Services } from "@/components/Services";
-import { Loader } from "@/components/Loader";
+import { HomeLoader } from "@/components/HomeLoader";
 import { Navbar } from "@/components/Navbar";
-import { useIsClient } from "@/lib/use-is-client";
+
+// Keep exactly 6 project cards on the homepage and omit case-study copy from RSC props
+const HOME_PROJECT_CARDS: ProjectCardSummary[] = INDEX_PROJECTS.slice(0, 6).map(
+  ({ id, slug, title, year, category, services, image, aspectClass, alt }) => ({
+    id,
+    slug,
+    title,
+    year,
+    category,
+    services,
+    image,
+    aspectClass,
+    alt,
+  }),
+);
 
 export default function Home() {
-  const isClient = useIsClient();
-  const [loaderDone, setLoaderDone] = useState(false);
-
-  const showLoader =
-    isClient && !loaderDone && !sessionStorage.getItem("hasVisited");
-
-  const handleLoaderComplete = useCallback(() => {
-    sessionStorage.setItem("hasVisited", "true");
-    setLoaderDone(true);
-  }, []);
-
   return (
     <>
-      {showLoader && <Loader onComplete={handleLoaderComplete} />}
+      <HomeLoader />
       <div className="relative min-h-screen">
         <Navbar />
         <main>
           <Hero />
-          <ProjectIndex />
+          <ProjectIndex projects={HOME_PROJECT_CARDS} />
           <BrutalistDivider />
           <Services />
           <ProjectMarquee

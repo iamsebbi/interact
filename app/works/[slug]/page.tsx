@@ -44,8 +44,12 @@ export default async function ProjectPage({
   }
 
   const project = INDEX_PROJECTS[projectIndex];
-  const nextProject =
-    INDEX_PROJECTS[(projectIndex + 1) % INDEX_PROJECTS.length];
+  const next = INDEX_PROJECTS[(projectIndex + 1) % INDEX_PROJECTS.length];
 
-  return <ProjectDetailClient project={project} nextProject={nextProject} />;
+  return (
+    <ProjectDetailClient
+      project={project}
+      nextProject={{ slug: next.slug, title: next.title }}
+    />
+  );
 }

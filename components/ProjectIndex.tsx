@@ -3,12 +3,25 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { INDEX_PROJECTS, IndexProject } from "@/lib/index-projects";
+import type { IndexProject } from "@/lib/index-projects";
 import { Section } from "./Section";
 import { useTheme } from "./ThemeProvider";
 
+export type ProjectCardSummary = Pick<
+  IndexProject,
+  | "id"
+  | "slug"
+  | "title"
+  | "year"
+  | "category"
+  | "services"
+  | "image"
+  | "aspectClass"
+  | "alt"
+>;
+
 interface ProjectIndexCardProps {
-  project: IndexProject;
+  project: ProjectCardSummary;
 }
 
 function ProjectIndexCard({ project }: ProjectIndexCardProps) {
@@ -71,12 +84,13 @@ function ProjectIndexCard({ project }: ProjectIndexCardProps) {
   );
 }
 
-export function ProjectIndex() {
+export function ProjectIndex({
+  projects,
+}: {
+  projects: ProjectCardSummary[];
+}) {
   const { language } = useTheme();
   const isRO = language === "RO";
-
-  // Keep exactly 6 projects (2 rows of 3 on desktop, 3 rows of 2 on mobile)
-  const projects = INDEX_PROJECTS.slice(0, 6);
 
   // Mobile (4 cols) & Tablet (8 cols) 2-column distribution:
   // Col 1: 0, 2, 4 (UNBREN Events, QXT Energy, Domino Travel)

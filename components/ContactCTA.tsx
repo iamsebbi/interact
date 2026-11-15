@@ -31,6 +31,47 @@ const INITIAL_FORM_STATE: FormState = {
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const SERVICE_OPTIONS = {
+  RO: [
+    "Dezvoltare Web & Next.js",
+    "Design UI/UX & Produs",
+    "Arhitectură de Brand & Vizuală",
+    "Inginerie Creativă & Animații",
+    "Consultanță & Direcție Tehnică",
+    "Proiect Personalizat",
+  ],
+  EN: [
+    "Web Development & Next.js",
+    "UI/UX & Product Design",
+    "Brand & Visual Architecture",
+    "Creative Engineering & Motion",
+    "Technical Direction & Advisory",
+    "Bespoke Digital System",
+  ],
+} as const;
+
+const BUDGET_OPTIONS = [
+  "< €2,500",
+  "€2,500 – €5,000",
+  "€5,000 – €10,000",
+  "€10,000+",
+] as const;
+
+const TIMELINE_OPTIONS = {
+  RO: [
+    "Urgent (< 3 săptămâni)",
+    "1 – 2 luni",
+    "3+ luni",
+    "Termen flexibil",
+  ],
+  EN: [
+    "Urgent (< 3 weeks)",
+    "1 – 2 months",
+    "3+ months",
+    "Flexible timeline",
+  ],
+} as const;
+
 export function ContactCTA() {
   const { language } = useTheme();
   const isRO = language === "RO";
@@ -56,44 +97,9 @@ export function ContactCTA() {
     };
   }, []);
 
-  const serviceOptions = isRO
-    ? [
-        "Dezvoltare Web & Next.js",
-        "Design UI/UX & Produs",
-        "Arhitectură de Brand & Vizuală",
-        "Inginerie Creativă & Animații",
-        "Consultanță & Direcție Tehnică",
-        "Proiect Personalizat",
-      ]
-    : [
-        "Web Development & Next.js",
-        "UI/UX & Product Design",
-        "Brand & Visual Architecture",
-        "Creative Engineering & Motion",
-        "Technical Direction & Advisory",
-        "Bespoke Digital System",
-      ];
-
-  const budgetOptions = [
-    "< €2,500",
-    "€2,500 – €5,000",
-    "€5,000 – €10,000",
-    "€10,000+",
-  ];
-
-  const timelineOptions = isRO
-    ? [
-        "Urgent (< 3 săptămâni)",
-        "1 – 2 luni",
-        "3+ luni",
-        "Termen flexibil",
-      ]
-    : [
-        "Urgent (< 3 weeks)",
-        "1 – 2 months",
-        "3+ months",
-        "Flexible timeline",
-      ];
+  const serviceOptions = isRO ? SERVICE_OPTIONS.RO : SERVICE_OPTIONS.EN;
+  const budgetOptions = BUDGET_OPTIONS;
+  const timelineOptions = isRO ? TIMELINE_OPTIONS.RO : TIMELINE_OPTIONS.EN;
 
   const toggleService = (service: string) => {
     setForm((prev) => {
@@ -308,10 +314,10 @@ export function ContactCTA() {
                 href="https://wa.me/40769695933"
                 target="_blank"
                 rel="noopener noreferrer"
-                title="+40 769 695 933"
+                title="WhatsApp — Click to chat"
                 className="font-heading text-xs sm:text-sm uppercase tracking-tight text-foreground hover:text-primary transition-colors truncate-ellipsis"
               >
-                +40 769 695 933
+                CLICK TO CHAT
               </a>
             </div>
           </div>

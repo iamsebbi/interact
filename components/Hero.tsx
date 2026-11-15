@@ -4,12 +4,7 @@ import { useTheme } from "./ThemeProvider";
 import { ProjectMarquee } from "./ProjectMarquee";
 import { WEB_MARQUEE_ITEMS } from "@/lib/marquee-data";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-
-if (globalThis.window !== undefined) {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 export function Hero() {
   const { language } = useTheme();
@@ -59,6 +54,7 @@ export function Hero() {
           items={WEB_MARQUEE_ITEMS}
           baseSpeed={48}
           className="py-0"
+          eagerFirstSet
         />
       </div>
     </section>

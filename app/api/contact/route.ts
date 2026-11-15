@@ -22,6 +22,14 @@ const MIN_ELAPSED_MS = 1500; // 1.5 seconds
 
 const ipRequests = new Map<string, number[]>();
 const recentSubmissions = new Map<string, number>();
+let cachedResend: { apiKey: string; client: Resend } | null = null;
+
+function getResendClient(apiKey: string): Resend {
+  if (!cachedResend || cachedResend.apiKey !== apiKey) {
+    cachedResend = { apiKey, client: new Resend(apiKey) };
+  }
+  return cachedResend.client;
+}
 
 function getClientIp(request: Request): string {
   const forwarded = request.headers.get("x-forwarded-for");
@@ -220,7 +228,7 @@ export async function POST(request: Request) {
   ].join("\n");
 
   try {
-    const resend = new Resend(apiKey);
+    const resend = getResendClient(apiKey);
     const { data, error } = await resend.emails.send({
       from: fromEmail,
       to: [toEmail],

@@ -19,6 +19,7 @@ export interface IndexProject {
   alt: string;
   href?: string;
   heroImage?: string;
+  heroVideo?: string;
   video?: string;
   showcaseMedia?: { type: "video" | "image"; src: string; alt: string }[];
   outroVideo?: string;
@@ -124,6 +125,61 @@ export const INDEX_PROJECTS: IndexProject[] = [
       "React Hook Form",
       "Zod",
     ],
+  },
+  {
+    id: "kurogane",
+    slug: "kurogane",
+    title: "KUROGANE",
+    year: "2026",
+    category: "Mobile App, Entertainment & Media",
+    services: "Brand Identity, Mobile App Design & Development",
+    accent: "#f26a4b",
+    image: "/projects/kurogane.png",
+    aspectClass: "aspect-square",
+    alt: "KUROGANE — Editorial Mobile App for Anime, Donghua & Manga",
+    heroVideo: "/projects/videoheader3.mp4",
+    video: "/projects/stripevideo.mp4",
+    client: "KUROGANE",
+    about: {
+      en: "Editorial Mobile App for Anime, Donghua & Manga",
+      ro: "Aplicație Mobilă Editorială pentru Anime, Donghua și Manga",
+    },
+    summary: {
+      en: "A bespoke mobile experience designed for fans of anime, donghua, and manga—bringing together personal watchlists, release calendars, and seasonal discovery in one calm, editorial interface.",
+      ro: "O experiență mobilă dedicată pasionaților de anime, donghua și manga, ce reunește listele personale, calendarele de lansări și descoperirea de conținut într-o interfață clară și editorială.",
+    },
+    challenge: {
+      en: "Existing anime and manga tracking apps often feel dated, crowded with clutter, and slow to browse. The goal was to replace visual noise with a refined, magazine-inspired mobile product that makes discovering new titles and tracking episodes effortless.",
+      ro: "Aplicațiile existente pentru urmărirea seriilor anime și manga sunt adesea încărcate vizual, lente și greu de parcurs. Obiectivul a fost înlocuirea zgomotului vizual cu un produs mobil rafinat, cu estetică editorială, care face descoperirea și organizarea listelor naturale și rapide.",
+    },
+    solution: {
+      en: "Crafted a custom brand identity and mobile interface paired with instant search, reliable cloud performance, and live catalog updates. Users get real-time release schedules, unified watchlists, and curated news wrapped in a fluid iOS and Android experience.",
+      ro: "Am construit o identitate vizuală proprie și o interfață mobilă completă, susținute de căutare instantanee și actualizare continuă a cataloagelor în cloud. Utilizatorii primesc programe în timp real pentru episoade noi, liste unificate și știri relevante într-o experiență fluidă pe iOS și Android.",
+    },
+    stack: [
+      "Flutter 3",
+      "Dart",
+      "Riverpod 2",
+      "Cloudflare Workers",
+      "Hono v4",
+      "Cloudflare D1",
+      "Cloudflare KV",
+      "TypeScript 5",
+      "Firebase Auth",
+    ],
+    showcaseMedia: [
+      {
+        type: "video",
+        src: "/projects/kuroganeHero.mp4",
+        alt: "Kurogane Motion Showcase",
+      },
+      {
+        type: "image",
+        src: "/projects/kurogane-icon-on-screen.jpg",
+        alt: "Kurogane iOS Home Screen Icon Preview",
+      },
+    ],
+    outroVideo: "/projects/center-stage-2560x1098.webm",
   },
   {
     id: "qxt-energy",

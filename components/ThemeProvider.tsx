@@ -97,16 +97,20 @@ export function ThemeProvider({
   }, [effectiveTheme, effectiveLanguage, isMenuOpen]);
 
   const toggleTheme = useCallback(() => {
-    const newTheme = theme === "dark" ? "light" : "dark";
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-  }, [theme]);
+    setTheme((prev) => {
+      const nextTheme = prev === "dark" ? "light" : "dark";
+      localStorage.setItem("theme", nextTheme);
+      return nextTheme;
+    });
+  }, []);
 
   const toggleGrid = useCallback(() => {
-    const nextGrid = !showGrid;
-    setShowGrid(nextGrid);
-    localStorage.setItem("showGrid", String(nextGrid));
-  }, [showGrid]);
+    setShowGrid((prev) => {
+      const nextGrid = !prev;
+      localStorage.setItem("showGrid", String(nextGrid));
+      return nextGrid;
+    });
+  }, []);
 
   const updateLanguage = useCallback((nextLanguage: Language) => {
     setLanguage(nextLanguage);
@@ -114,9 +118,12 @@ export function ThemeProvider({
   }, []);
 
   const toggleLanguage = useCallback(() => {
-    const nextLanguage = language === "EN" ? "RO" : "EN";
-    updateLanguage(nextLanguage);
-  }, [language, updateLanguage]);
+    setLanguage((prev) => {
+      const nextLanguage = prev === "EN" ? "RO" : "EN";
+      localStorage.setItem("language", nextLanguage);
+      return nextLanguage;
+    });
+  }, []);
 
   const contextValue = useMemo(
     () => ({
