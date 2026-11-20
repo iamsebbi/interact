@@ -3,6 +3,7 @@ import { animate, useReducedMotion } from "motion/react";
 import { Switch } from "../ui/switch";
 import { Button } from "../ui/button";
 import { CodeBlock } from "../ui/code-block";
+import type { ComponentPropDoc } from "../studio/registry";
 import {
   Tabs,
   TabsHighlight,
@@ -11,7 +12,7 @@ import {
   TabsTrigger,
 } from "../ui/tabs";
 import { cn } from "../../utils/cn";
-import { Bookmark, Cancel01, Check, Code01, Copy01, Play, Refresh, Share01, Sparkles } from "../icons";
+import { Bookmark, Cancel01, Check, Code01, Copy01, Play, Refresh, Share01, Sparkles, Terminal } from "../icons";
 
 export interface ShowcaseComponentNavItem {
   id: string;
@@ -125,6 +126,8 @@ export interface ShowcaseCodePanelProps {
   codeSnippet: string;
   copiedCode: boolean;
   onCopyCode: () => void;
+  cliCommand?: string;
+  propsDocs?: readonly ComponentPropDoc[];
 }
 
 export const ShowcaseCodePanel: React.FC<ShowcaseCodePanelProps> = ({
@@ -132,27 +135,128 @@ export const ShowcaseCodePanel: React.FC<ShowcaseCodePanelProps> = ({
   codeSnippet,
   copiedCode,
   onCopyCode,
-}) => (
-  <div className="relative z-10 flex-1 min-h-0 w-full mt-1 rounded-2xl border border-border bg-background/70 flex flex-col overflow-hidden">
-    <div className="flex items-center justify-between px-3.5 py-2 border-b border-border bg-secondary/40 shrink-0">
-      <div className="flex items-center gap-2 text-xs font-medium text-foreground">
-        <Code01 size={14} className="text-muted-foreground" />
-        <span>{codeTitle}</span>
+  cliCommand,
+  propsDocs,
+}) => {
+  const [panelTab, setPanelTab] = useState<"usage" | "props">("usage");
+  const [copiedCli, setCopiedCli] = useState(false);
+
+  const handleCopyCli = async () => {
+    if (!cliCommand) return;
+    try {
+      await navigator.clipboard.writeText(cliCommand);
+      setCopiedCli(true);
+      setTimeout(() => setCopiedCli(false), 1800);
+    } catch {}
+  };
+
+  return (
+    <div className="relative z-10 flex-1 min-h-0 w-full mt-1 rounded-2xl border border-border bg-background/70 flex flex-col overflow-hidden">
+      <div className="flex items-center justify-between gap-2 px-3.5 py-2 border-b border-border bg-secondary/40 shrink-0">
+        <div className="flex items-center gap-2 min-w-0">
+          {propsDocs && propsDocs.length > 0 ? (
+            <div className="inline-flex items-center gap-1 p-0.5 rounded-lg bg-background/60 border border-border/70">
+              <button
+                type="button"
+                onClick={() => setPanelTab("usage")}
+                className={cn(
+                  "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors cursor-pointer",
+                  panelTab === "usage"
+                    ? "bg-secondary text-foreground shadow-2xs"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <Code01 size={12} />
+                <span>Usage</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setPanelTab("props")}
+                className={cn(
+                  "px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors cursor-pointer",
+                  panelTab === "props"
+                    ? "bg-secondary text-foreground shadow-2xs"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                Props ({propsDocs.length})
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 text-xs font-medium text-foreground">
+              <Code01 size={14} className="text-muted-foreground" />
+              <span>{codeTitle}</span>
+            </div>
+          )}
+        </div>
+        {panelTab === "usage" && (
+          <button
+            type="button"
+            onClick={onCopyCode}
+            className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-lg bg-secondary hover:bg-secondary/80 border border-border text-foreground transition-colors cursor-pointer shrink-0"
+          >
+            {copiedCode ? <Check size={13} /> : <Copy01 size={13} />}
+            <span>{copiedCode ? "Copied" : "Copy JSX"}</span>
+          </button>
+        )}
       </div>
-      <button
-        type="button"
-        onClick={onCopyCode}
-        className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-lg bg-secondary hover:bg-secondary/80 border border-border text-foreground transition-colors cursor-pointer"
-      >
-        {copiedCode ? <Check size={13} /> : <Copy01 size={13} />}
-        <span>{copiedCode ? "Copied" : "Copy JSX"}</span>
-      </button>
+
+      {cliCommand && panelTab === "usage" && (
+        <div className="flex items-center justify-between gap-2 px-3.5 py-2 border-b border-border/70 bg-secondary/20 shrink-0">
+          <div className="flex items-center gap-2 min-w-0 text-[11px] font-mono text-muted-foreground">
+            <Terminal size={13} className="text-primary shrink-0" />
+            <code className="truncate select-all text-foreground/90">{cliCommand}</code>
+          </div>
+          <button
+            type="button"
+            onClick={handleCopyCli}
+            className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-md bg-secondary/80 hover:bg-secondary border border-border/80 text-foreground transition-colors cursor-pointer shrink-0"
+          >
+            {copiedCli ? <Check size={12} /> : <Copy01 size={12} />}
+            <span>{copiedCli ? "Copied" : "CLI"}</span>
+          </button>
+        </div>
+      )}
+
+      {panelTab === "usage" ? (
+        <div className="flex-1 min-h-0 p-3.5 overflow-auto">
+          <CodeBlock code={codeSnippet} lang="tsx" />
+        </div>
+      ) : (
+        <div className="flex-1 min-h-0 overflow-auto p-3.5">
+          <table className="w-full text-left border-collapse text-[11px]">
+            <thead>
+              <tr className="border-b border-border text-muted-foreground font-mono">
+                <th className="py-1.5 pr-3 font-medium">Prop</th>
+                <th className="py-1.5 pr-3 font-medium">Type</th>
+                <th className="py-1.5 pr-3 font-medium">Default</th>
+                <th className="py-1.5 font-medium">Description</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border/50">
+              {propsDocs?.map((prop) => (
+                <tr key={prop.name} className="align-top">
+                  <td className="py-2 pr-3 font-mono font-semibold text-foreground whitespace-nowrap">
+                    {prop.name}
+                  </td>
+                  <td className="py-2 pr-3 font-mono text-primary/90 break-words max-w-[180px]">
+                    {prop.type}
+                  </td>
+                  <td className="py-2 pr-3 font-mono text-muted-foreground whitespace-nowrap">
+                    {prop.defaultValue}
+                  </td>
+                  <td className="py-2 text-muted-foreground leading-relaxed">
+                    {prop.description}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
-    <div className="flex-1 min-h-0 p-3.5 overflow-auto">
-      <CodeBlock code={codeSnippet} lang="tsx" />
-    </div>
-  </div>
-);
+  );
+};
 
 export interface ComponentDetailLayoutProps {
   /** Component title displayed in the stage card header */

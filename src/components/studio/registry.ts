@@ -220,6 +220,257 @@ export function getRegistryCliCommand(id: StudioComponentId): string {
   return `npx shadcn@latest add ${REGISTRY_BASE_URL}/${id}.json`;
 }
 
+export interface ComponentPropDoc {
+  name: string;
+  type: string;
+  defaultValue: string;
+  description: string;
+}
+
+export const STUDIO_COMPONENT_PROPS: Record<
+  StudioComponentId,
+  readonly ComponentPropDoc[]
+> = {
+  "bot-avatar": [
+    {
+      name: "shape",
+      type: '"squircle" | "cloud" | "drop" | "triangle" | "cube" | "berry" | "circle"',
+      defaultValue: '"squircle"',
+      description: "Body silhouette and 3D facial projection surface profile.",
+    },
+    {
+      name: "expression",
+      type: '"idle" | "happy" | "excited" | "wink" | "focused" | "confused" | "surprised" | "angry" | "sleepy" | "loading"',
+      defaultValue: '"idle"',
+      description: "Active eye geometry and idle/reactive body animation state.",
+    },
+    {
+      name: "size",
+      type: "number",
+      defaultValue: "180",
+      description: "Rendered SVG width and height in pixels.",
+    },
+    {
+      name: "bodyColor",
+      type: "string",
+      defaultValue: '"#222428"',
+      description: "Primary body fill color (hex or CSS color).",
+    },
+    {
+      name: "eyeColor",
+      type: "string",
+      defaultValue: '"#FFFFFF"',
+      description: "Eye and facial detail stroke/fill color.",
+    },
+    {
+      name: "trackGaze",
+      type: "boolean",
+      defaultValue: "true",
+      description: "Enables proximity pointer/cursor 3D eye & head tracking.",
+    },
+    {
+      name: "interactive",
+      type: "boolean",
+      defaultValue: "true",
+      description: "Enables tap bounce, long-press pet, poke annoyance, and wake reactions.",
+    },
+    {
+      name: "enableVibration",
+      type: "boolean",
+      defaultValue: "true",
+      description: "Triggers navigator.vibrate haptic feedback on supported devices.",
+    },
+  ],
+  "color-picker": [
+    {
+      name: "value",
+      type: "string",
+      defaultValue: "undefined",
+      description: "Controlled hex color (#rgb, #rrggbb, or #rrggbbaa).",
+    },
+    {
+      name: "defaultValue",
+      type: "string",
+      defaultValue: '"#3478f6"',
+      description: "Initial uncontrolled hex color.",
+    },
+    {
+      name: "onValueChange",
+      type: "(value: string) => void",
+      defaultValue: "undefined",
+      description: "Fires continuously while dragging or typing a valid hex color.",
+    },
+    {
+      name: "onValueCommit",
+      type: "(value: string) => void",
+      defaultValue: "undefined",
+      description: "Fires once an interaction settles (pointer release, preset, commit).",
+    },
+    {
+      name: "alpha",
+      type: "boolean",
+      defaultValue: "true",
+      description: "Enables opacity slider and alpha channel editing.",
+    },
+    {
+      name: "open / defaultOpen",
+      type: "boolean",
+      defaultValue: "false",
+      description: "Controls popover open state when using ColorPickerTrigger + Content.",
+    },
+    {
+      name: "disabled",
+      type: "boolean",
+      defaultValue: "false",
+      description: "Disables pointer and keyboard interactions.",
+    },
+  ],
+  palette: [
+    {
+      name: "count",
+      type: "number",
+      defaultValue: "4",
+      description: "Number of color swatches in the palette (clamped 3..5).",
+    },
+    {
+      name: "corner",
+      type: "number",
+      defaultValue: "10",
+      description: "Corner radius in pixels applied to each swatch and button.",
+    },
+    {
+      name: "morph",
+      type: "number",
+      defaultValue: "50",
+      description: "Fluid SVG goo transition speed (0..100).",
+    },
+    {
+      name: "colors",
+      type: "string[]",
+      defaultValue: "undefined",
+      description: "Optional external hex array to override generated OKLCH swatches.",
+    },
+    {
+      name: "onChange",
+      type: "(colors: string[]) => void",
+      defaultValue: "undefined",
+      description: "Callback invoked with new hex colors when rolling a palette.",
+    },
+    {
+      name: "onSwatchClick",
+      type: "(color: string, index: number) => void",
+      defaultValue: "undefined",
+      description: "Custom swatch click handler (defaults to copying hex to clipboard).",
+    },
+    {
+      name: "rollSignal",
+      type: "number",
+      defaultValue: "0",
+      description: "Increment externally to trigger an animated palette roll.",
+    },
+  ],
+  "wake-slider": [
+    {
+      name: "value / defaultValue",
+      type: "number",
+      defaultValue: "50",
+      description: "Controlled or initial numeric value of the slider.",
+    },
+    {
+      name: "min / max / step",
+      type: "number",
+      defaultValue: "0 / 100 / 1",
+      description: "Numeric range bounds and quantization step.",
+    },
+    {
+      name: "bars",
+      type: "number",
+      defaultValue: "32",
+      description: "Number of vertical track bars (clamped 12..64).",
+    },
+    {
+      name: "wake",
+      type: "number",
+      defaultValue: "60",
+      description: "Peak velocity-driven wave energy amplitude (0..100).",
+    },
+    {
+      name: "unit",
+      type: "string",
+      defaultValue: '""',
+      description: "Optional unit suffix rendered beside the NumberFlow readout.",
+    },
+    {
+      name: "showReading",
+      type: "boolean",
+      defaultValue: "true",
+      description: "Toggles the animated NumberFlow numeric readout.",
+    },
+    {
+      name: "fullWidth",
+      type: "boolean",
+      defaultValue: "false",
+      description: "Stretches the bar track to fill its container width.",
+    },
+    {
+      name: "onChange",
+      type: "(val: number) => void",
+      defaultValue: "undefined",
+      description: "Fires when the slider value changes via pointer or keyboard.",
+    },
+  ],
+  gradient: [
+    {
+      name: "tile",
+      type: "TileConfig",
+      defaultValue: "undefined",
+      description: "Full tile configuration object (base, rim, blobs, motion, beam, noise).",
+    },
+    {
+      name: "globals",
+      type: "Partial<GlobalsConfig>",
+      defaultValue: "DEFAULT_GLOBALS",
+      description: "Global rendering defaults (size, radius, contrast, saturate, blurScale).",
+    },
+    {
+      name: "size",
+      type: "number | string",
+      defaultValue: "205",
+      description: "Tile width and height (px number or CSS length).",
+    },
+    {
+      name: "radius",
+      type: "number",
+      defaultValue: "30",
+      description: "Squircle border radius percentage.",
+    },
+    {
+      name: "animate",
+      type: "boolean",
+      defaultValue: "true",
+      description: "Enables blob entrance animations (scale, lift, fade, rotate).",
+    },
+    {
+      name: "rimAnimate",
+      type: "boolean",
+      defaultValue: "false",
+      description: "Enables rim light animations (bloom, glint, breathe, scale-down).",
+    },
+    {
+      name: "beamActive",
+      type: "boolean",
+      defaultValue: "false",
+      description: "Wraps the tile in an animated BorderBeam perimeter effect.",
+    },
+    {
+      name: "noise",
+      type: "boolean",
+      defaultValue: "false",
+      description: "Overlays an SVG fractalNoise film grain texture.",
+    },
+  ],
+};
+
 export function buildStudioAiPrompt<K extends StudioComponentId>(
   id: K,
   config: StudioConfigMap[K]

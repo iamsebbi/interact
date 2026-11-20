@@ -3,7 +3,11 @@ import { animate, useReducedMotion } from "motion/react";
 import { Bookmark, Play, Settings2 } from "../icons";
 import { GlobalsConfig, TileConfig } from "../../types/gradient";
 import { DEFAULT_GLOBALS } from "../../constants/defaults";
-import type { StudioComponentId } from "../studio/registry";
+import {
+  getRegistryCliCommand,
+  STUDIO_COMPONENT_PROPS,
+  type StudioComponentId,
+} from "../studio/registry";
 import { BotAvatar, DEFAULT_BOT_SHAPE, type AvatarExpression } from "../bot-avatar";
 import { Palette } from "../palette/Palette";
 import { WakeSlider } from "../ui/wake-slider";
@@ -583,7 +587,10 @@ export const ComponentsPage: React.FC<ComponentsPageProps> = ({
 
   const handleCopyPrompt = async () => {
     const title = PRODUCTS.find((p) => p.id === activeProduct)?.title ?? "Component";
-    const promptText = `Implement the ${title} component in React/TypeScript using the following setup:\n\n${jsxSnippet}`;
+    const cliLine = activeProduct
+      ? `\nInstall via shadcn CLI: ${getRegistryCliCommand(activeProduct)}\n`
+      : "";
+    const promptText = `Implement the ${title} component from interact.dev in React + TypeScript.${cliLine}\n${jsxSnippet}`;
     try {
       await navigator.clipboard.writeText(promptText);
       setCopiedPrompt(true);
@@ -804,6 +811,8 @@ export const ComponentsPage: React.FC<ComponentsPageProps> = ({
                             codeSnippet={jsxSnippet}
                             copiedCode={copiedCode}
                             onCopyCode={handleCopyCode}
+                            cliCommand={getRegistryCliCommand(product.id)}
+                            propsDocs={STUDIO_COMPONENT_PROPS[product.id]}
                           />
                         </div>
                       )}

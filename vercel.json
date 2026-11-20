@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/((?!r/|assets/|asterisk-symbol\\.svg).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
