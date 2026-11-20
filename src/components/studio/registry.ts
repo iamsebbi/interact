@@ -215,7 +215,7 @@ export function buildStudioJsx<K extends StudioComponentId>(
 }
 
 export const REGISTRY_FALLBACK_URL =
-  "https://raw.githubusercontent.com/iamsebbi/interact/main/public/r";
+  "https://interactdev.vercel.app/r";
 
 export function getRegistryBaseUrl(): string {
   const configured = import.meta.env?.VITE_REGISTRY_URL?.replace(/\/+$/, "");

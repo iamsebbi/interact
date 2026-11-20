@@ -8,11 +8,11 @@ All components are free and distributed via a **shadcn CLI** compatible registry
 
 | Component | Description | Install Command |
 | :--- | :--- | :--- |
-| **Bot Avatar** | Interactive 2.5D SVG avatar with 3D gaze tracking, organic blinking, 7 shapes, and 10 expressions | `npx shadcn@latest add https://interact.dev/r/bot-avatar.json` |
-| **Color Picker** | HSVA color picker with spring-physics loupe, HEX/RGB/HSL channels, alpha slider, and eyedropper | `npx shadcn@latest add https://interact.dev/r/color-picker.json` |
-| **OKLCH Palette** | Perceptually uniform OKLCH color ramp generator with elastic SVG goo transitions | `npx shadcn@latest add https://interact.dev/r/palette.json` |
-| **Wake Slider** | Kinetic bar-track range slider with velocity-driven wave wake and NumberFlow readout | `npx shadcn@latest add https://interact.dev/r/wake-slider.json` |
-| **Squircle Gradient** | Layered SVG & CSS squircle gradient tile with organic shapes, rim lighting, film grain, and border beams | `npx shadcn@latest add https://interact.dev/r/gradient.json` |
+| **Bot Avatar** | Interactive 2.5D SVG avatar with 3D gaze tracking, organic blinking, 7 shapes, and 10 expressions | `npx shadcn@latest add https://interactdev.vercel.app/r/bot-avatar.json` |
+| **Color Picker** | HSVA color picker with spring-physics loupe, HEX/RGB/HSL channels, alpha slider, and eyedropper | `npx shadcn@latest add https://interactdev.vercel.app/r/color-picker.json` |
+| **OKLCH Palette** | Perceptually uniform OKLCH color ramp generator with elastic SVG goo transitions | `npx shadcn@latest add https://interactdev.vercel.app/r/palette.json` |
+| **Wake Slider** | Kinetic bar-track range slider with velocity-driven wave wake and NumberFlow readout | `npx shadcn@latest add https://interactdev.vercel.app/r/wake-slider.json` |
+| **Squircle Gradient** | Layered SVG & CSS squircle gradient tile with organic shapes, rim lighting, film grain, and border beams | `npx shadcn@latest add https://interactdev.vercel.app/r/gradient.json` |
 
 ### Optional Registry Namespace
 
@@ -21,7 +21,7 @@ Add `@interact` to your project's `components.json`:
 ```json
 {
   "registries": {
-    "@interact": "https://interact.dev/r/{name}.json"
+    "@interact": "https://interactdev.vercel.app/r/{name}.json"
   }
 }
 ```
