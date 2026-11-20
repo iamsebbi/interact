@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
@@ -13,6 +13,86 @@ import type { IndexProject } from "@/lib/index-projects";
 interface ProjectDetailClientProps {
   project: IndexProject;
   nextProject: Pick<IndexProject, "slug" | "title">;
+}
+
+/**
+ * Cycles through hero header images in a continuous loop, pausing when off-screen,
+ * when the browser tab is hidden, or when reduced motion is preferred.
+ */
+function HeroImageLoop({ images, alt }: { images: string[]; alt: string }) {
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let interval: ReturnType<typeof setInterval> | null = null;
+    let isVisible = true;
+    let isTabVisible = !document.hidden;
+
+    const syncInterval = () => {
+      if (isVisible && isTabVisible) {
+        if (!interval) {
+          interval = setInterval(() => {
+            setCurrentIdx((prev) => (prev + 1) % images.length);
+          }, 2500);
+        }
+      } else if (interval) {
+        clearInterval(interval);
+        interval = null;
+      }
+    };
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry?.isIntersecting ?? true;
+        syncInterval();
+      },
+      { threshold: 0 },
+    );
+    if (containerRef.current) {
+      io.observe(containerRef.current);
+    }
+
+    const handleVisibilityChange = () => {
+      isTabVisible = !document.hidden;
+      syncInterval();
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    syncInterval();
+
+    return () => {
+      io.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [images.length]);
+
+  return (
+    <div ref={containerRef} className="relative w-full h-full">
+      {images.map((src, idx) => (
+        <Image
+          key={src}
+          src={src}
+          alt={idx === 0 ? alt : `${alt} — ${idx + 1}`}
+          fill
+          preload={idx === 0}
+          loading={idx === 0 ? undefined : "eager"}
+          sizes="(max-width: 1024px) 100vw, 50vw"
+          aria-hidden={idx !== currentIdx}
+          className={`object-cover object-center transition-[opacity,filter] duration-500 ease-in-out ${
+            idx === currentIdx
+              ? "opacity-100 blur-[0px]"
+              : "opacity-0 blur-md"
+          }`}
+        />
+      ))}
+    </div>
+  );
 }
 
 export function ProjectDetailClient({
@@ -120,12 +200,17 @@ export function ProjectDetailClient({
                   onEnded={(e) => e.currentTarget.pause()}
                   className="w-full h-full object-cover object-center"
                 />
+              ) : project.heroImages && project.heroImages.length > 0 ? (
+                <HeroImageLoop
+                  images={project.heroImages}
+                  alt={project.alt}
+                />
               ) : (
                 <Image
                   src={project.heroImage || project.image}
                   alt={project.alt}
                   fill
-                  priority
+                  preload
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover object-center"
                 />
@@ -175,7 +260,7 @@ export function ProjectDetailClient({
               {project.solution && (
                 <div className="col-span-4 md:col-span-4 lg:col-span-6 flex flex-col gap-3">
                   <span className="font-lekton text-xs uppercase tracking-editorial text-foreground/50">
-                    {isRO ? "ARHITECTURA & SOLUȚIA" : "THE SOLUTION"}
+                    {isRO ? "SOLUȚIA" : "THE SOLUTION"}
                   </span>
                   <div className="w-full border-t border-border/60 mb-2" />
                   <p className="font-heading text-base sm:text-lg leading-relaxed text-foreground/85">
