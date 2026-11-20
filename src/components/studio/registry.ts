@@ -214,10 +214,27 @@ export function buildStudioJsx<K extends StudioComponentId>(
   }
 }
 
-export const REGISTRY_BASE_URL = "https://interact.dev/r";
+export const REGISTRY_FALLBACK_URL =
+  "https://raw.githubusercontent.com/iamsebbi/interact/main/public/r";
+
+export function getRegistryBaseUrl(): string {
+  const configured = import.meta.env?.VITE_REGISTRY_URL?.replace(/\/+$/, "");
+  if (configured) return configured;
+
+  if (typeof window !== "undefined") {
+    const { hostname, origin } = window.location;
+    if (hostname !== "localhost" && hostname !== "127.0.0.1") {
+      return `${origin}/r`;
+    }
+  }
+
+  return REGISTRY_FALLBACK_URL;
+}
+
+export const REGISTRY_BASE_URL = getRegistryBaseUrl();
 
 export function getRegistryCliCommand(id: StudioComponentId): string {
-  return `npx shadcn@latest add ${REGISTRY_BASE_URL}/${id}.json`;
+  return `npx shadcn@latest add ${getRegistryBaseUrl()}/${id}.json`;
 }
 
 export interface ComponentPropDoc {

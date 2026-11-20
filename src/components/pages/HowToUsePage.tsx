@@ -11,6 +11,7 @@ import {
 } from "../icons";
 import { Button } from "../ui/button";
 import { CodeBlock, type CodeLanguage } from "../ui/code-block";
+import { getRegistryBaseUrl } from "../studio/registry";
 
 export interface HowToUsePageProps {
   onNavigateToStudio?: () => void;
@@ -39,23 +40,25 @@ export function HowToUsePage({
     } catch {}
   };
 
+  const registryBaseUrl = getRegistryBaseUrl();
+
   const codeSnippets: GuideSnippet[] = [
     {
       title: "1. Install any component via shadcn CLI",
       lang: "bash",
       code: `# Install directly by registry URL
-npx shadcn@latest add https://interact.dev/r/bot-avatar.json
-npx shadcn@latest add https://interact.dev/r/color-picker.json
-npx shadcn@latest add https://interact.dev/r/palette.json
-npx shadcn@latest add https://interact.dev/r/wake-slider.json
-npx shadcn@latest add https://interact.dev/r/gradient.json`,
+npx shadcn@latest add ${registryBaseUrl}/bot-avatar.json
+npx shadcn@latest add ${registryBaseUrl}/color-picker.json
+npx shadcn@latest add ${registryBaseUrl}/palette.json
+npx shadcn@latest add ${registryBaseUrl}/wake-slider.json
+npx shadcn@latest add ${registryBaseUrl}/gradient.json`,
     },
     {
       title: "2. Optional: Add @interact namespace in components.json",
       lang: "json",
       code: `{
   "registries": {
-    "@interact": "https://interact.dev/r/{name}.json"
+    "@interact": "${registryBaseUrl}/{name}.json"
   }
 }`,
     },
