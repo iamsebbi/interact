@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sans: "Google Sans Flex", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    --font-mono: "Lekton", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    --font-sans-optical-sizing: auto;
+    --font-sans-slnt: 0;
+    --font-sans-wdth: 100;
+    --font-sans-rond: 0;
+    --tracking-normal: 0em;
+    --spacing: 0.25rem;
+  }
+
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  html, body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-optical-sizing: var(--font-sans-optical-sizing, auto);
+    font-variation-settings: "slnt" var(--font-sans-slnt, 0), "wdth" var(--font-sans-wdth, 100), "ROND" var(--font-sans-rond, 0);
+    margin: 0;
+    min-height: 100vh;
+    letter-spacing: var(--tracking-normal);
+  }
+
+  code, kbd, samp, pre {
+    font-family: var(--font-mono);
+  }
+
+  .theme {
+    --font-sans: "Google Sans Flex", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-mono: "Lekton", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    --font-sans-optical-sizing: auto;
+    --font-sans-slnt: 0;
+    --font-sans-wdth: 100;
+    --font-sans-rond: 0;
+    --radius: 0.625rem;
+    --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
+    --tracking-tight: calc(var(--tracking-normal) - 0.025em);
+    --tracking-wide: calc(var(--tracking-normal) + 0.025em);
+    --tracking-wider: calc(var(--tracking-normal) + 0.05em);
+    --tracking-widest: calc(var(--tracking-normal) + 0.1em);
+  }
+}
+
+/* Utilities */
+.google-sans-flex {
+  font-family: var(--font-sans);
+  font-optical-sizing: var(--font-sans-optical-sizing, auto);
+  font-variation-settings:
+    "slnt" var(--font-sans-slnt, 0),
+    "wdth" var(--font-sans-wdth, 100),
+    "ROND" var(--font-sans-rond, 0);
+}
+
+.lekton-regular {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-style: normal;
+}
+
+.lekton-bold {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-style: normal;
+}
+
+.lekton-regular-italic {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-style: italic;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Universal Range Sliders (Vertical Line Thumb) */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  height: 1rem;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  background-color: var(--input);
+  border-radius: 9999px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -6px;
+  height: 16px;
+  width: 6px;
+  border-radius: 9999px;
+  background-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--background), 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+  cursor: ew-resize;
+}
+
+input[type="range"]::-moz-range-track {
+  height: 4px;
+  background-color: var(--input);
+  border-radius: 9999px;
+  border: none;
+}
+
+input[type="range"]::-moz-range-thumb {
+  height: 16px;
+  width: 6px;
+  border-radius: 9999px;
+  background-color: var(--primary);
+  border: none;
+  box-shadow: 0 0 0 2px var(--background), 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+  cursor: ew-resize;
+}

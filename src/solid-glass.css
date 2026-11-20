@@ -1,0 +1,414 @@
+/*
+ * Solid Glass Material Stylesheet
+ * Adapted from deeplethe/solid-glass for Tailwind CSS v3 + iamsebbi.dev.
+ *
+ * Four rules keep it one material:
+ *   1. The finish is at the edge (rim + hairline + shadow, never a gradient across the face).
+ *   2. Heavy, not airy (neutral grey smoky panes with controlled backdrop blur).
+ *   3. Depth is thickness (panel < card < popover).
+ *   4. One state (hovered, chosen, and held-open wear the same small pane of clear glass).
+ */
+
+/* ---- The panes in daylight ------------------------------------------------ */
+
+:root,
+.light {
+  color-scheme: light;
+  --radius: 0.875rem;
+  --radius-control: 0.7rem;
+
+  --background: oklch(0.925 0.007 265);
+  --foreground: oklch(0.16 0 0);
+
+  /* Thickness: panel < card < popover */
+  --panel: oklch(0.975 0.004 265 / 44%);
+  --card: oklch(0.98 0.004 265 / 60%);
+  --card-foreground: oklch(0.16 0 0);
+  --popover: oklch(0.985 0.003 265 / 96%);
+  --popover-foreground: oklch(0.16 0 0);
+
+  --primary: oklch(0.2 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.3 0.02 265 / 9%);
+  --secondary-foreground: oklch(0.2 0 0);
+  --muted: oklch(0.3 0.02 265 / 7%);
+  --muted-foreground: oklch(0.47 0 0);
+  --accent: oklch(0.3 0.02 265 / 9%);
+  --accent-foreground: oklch(0.2 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.3 0.02 265 / 13%);
+  --input: oklch(0.3 0.02 265 / 15%);
+  --ring: oklch(0.7 0 0);
+
+  /* Edge finish tokens */
+  --glass-rim: oklch(1 0 0 / 90%);
+  --glass-inner: oklch(1 0 0 / 35%);
+  --glass-edge: oklch(0.38 0.03 265 / 10%);
+  --popover-edge: oklch(0.38 0.03 265 / 22%);
+  --popover-under: oklch(0.38 0.03 265 / 16%);
+  --glass-shade: oklch(0.3 0.06 265 / 28%);
+  --glass-contact: oklch(0.25 0.03 265 / 6%);
+  --glass-lift: oklch(0.25 0.03 265 / 14%);
+
+  --glass-control: oklch(1 0 0 / 55%);
+  --glass-control-rim: oklch(1 0 0 / 80%);
+
+  --glass-state: oklch(0.3 0.02 265 / 9%);
+  --glass-state-rim: oklch(1 0 0 / 85%);
+  --glass-state-edge: oklch(0.3 0.02 265 / 13%);
+  --glass-state-armed: oklch(0.3 0.02 265 / 26%);
+
+  --hover: oklch(0.3 0.02 265 / 10%);
+  --hover-faint: oklch(0.3 0.02 265 / 5.5%);
+
+  --primary-solid: 88%;
+  --primary-rim: oklch(1 0 0 / 30%);
+  --primary-under: oklch(0 0 0 / 45%);
+  --primary-inner: oklch(1 0 0 / 7%);
+  --primary-edge: oklch(0.2 0 0 / 30%);
+
+  --field: oklch(1 0 0 / 60%);
+  --field-rim: oklch(1 0 0);
+  --field-edge: oklch(0.3 0.02 265 / 14%);
+
+  --well-shade: oklch(0.3 0.06 265 / 14%);
+  --well-rim: oklch(1 0 0 / 85%);
+
+  --focus-line: oklch(0.2 0 0 / 50%);
+  --knob: oklch(1 0 0);
+  --knob-shade: oklch(0.3 0.06 265 / 30%);
+
+  --glass-blur: blur(26px) saturate(180%);
+  --glass-blur-control: blur(14px);
+
+  --light-1: oklch(0.68 0.13 165 / 7%);
+  --light-2: oklch(0.75 0.08 240 / 11%);
+  --light-3: oklch(0.68 0.13 165 / 4%);
+
+  --brand: oklch(0.68 0.13 165);
+  --brand-foreground: oklch(0.99 0 0);
+  --brand-muted: oklch(0.68 0.13 165 / 12%);
+
+  --chart-1: oklch(0.7 0 0);
+  --chart-2: oklch(0.54 0 0);
+  --chart-3: oklch(0.44 0 0);
+  --chart-4: oklch(0.35 0 0);
+  --chart-5: oklch(0.27 0 0);
+
+  --sidebar: oklch(0.975 0.004 265 / 44%);
+  --sidebar-foreground: oklch(0.25 0 0);
+  --sidebar-primary: oklch(0.2 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.3 0.02 265 / 9%);
+  --sidebar-accent-foreground: oklch(0.16 0 0);
+  --sidebar-border: oklch(0.3 0.02 265 / 12%);
+  --sidebar-ring: oklch(0.7 0 0);
+}
+
+/* ---- Solid Glass in dark mode --------------------------------------------- */
+
+.dark {
+  color-scheme: dark;
+
+  --background: oklch(0.16 0 0);
+  --foreground: oklch(0.985 0 0);
+
+  --panel: oklch(1 0 0 / 4.5%);
+  --card: oklch(0.31 0 0 / 46%);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.22 0 0 / 96%);
+  --popover-foreground: oklch(0.985 0 0);
+
+  --primary: oklch(0.94 0 0);
+  --primary-foreground: oklch(0.18 0 0);
+  --secondary: oklch(1 0 0 / 10%);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(1 0 0 / 7%);
+  --muted-foreground: oklch(0.72 0 0);
+  --accent: oklch(1 0 0 / 8%);
+  --accent-foreground: oklch(0.98 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(1 0 0 / 11%);
+  --input: oklch(1 0 0 / 13%);
+  --ring: oklch(0.52 0 0);
+
+  --glass-rim: oklch(1 0 0 / 16%);
+  --glass-inner: oklch(1 0 0 / 4%);
+  --glass-edge: oklch(1 0 0 / 6%);
+  --popover-edge: var(--glass-edge);
+  --popover-under: oklch(0 0 0 / 0%);
+  --glass-shade: oklch(0 0 0 / 60%);
+  --glass-contact: oklch(0 0 0 / 10%);
+  --glass-lift: oklch(0 0 0 / 22%);
+
+  --glass-control: oklch(1 0 0 / 7%);
+  --glass-control-rim: oklch(1 0 0 / 11%);
+
+  --glass-state: var(--glass-control);
+  --glass-state-rim: var(--glass-control-rim);
+  --glass-state-edge: var(--glass-edge);
+  --glass-state-armed: var(--glass-control-rim);
+
+  --hover: oklch(1 0 0 / 8%);
+  --hover-faint: oklch(1 0 0 / 4%);
+
+  --primary-solid: 86%;
+  --primary-rim: oklch(1 0 0);
+  --primary-under: oklch(0 0 0 / 22%);
+  --primary-inner: oklch(0 0 0 / 7%);
+  --primary-edge: oklch(1 0 0 / 26%);
+
+  --field: oklch(1 0 0 / 6%);
+  --field-rim: oklch(1 0 0 / 15%);
+  --field-edge: oklch(1 0 0 / 8%);
+
+  --well-shade: oklch(0 0 0 / 38%);
+  --well-rim: oklch(1 0 0 / 9%);
+
+  --focus-line: oklch(1 0 0 / 40%);
+  --knob: oklch(0.97 0 0);
+  --knob-shade: oklch(0 0 0 / 55%);
+
+  --glass-blur: blur(26px);
+  --glass-blur-control: blur(14px);
+
+  --light-1: transparent;
+  --light-2: transparent;
+  --light-3: transparent;
+
+  --brand: oklch(0.78 0.13 166);
+  --brand-foreground: oklch(0.2 0.03 166);
+  --brand-muted: oklch(0.78 0.13 166 / 15%);
+
+  --chart-1: oklch(0.94 0 0);
+  --chart-2: oklch(0.83 0 0);
+  --chart-3: oklch(0.69 0 0);
+  --chart-4: oklch(0.56 0 0);
+  --chart-5: oklch(0.44 0 0);
+
+  --sidebar: oklch(0.11 0 0 / 50%);
+  --sidebar-foreground: oklch(0.9 0 0);
+  --sidebar-primary: oklch(0.95 0 0);
+  --sidebar-primary-foreground: oklch(0.18 0 0);
+  --sidebar-accent: oklch(1 0 0 / 8%);
+  --sidebar-accent-foreground: oklch(0.98 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.48 0 0);
+}
+
+/* ---- Page ground ---------------------------------------------------------- */
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+  background-image:
+    radial-gradient(62rem 42rem at 12% -6rem, var(--light-1), transparent 62%),
+    radial-gradient(52rem 38rem at 92% 4rem, var(--light-2), transparent 60%),
+    radial-gradient(64rem 46rem at 55% 110%, var(--light-3), transparent 62%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* ---- The material --------------------------------------------------------- */
+
+.bg-card,
+.bg-popover,
+.bg-sidebar,
+.glass-panel {
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+}
+
+.glass-panel {
+  background-color: var(--panel);
+}
+
+.glass-panel,
+.bg-card {
+  border-width: 0;
+  box-shadow:
+    inset 0 1px 0 var(--glass-rim),
+    inset 0 0 0 1px var(--glass-inner),
+    0 0 0 1px var(--glass-edge),
+    0 1px 2px var(--glass-contact),
+    0 12px 32px -14px var(--glass-shade);
+}
+
+.bg-popover {
+  border-width: 0;
+  box-shadow:
+    inset 0 1px 0 var(--glass-rim),
+    inset 0 -1px 0 var(--popover-under),
+    0 0 0 1px var(--popover-edge),
+    0 24px 60px -18px var(--glass-shade),
+    0 6px 16px -6px var(--glass-lift);
+}
+
+.glass-control {
+  background-color: var(--glass-control);
+  -webkit-backdrop-filter: var(--glass-blur-control);
+  backdrop-filter: var(--glass-blur-control);
+  box-shadow:
+    inset 0 1px 0 var(--glass-control-rim),
+    0 0 0 1px var(--glass-edge),
+    0 1px 2px var(--glass-contact);
+}
+
+.glass-control:hover {
+  background-color: var(--hover);
+}
+
+/* Primary button: solid ink glass pane */
+:is(button, a, [role="button"]).bg-primary:not([data-slot="badge"]),
+.glass-primary {
+  background-color: color-mix(in oklch, var(--primary) var(--primary-solid), transparent);
+  -webkit-backdrop-filter: var(--glass-blur-control);
+  backdrop-filter: var(--glass-blur-control);
+  box-shadow:
+    inset 0 1px 0 var(--primary-rim),
+    inset 0 -1px 0 var(--primary-under),
+    inset 0 0 0 1px var(--primary-inner),
+    0 1px 2px var(--glass-contact),
+    0 8px 18px -9px var(--glass-shade),
+    var(--tw-ring-shadow, 0 0 #0000);
+}
+
+:is(button, a, [role="button"]).bg-primary:not([data-slot="badge"]):hover,
+.glass-primary:hover {
+  background-color: color-mix(in oklch, var(--primary) calc(var(--primary-solid) - 10%), transparent);
+}
+
+:is(button, a, [role="button"]).bg-primary:not([data-slot="badge"]):not(:focus-visible),
+.glass-primary:not(:focus-visible) {
+  border-color: color-mix(in oklab, var(--primary) 55%, var(--primary-edge));
+}
+
+:is(button, a, [role="button"]).bg-primary:not([data-slot="badge"]):active,
+.glass-primary:active {
+  box-shadow:
+    inset 0 1px 0 var(--primary-rim),
+    inset 0 -1px 0 var(--primary-under),
+    inset 0 0 0 1px var(--primary-inner),
+    0 1px 1px var(--glass-contact),
+    var(--tw-ring-shadow, 0 0 #0000);
+}
+
+/* Secondary & outline buttons: clear glass controls */
+[data-slot="button"]:is([data-variant="outline"], .bg-background),
+[data-slot="button"]:is([data-variant="secondary"], .bg-secondary) {
+  background-color: var(--glass-control);
+  -webkit-backdrop-filter: var(--glass-blur-control);
+  backdrop-filter: var(--glass-blur-control);
+}
+
+[data-slot="button"]:is([data-variant="outline"], .bg-background) {
+  background-clip: padding-box;
+  box-shadow:
+    inset 0 1px 0 var(--glass-control-rim),
+    0 1px 2px var(--glass-contact),
+    var(--tw-ring-shadow, 0 0 #0000);
+}
+
+[data-slot="button"]:is([data-variant="outline"], .bg-background):not(:focus-visible):not([aria-invalid="true"]) {
+  border-color: var(--border);
+}
+
+[data-slot="button"]:is([data-variant="secondary"], .bg-secondary) {
+  background-clip: padding-box;
+  box-shadow:
+    inset 0 1px 0 var(--glass-control-rim),
+    0 1px 2px var(--glass-contact),
+    var(--tw-ring-shadow, 0 0 #0000);
+}
+
+[data-slot="button"]:is([data-variant="secondary"], .bg-secondary):not(:focus-visible):not([aria-invalid="true"]) {
+  border-color: var(--glass-edge);
+}
+
+[data-slot="button"]:is([data-variant="outline"], [data-variant="secondary"], .bg-background, .bg-secondary):hover {
+  background-color: color-mix(in oklch, var(--foreground) 12%, transparent);
+}
+
+/* Switch groove & lit knob */
+[data-slot="switch"]:not([data-checked]) {
+  box-shadow:
+    inset 0 1px 1.5px var(--well-shade),
+    inset 0 -1px 0 var(--well-rim),
+    var(--tw-ring-shadow, 0 0 #0000);
+}
+
+[data-slot="switch"][data-checked] {
+  border-color: transparent;
+  border-top-color: var(--primary-rim);
+  border-bottom-color: color-mix(in oklch, var(--primary-under) 45%, transparent);
+  background-color: color-mix(in oklch, var(--primary) var(--primary-solid), transparent);
+  background-clip: border-box;
+}
+
+[data-slot="switch-thumb"] {
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 90%),
+    inset 0 -1px 0 oklch(0 0 0 / 14%),
+    0 1px 2px var(--knob-shade);
+}
+
+/* The one state: chosen / active glass pane */
+.glass-chosen {
+  background-color: var(--glass-state);
+  box-shadow:
+    inset 0 1px 0 var(--glass-state-rim),
+    0 0 0 1px var(--glass-state-edge);
+}
+
+.glass-chosen.border:not(.border-0):not(:focus-visible) {
+  border-color: var(--glass-state-edge);
+  box-shadow: inset 0 1px 0 var(--glass-state-rim);
+}
+
+/* Reduced transparency accessibility fallback */
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --primary-solid: 100%;
+    --panel: oklch(0.947 0.006 265);
+    --card: oklch(0.958 0.005 265);
+    --popover: oklch(0.98 0.003 265);
+    --sidebar: oklch(0.985 0 0);
+  }
+  .dark {
+    --panel: oklch(0.19 0 0);
+    --card: oklch(0.225 0 0);
+    --popover: oklch(0.22 0 0);
+    --sidebar: oklch(0.13 0 0);
+  }
+  .bg-card,
+  .bg-popover,
+  .bg-sidebar,
+  .glass-panel,
+  .glass-control {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: var(--border);
+  border-radius: 999px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}

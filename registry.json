@@ -1,0 +1,160 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "interact-dev",
+  "homepage": "https://interact.dev",
+  "items": [
+    {
+      "name": "bot-avatar",
+      "type": "registry:component",
+      "title": "Bot Avatar",
+      "description": "Interactive 2.5D SVG avatar with 3D gaze tracking, organic blinking, 7 body shapes, and 10 expressions.",
+      "dependencies": ["motion"],
+      "files": [
+        {
+          "path": "src/components/bot-avatar/BotAvatar.tsx",
+          "type": "registry:component",
+          "target": "@components/bot-avatar/BotAvatar.tsx"
+        },
+        {
+          "path": "src/components/bot-avatar/botAvatarConfig.ts",
+          "type": "registry:component",
+          "target": "@components/bot-avatar/botAvatarConfig.ts"
+        },
+        {
+          "path": "src/components/bot-avatar/index.ts",
+          "type": "registry:component",
+          "target": "@components/bot-avatar/index.ts"
+        }
+      ]
+    },
+    {
+      "name": "color-picker",
+      "type": "registry:ui",
+      "title": "Color Picker",
+      "description": "Interactive HSVA color picker with spring-physics loupe, HEX/RGB/HSL channels, alpha slider, and eyedropper.",
+      "dependencies": ["motion", "@animate-ui/react"],
+      "files": [
+        {
+          "path": "src/components/ui/color-picker.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/components/ui/color-picker-utils/ease.ts",
+          "type": "registry:ui",
+          "target": "@ui/color-picker-utils/ease.ts"
+        },
+        {
+          "path": "src/components/ui/color-picker-utils/presence-gate.tsx",
+          "type": "registry:ui",
+          "target": "@ui/color-picker-utils/presence-gate.tsx"
+        },
+        {
+          "path": "src/components/ui/color-picker-utils/touch.ts",
+          "type": "registry:ui",
+          "target": "@ui/color-picker-utils/touch.ts"
+        },
+        {
+          "path": "src/components/ui/color-picker-utils/use-dismiss.ts",
+          "type": "registry:ui",
+          "target": "@ui/color-picker-utils/use-dismiss.ts"
+        },
+        {
+          "path": "src/components/animate-ui/icons/pipette.tsx",
+          "type": "registry:ui",
+          "target": "@components/animate-ui/icons/pipette.tsx"
+        }
+      ]
+    },
+    {
+      "name": "palette",
+      "type": "registry:component",
+      "title": "OKLCH Palette",
+      "description": "Perceptually uniform OKLCH color ramp generator with elastic SVG goo morph transitions.",
+      "dependencies": ["motion", "@animate-ui/react"],
+      "files": [
+        {
+          "path": "src/components/palette/Palette.tsx",
+          "type": "registry:component",
+          "target": "@components/palette/Palette.tsx"
+        },
+        {
+          "path": "src/components/palette/Palette.css",
+          "type": "registry:component",
+          "target": "@components/palette/Palette.css"
+        },
+        {
+          "path": "src/components/animate-ui/icons/refresh-cw.tsx",
+          "type": "registry:ui",
+          "target": "@components/animate-ui/icons/refresh-cw.tsx"
+        }
+      ]
+    },
+    {
+      "name": "wake-slider",
+      "type": "registry:ui",
+      "title": "Wake Slider",
+      "description": "Kinetic bar-track range slider with velocity-driven wave wake and NumberFlow numeric readout.",
+      "dependencies": ["@number-flow/react"],
+      "files": [
+        {
+          "path": "src/components/ui/wake-slider.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/components/ui/wake-slider.css",
+          "type": "registry:ui",
+          "target": "@ui/wake-slider.css"
+        }
+      ]
+    },
+    {
+      "name": "gradient",
+      "type": "registry:component",
+      "title": "Squircle Gradient",
+      "description": "Layered SVG & CSS squircle gradient tile with organic shapes, echo trails, rim lighting, film grain, and border beams.",
+      "dependencies": ["border-beam", "motion", "@animate-ui/react"],
+      "files": [
+        {
+          "path": "src/components/GradientTile.tsx",
+          "type": "registry:component",
+          "target": "@components/GradientTile.tsx"
+        },
+        {
+          "path": "src/types/gradient.ts",
+          "type": "registry:lib",
+          "target": "types/gradient.ts"
+        },
+        {
+          "path": "src/constants/defaults.ts",
+          "type": "registry:lib",
+          "target": "constants/defaults.ts"
+        },
+        {
+          "path": "src/constants/shapes.ts",
+          "type": "registry:lib",
+          "target": "constants/shapes.ts"
+        },
+        {
+          "path": "src/constants/shapesPack2.ts",
+          "type": "registry:lib",
+          "target": "constants/shapesPack2.ts"
+        },
+        {
+          "path": "src/utils/color.ts",
+          "type": "registry:lib",
+          "target": "utils/color.ts"
+        },
+        {
+          "path": "src/components/animate-ui/icons/layers.tsx",
+          "type": "registry:ui",
+          "target": "@components/animate-ui/icons/layers.tsx"
+        },
+        {
+          "path": "src/components/animate-ui/icons/sparkles.tsx",
+          "type": "registry:ui",
+          "target": "@components/animate-ui/icons/sparkles.tsx"
+        }
+      ]
+    }
+  ]
+}

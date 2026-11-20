@@ -1,0 +1,70 @@
+/* ══ Wake Slider Styles ══════════════════════════════════════════
+   A row of thin bars with energy-based kinetic wake wave physics.
+   Ink when lit, faint after the value.
+══════════════════════════════════════════════════════════════════ */
+
+.wks {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  user-select: none;
+  --fill-on: var(--foreground, #ffffff);
+  --fill-slab: color-mix(in srgb, var(--foreground, #ffffff) 6%, transparent);
+}
+
+.wks-track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: ew-resize;
+  touch-action: none;
+  position: relative;
+  outline: none;
+  border-radius: 4px;
+}
+
+.wks-track:focus-visible {
+  outline: none;
+}
+
+.wks-bar {
+  display: inline-block;
+  width: 3px;
+  border-radius: 9999px;
+  transform-origin: center center;
+  will-change: transform;
+  background: color-mix(in srgb, var(--fill-on) 28%, var(--fill-slab));
+  transition: background-color 0.12s ease;
+}
+
+.wks-bar[data-on] {
+  background: var(--fill-on);
+}
+
+.wks-value {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--foreground, #ffffff);
+  min-width: 32px;
+  text-align: right;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Card / Boxed layout for settings & controls */
+.wks-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+
+.wks-field-stacked {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
