@@ -5,6 +5,7 @@ export * from "./constants/defaults";
 export * from "./utils/color";
 export * from "./utils/cn";
 export * from "./components/ui/wake-slider";
+export * from "./components/ui/download-button";
 export * from "./components/ui/switch";
 export * from "./components/ui/button";
 export { Navbar, type NavbarProps } from "./components/navigation/Navbar";

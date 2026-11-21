@@ -355,7 +355,7 @@ export const ColorPickerDemo: React.FC<ColorPickerDemoProps> = ({
                   "h-9 px-3 rounded-xl border text-xs font-medium capitalize transition-all cursor-pointer flex items-center justify-center",
                   isSelected
                     ? "glass-chosen text-foreground font-semibold"
-                    : "bg-secondary/60 border-border text-muted-foreground hover:text-foreground hover:bg-secondary"
+                    : "bg-secondary/80 border-border text-muted-foreground hover:text-foreground hover:bg-secondary"
                 )}
               >
                 {item}
@@ -382,7 +382,7 @@ export const ColorPickerDemo: React.FC<ColorPickerDemoProps> = ({
                   "h-9 px-3 rounded-xl border text-xs font-medium capitalize transition-all cursor-pointer flex items-center justify-center",
                   isSelected
                     ? "glass-chosen text-foreground font-semibold"
-                    : "bg-secondary/60 border-border text-muted-foreground hover:text-foreground hover:bg-secondary"
+                    : "bg-secondary/80 border-border text-muted-foreground hover:text-foreground hover:bg-secondary"
                 )}
               >
                 {item}

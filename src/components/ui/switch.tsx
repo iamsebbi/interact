@@ -1,193 +1,391 @@
 "use client";
 
 import * as React from "react";
-import { motion } from "motion/react";
+import { Switch as SwitchPrimitive } from "@base-ui/react/switch";
+import { motion, useReducedMotion } from "motion/react";
 import { cn } from "@/utils/cn";
 
 export interface SwitchProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onChange"> {
-  checked?: boolean;
-  defaultChecked?: boolean;
-  onCheckedChange?: (checked: boolean) => void;
-  disabled?: boolean;
-  showIcon?: boolean;
+  extends Omit<SwitchPrimitive.Root.Props, "size"> {
   size?: "sm" | "md" | "lg";
-  className?: string;
+}
+
+interface SwitchDimensions {
+  track: string;
+  leftCenter: number;
+  rightCenter: number;
+  offSize: number;
+  offPressSize: number;
+  onSize: number;
+  pressSize: number;
+  haloSize: number;
+}
+
+const DIMENSIONS_BY_SIZE: Record<"sm" | "md" | "lg", SwitchDimensions> = {
+  // Concentric circular geometry matching Material Design 3 Measurements spec
+  sm: {
+    track: "w-[40px] h-[24px]",
+    leftCenter: 12,
+    rightCenter: 28,
+    offSize: 12,
+    offPressSize: 15,
+    onSize: 18,
+    pressSize: 21,
+    haloSize: 30,
+  },
+  md: {
+    track: "w-[52px] h-[32px]",
+    leftCenter: 16,
+    rightCenter: 36,
+    offSize: 16,
+    offPressSize: 20,
+    onSize: 24,
+    pressSize: 28,
+    haloSize: 40,
+  },
+  lg: {
+    track: "w-[60px] h-[36px]",
+    leftCenter: 18,
+    rightCenter: 42,
+    offSize: 18,
+    offPressSize: 22,
+    onSize: 28,
+    pressSize: 32,
+    haloSize: 44,
+  },
+};
+
+const DESKTOP_MEDIA_QUERY = "(min-width: 768px)";
+
+function subscribeDesktopQuery(callback: () => void) {
+  if (typeof window === "undefined" || !window.matchMedia) return () => {};
+  const mq = window.matchMedia(DESKTOP_MEDIA_QUERY);
+  mq.addEventListener("change", callback);
+  return () => mq.removeEventListener("change", callback);
+}
+
+function getDesktopSnapshot() {
+  if (typeof window === "undefined" || !window.matchMedia) return false;
+  return window.matchMedia(DESKTOP_MEDIA_QUERY).matches;
+}
+
+function mergeRefs<T>(...refs: Array<React.Ref<T> | undefined>) {
+  return (value: T | null) => {
+    for (const ref of refs) {
+      if (typeof ref === "function") {
+        ref(value);
+      } else if (ref && typeof ref === "object") {
+        (ref as React.MutableRefObject<T | null>).current = value;
+      }
+    }
+  };
 }
 
 /**
- * Material Design 3 (M3) Animated Switch
- * ──────────────────────────────────────────────────────────
- * Follows the official Google Material 3 specification:
- * - Unchecked: Outlined track, compact 14px thumb (outline color).
- * - Checked: Solid primary filled track, expanded 20px thumb with M3 checkmark.
- * - Pressed: Thumb stretches horizontally (pill expansion) during tap/drag.
- * - Motion: Fluid physical spring physics (stiffness: 600, damping: 35).
+ * Material Design 3 Animated Switch powered by `@base-ui/react/switch`
+ * - Full Base UI primitive semantics: hidden `<input>`, `<form>` / `<label>` / `Field` support, `readOnly`, `required`, cancelable `onCheckedChange`, and `data-*` state attributes
+ * - 5 interaction states: Enabled, Hovered, Focused, Pressed, Disabled
+ * - Concentric circular handle (off < offPress / on < press) centered on track semicircles
+ * - State-layer hover/focus/press halo around the handle
+ * - Supports tap, click, drag-to-toggle, and keyboard toggle
+ * - Defaults to `sm` (40×24) on desktop (>= 768px) and `md` (52×32) on mobile when `size` is omitted
  */
-export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
+export const Switch = React.forwardRef<HTMLElement, SwitchProps>(
   (
     {
-      checked: controlledChecked,
-      defaultChecked = false,
-      onCheckedChange,
-      disabled = false,
-      showIcon = false,
-      size = "md",
+      size,
       className,
+      disabled = false,
+      readOnly = false,
+      inputRef: externalInputRef,
       onClick,
+      onPointerEnter,
+      onPointerLeave,
+      onPointerDown,
+      onPointerMove,
+      onPointerUp,
+      onPointerCancel,
+      onFocus,
+      onBlur,
+      onKeyDown,
+      onKeyUp,
       ...props
     },
     ref
   ) => {
-    const isControlled = controlledChecked !== undefined;
-    const [internalChecked, setInternalChecked] = React.useState<boolean>(
-      isControlled ? controlledChecked! : defaultChecked
+    const shouldReduceMotion = Boolean(useReducedMotion());
+    const isDesktop = React.useSyncExternalStore(
+      subscribeDesktopQuery,
+      getDesktopSnapshot,
+      () => false
     );
     const [isPressed, setIsPressed] = React.useState(false);
+    const [isHovered, setIsHovered] = React.useState(false);
+    const [isFocused, setIsFocused] = React.useState(false);
 
-    const isChecked = isControlled ? controlledChecked! : internalChecked;
+    const internalInputRef = React.useRef<HTMLInputElement>(null);
+    const pointerDownRef = React.useRef(false);
+    const startXRef = React.useRef(0);
+    const draggedRef = React.useRef(false);
 
-    const toggle = React.useCallback(
-      (e: React.MouseEvent<HTMLButtonElement>) => {
-        if (disabled) return;
-        const next = !isChecked;
-        if (!isControlled) {
-          setInternalChecked(next);
-        }
-        onCheckedChange?.(next);
-        onClick?.(e);
-      },
-      [disabled, isChecked, isControlled, onCheckedChange, onClick]
+    const mergedInputRef = React.useMemo(
+      () => mergeRefs(internalInputRef, externalInputRef),
+      [externalInputRef]
     );
 
-    // M3 Dimensions by size
-    // md: 46px x 26px (track), thumb: 15px (off) -> 19px (on)
-    // sm: 38px x 22px (track), thumb: 12px (off) -> 16px (on)
-    // lg: 52px x 32px (track), thumb: 16px (off) -> 24px (on)
-    const dimensions = React.useMemo(() => {
-      switch (size) {
-        case "sm":
-          return {
-            track: "w-[38px] h-[22px]",
-            thumbOff: 12,
-            thumbOn: 16,
-            travel: 16,
-            iconSize: 10,
-          };
-        case "lg":
-          return {
-            track: "w-[52px] h-[32px]",
-            thumbOff: 18,
-            thumbOn: 24,
-            travel: 20,
-            iconSize: 14,
-          };
-        case "md":
-        default:
-          return {
-            track: "w-[46px] h-[26px]",
-            thumbOff: 15,
-            thumbOn: 19,
-            travel: 20,
-            iconSize: 12,
-          };
-      }
-    }, [size]);
+    const resolvedSize = size ?? (isDesktop ? "sm" : "md");
+    const dims = DIMENSIONS_BY_SIZE[resolvedSize];
 
-    const thumbWidth = isPressed
-      ? (isChecked ? dimensions.thumbOn + 3 : dimensions.thumbOff + 5)
-      : isChecked
-      ? dimensions.thumbOn
-      : dimensions.thumbOff;
-
-    const thumbHeight = isChecked ? dimensions.thumbOn : dimensions.thumbOff;
-
-    const thumbX = isChecked
-      ? dimensions.travel - (isPressed ? 3 : 0)
-      : 0;
+    const springTransition = shouldReduceMotion
+      ? { duration: 0 }
+      : { type: "spring" as const, stiffness: 560, damping: 32, mass: 0.9 };
 
     return (
-      <button
+      <SwitchPrimitive.Root
         ref={ref}
-        type="button"
-        role="switch"
         data-slot="switch"
-        data-checked={isChecked ? "" : undefined}
-        aria-checked={isChecked}
         disabled={disabled}
-        onClick={toggle}
-        onPointerDown={() => {
-          if (!disabled) setIsPressed(true);
+        readOnly={readOnly}
+        inputRef={mergedInputRef}
+        onClick={(e) => {
+          if (draggedRef.current) {
+            draggedRef.current = false;
+            e.preventDefault();
+            e.preventBaseUIHandler();
+            return;
+          }
+          onClick?.(e);
         }}
-        onPointerUp={() => setIsPressed(false)}
-        onPointerLeave={() => setIsPressed(false)}
+        onPointerEnter={(e) => {
+          const isDisabled =
+            disabled ||
+            Boolean(internalInputRef.current?.disabled) ||
+            e.currentTarget.hasAttribute("data-disabled");
+          if (!isDisabled) setIsHovered(true);
+          onPointerEnter?.(e);
+        }}
+        onPointerLeave={(e) => {
+          setIsHovered(false);
+          if (!pointerDownRef.current) setIsPressed(false);
+          onPointerLeave?.(e);
+        }}
+        onPointerDown={(e) => {
+          onPointerDown?.(e);
+          const isDisabled =
+            disabled ||
+            Boolean(internalInputRef.current?.disabled) ||
+            e.currentTarget.hasAttribute("data-disabled");
+          const isReadOnly =
+            readOnly || e.currentTarget.hasAttribute("data-readonly");
+          if (
+            isDisabled ||
+            isReadOnly ||
+            (e.pointerType === "mouse" && e.button !== 0)
+          ) {
+            return;
+          }
+          pointerDownRef.current = true;
+          startXRef.current = e.clientX;
+          draggedRef.current = false;
+          setIsPressed(true);
+          try {
+            e.currentTarget.setPointerCapture(e.pointerId);
+          } catch {}
+        }}
+        onPointerMove={(e) => {
+          onPointerMove?.(e);
+          const input = internalInputRef.current;
+          const isReadOnly =
+            readOnly || e.currentTarget.hasAttribute("data-readonly");
+          if (
+            !pointerDownRef.current ||
+            !input ||
+            input.disabled ||
+            isReadOnly
+          ) {
+            return;
+          }
+          const dx = e.clientX - startXRef.current;
+          if (!input.checked && dx > 6) {
+            draggedRef.current = true;
+            startXRef.current = e.clientX;
+            input.click();
+          } else if (input.checked && dx < -6) {
+            draggedRef.current = true;
+            startXRef.current = e.clientX;
+            input.click();
+          }
+        }}
+        onPointerUp={(e) => {
+          onPointerUp?.(e);
+          pointerDownRef.current = false;
+          setIsPressed(false);
+          try {
+            e.currentTarget.releasePointerCapture(e.pointerId);
+          } catch {}
+          if (draggedRef.current) {
+            window.setTimeout(() => {
+              draggedRef.current = false;
+            }, 0);
+          }
+        }}
+        onPointerCancel={(e) => {
+          onPointerCancel?.(e);
+          pointerDownRef.current = false;
+          setIsPressed(false);
+          draggedRef.current = false;
+        }}
+        onFocus={(e) => {
+          const isDisabled =
+            disabled ||
+            Boolean(internalInputRef.current?.disabled) ||
+            e.currentTarget.hasAttribute("data-disabled");
+          if (!isDisabled && e.currentTarget.matches(":focus-visible")) {
+            setIsFocused(true);
+          }
+          onFocus?.(e);
+        }}
+        onBlur={(e) => {
+          setIsFocused(false);
+          setIsPressed(false);
+          onBlur?.(e);
+        }}
         onKeyDown={(e) => {
-          if (e.key === " " || e.key === "Enter") {
+          const isDisabled =
+            disabled ||
+            Boolean(internalInputRef.current?.disabled) ||
+            e.currentTarget.hasAttribute("data-disabled");
+          const isReadOnly =
+            readOnly || e.currentTarget.hasAttribute("data-readonly");
+          if (
+            !isDisabled &&
+            !isReadOnly &&
+            (e.key === " " || e.key === "Enter")
+          ) {
             setIsPressed(true);
           }
+          onKeyDown?.(e);
         }}
         onKeyUp={(e) => {
           if (e.key === " " || e.key === "Enter") {
             setIsPressed(false);
           }
+          onKeyUp?.(e);
         }}
-        className={cn(
-          "group relative inline-flex shrink-0 cursor-pointer items-center rounded-full p-[2.5px] transition-colors duration-200 outline-none select-none",
-          "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-          "disabled:cursor-not-allowed disabled:opacity-40",
-          dimensions.track,
-          isChecked
-            ? "bg-foreground border border-transparent shadow-xs"
-            : "bg-input/90 hover:bg-input border border-border/90 hover:border-muted-foreground/40 shadow-inner",
-          className
-        )}
+        className={(state) =>
+          cn(
+            "group relative inline-flex shrink-0 items-center rounded-full transition-colors duration-200 outline-none select-none touch-none",
+            "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+            state.disabled
+              ? "cursor-not-allowed"
+              : state.readOnly
+              ? "cursor-default"
+              : "cursor-pointer",
+            dims.track,
+            state.disabled
+              ? state.checked
+                ? "bg-foreground/20"
+                : "bg-muted/25 ring-2 ring-inset ring-border/40"
+              : state.checked
+              ? "bg-foreground"
+              : "bg-muted/50 ring-2 ring-inset ring-muted-foreground/45 hover:ring-muted-foreground/75",
+            typeof className === "function" ? className(state) : className
+          )
+        }
         {...props}
       >
-        <motion.span
+        <SwitchPrimitive.Thumb
           data-slot="switch-thumb"
-          layout
-          initial={false}
-          animate={{
-            x: thumbX,
-            width: thumbWidth,
-            height: thumbHeight,
+          render={(thumbProps, state) => {
+            const {
+              ref: thumbRef,
+              className: thumbBaseClassName,
+              style: _thumbStyle,
+              onDrag: _onDrag,
+              onDragStart: _onDragStart,
+              onDragEnd: _onDragEnd,
+              onAnimationStart: _onAnimationStart,
+              ...restThumbProps
+            } = thumbProps as React.HTMLAttributes<HTMLSpanElement> & {
+              ref?: React.Ref<HTMLSpanElement>;
+            };
+
+            const activeCenterX = state.checked
+              ? dims.rightCenter
+              : dims.leftCenter;
+            const isInteractive = !state.disabled && !state.readOnly;
+            const thumbSize =
+              isPressed && isInteractive
+                ? state.checked
+                  ? dims.pressSize
+                  : dims.offPressSize
+                : state.checked
+                ? dims.onSize
+                : dims.offSize;
+            const showHalo =
+              !state.disabled &&
+              (isFocused ||
+                isHovered ||
+                (isPressed && isInteractive));
+
+            return (
+              <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center">
+                <motion.span
+                  aria-hidden="true"
+                  initial={false}
+                  animate={{
+                    x: activeCenterX - dims.haloSize / 2,
+                    scale:
+                      isPressed && isInteractive
+                        ? 1.05
+                        : showHalo
+                        ? 1
+                        : 0.72,
+                    opacity:
+                      isPressed && isInteractive ? 1 : showHalo ? 0.85 : 0,
+                  }}
+                  transition={
+                    shouldReduceMotion
+                      ? { duration: 0 }
+                      : { duration: 0.16, ease: [0.22, 1, 0.36, 1] }
+                  }
+                  style={{ width: dims.haloSize, height: dims.haloSize }}
+                  className={cn(
+                    "absolute left-0 rounded-full transition-colors duration-150",
+                    state.checked ? "bg-foreground/15" : "bg-foreground/12"
+                  )}
+                />
+                <motion.span
+                  ref={thumbRef}
+                  {...restThumbProps}
+                  initial={false}
+                  animate={{
+                    x: activeCenterX - thumbSize / 2,
+                    width: thumbSize,
+                    height: thumbSize,
+                  }}
+                  transition={springTransition}
+                  className={cn(
+                    "rounded-full transition-colors duration-200",
+                    state.disabled
+                      ? state.checked
+                        ? "bg-background/85"
+                        : "bg-muted-foreground/40"
+                      : state.checked
+                      ? "bg-background shadow-sm"
+                      : isPressed && isInteractive
+                      ? "bg-foreground shadow-xs"
+                      : isHovered || isFocused
+                      ? "bg-foreground/85 shadow-xs"
+                      : "bg-muted-foreground shadow-xs",
+                    thumbBaseClassName
+                  )}
+                />
+              </span>
+            );
           }}
-          transition={{
-            type: "spring",
-            stiffness: 600,
-            damping: 35,
-          }}
-          className={cn(
-            "pointer-events-none flex items-center justify-center rounded-full transition-colors duration-200",
-            isChecked
-              ? "bg-background text-foreground shadow-sm"
-              : "bg-muted-foreground group-hover:bg-foreground/90 shadow-xs"
-          )}
-        >
-          {showIcon && (
-            <motion.svg
-              initial={false}
-              animate={{
-                scale: isChecked ? 1 : 0,
-                opacity: isChecked ? 1 : 0,
-              }}
-              transition={{ duration: 0.15 }}
-              style={{
-                width: dimensions.iconSize,
-                height: dimensions.iconSize,
-              }}
-              className="stroke-current flex-shrink-0"
-              viewBox="0 0 12 12"
-              fill="none"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="2.5 6 4.8 8.5 9.5 3.5" />
-            </motion.svg>
-          )}
-        </motion.span>
-      </button>
+        />
+      </SwitchPrimitive.Root>
     );
   }
 );

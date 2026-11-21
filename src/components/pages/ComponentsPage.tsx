@@ -1,16 +1,22 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { animate, useReducedMotion } from "motion/react";
-import { Bookmark, Play, Settings2 } from "../icons";
+import { Bookmark, Check, Play, Settings2, Share01 } from "../icons";
 import { GlobalsConfig, TileConfig } from "../../types/gradient";
 import { DEFAULT_GLOBALS } from "../../constants/defaults";
 import {
   getRegistryCliCommand,
-  STUDIO_COMPONENT_PROPS,
+  getShowcaseComponentDocs,
   type StudioComponentId,
 } from "../studio/registry";
-import { BotAvatar, DEFAULT_BOT_SHAPE, type AvatarExpression } from "../bot-avatar";
+import {
+  BotAvatar,
+  DEFAULT_BOT_BODY_COLOR,
+  DEFAULT_BOT_SHAPE,
+  type AvatarExpression,
+} from "../bot-avatar";
 import { Palette } from "../palette/Palette";
 import { WakeSlider } from "../ui/wake-slider";
+import { DownloadButton } from "../ui/download-button";
 import { GradientTile } from "../GradientTile";
 import { Button } from "../ui/button";
 import {
@@ -46,18 +52,38 @@ import {
   resolveGradientTile,
   type GradientTileConfig,
 } from "../showcase/demos/GradientTileDemo";
-import { ShowcaseCodePanel, ShowcaseStageHeader } from "../showcase/ComponentDetailLayout";
+import {
+  DownloadButtonDemo,
+  buildDownloadButtonJsx,
+  DEFAULT_DOWNLOAD_BUTTON_CONFIG,
+  type DownloadButtonConfig,
+} from "../showcase/demos/DownloadButtonDemo";
+import {
+  ShowcaseCodePanel,
+  ShowcaseStageHeader,
+  shareCurrentUrl,
+} from "../showcase/ComponentDetailLayout";
+import { prefetchComponentCode } from "../showcase/registrySource";
 import { DotMatrixWave } from "../showcase/DotMatrixWave";
 import { cn } from "../../utils/cn";
 
-export type ProductId = "gradient" | "bot-avatar" | "color-picker" | "palette" | "wake-slider";
+export type ProductId =
+  | "gradient"
+  | "bot-avatar"
+  | "color-picker"
+  | "palette"
+  | "wake-slider"
+  | "download-button";
 
 interface ProductMeta {
   id: ProductId;
   title: string;
   description: string;
-  cardHeightClass?: string;
+  masonryHeight: number;
+  cardHeightClass: string;
 }
+
+const MASONRY_GAP_PX = 20;
 
 const PRODUCTS: ProductMeta[] = [
   {
@@ -65,37 +91,94 @@ const PRODUCTS: ProductMeta[] = [
     title: "Bot Avatar",
     description:
       "Interactive 2.5D SVG avatar with 3D gaze tracking, organic blinking, 7 body shapes, 10 expressions, and tactile gestures.",
-    cardHeightClass: "h-[270px] sm:h-[300px]",
+    masonryHeight: 310,
+    cardHeightClass: "h-[280px] sm:h-[310px]",
   },
   {
     id: "color-picker",
     title: "Color Picker",
     description:
       "Interactive HSVA color picker with spring-physics loupe, HEX/RGB/HSL channels, alpha slider, eyedropper, and preset swatches.",
-    cardHeightClass: "h-[270px] sm:h-[300px]",
-  },
-  {
-    id: "palette",
-    title: "OKLCH Palette",
-    description:
-      "Perceptually uniform OKLCH color ramp generator with elastic SVG goo transitions and instant hex copy.",
-    cardHeightClass: "h-[270px] sm:h-[300px]",
-  },
-  {
-    id: "wake-slider",
-    title: "Wake Slider",
-    description:
-      "Kinetic bar-track range slider with velocity-driven wave wake and NumberFlow numeric readout.",
-    cardHeightClass: "h-[270px] sm:h-[300px]",
+    masonryHeight: 230,
+    cardHeightClass: "h-[210px] sm:h-[230px]",
   },
   {
     id: "gradient",
     title: "Squircle Gradient",
     description:
       "Layered SVG & CSS squircle gradient tile with organic blob shapes, echo trails, rim lighting, film grain, and border beams.",
-    cardHeightClass: "h-[270px] sm:h-[300px]",
+    masonryHeight: 360,
+    cardHeightClass: "h-[290px] sm:h-[360px]",
+  },
+  {
+    id: "wake-slider",
+    title: "Wake Slider",
+    description:
+      "Kinetic bar-track range slider with velocity-driven wave wake and NumberFlow numeric readout.",
+    masonryHeight: 220,
+    cardHeightClass: "h-[200px] sm:h-[220px]",
+  },
+  {
+    id: "palette",
+    title: "OKLCH Palette",
+    description:
+      "Perceptually uniform OKLCH color ramp generator with elastic SVG goo transitions and instant hex copy.",
+    masonryHeight: 240,
+    cardHeightClass: "h-[210px] sm:h-[240px]",
+  },
+  {
+    id: "download-button",
+    title: "Download Button",
+    description:
+      "Multi-state pill download button with emerging Pause/Play and Cancel circles, live progress sweep, and checkmark-to-Open morph.",
+    masonryHeight: 210,
+    cardHeightClass: "h-[195px] sm:h-[210px]",
   },
 ];
+
+const LG_MEDIA_QUERY = "(min-width: 1024px)";
+const SM_MEDIA_QUERY = "(min-width: 640px)";
+
+function subscribeMasonryQueries(callback: () => void) {
+  if (typeof window === "undefined" || !window.matchMedia) return () => {};
+  const lgMq = window.matchMedia(LG_MEDIA_QUERY);
+  const smMq = window.matchMedia(SM_MEDIA_QUERY);
+  lgMq.addEventListener("change", callback);
+  smMq.addEventListener("change", callback);
+  return () => {
+    lgMq.removeEventListener("change", callback);
+    smMq.removeEventListener("change", callback);
+  };
+}
+
+function getMasonryColumnCountSnapshot(): 1 | 2 | 3 {
+  if (typeof window === "undefined" || !window.matchMedia) return 3;
+  if (window.matchMedia(LG_MEDIA_QUERY).matches) return 3;
+  if (window.matchMedia(SM_MEDIA_QUERY).matches) return 2;
+  return 1;
+}
+
+function distributeMasonryColumns<T extends { masonryHeight: number }>(
+  items: readonly T[],
+  columnCount: number
+): T[][] {
+  const cols: T[][] = Array.from({ length: columnCount }, () => []);
+  const heights = new Array<number>(columnCount).fill(0);
+
+  for (const item of items) {
+    let shortestCol = 0;
+    for (let i = 1; i < columnCount; i++) {
+      if (heights[i] < heights[shortestCol]) {
+        shortestCol = i;
+      }
+    }
+    cols[shortestCol].push(item);
+    heights[shortestCol] +=
+      item.masonryHeight + (cols[shortestCol].length > 1 ? MASONRY_GAP_PX : 0);
+  }
+
+  return cols;
+}
 
 const CUBIC_EASE = [0.22, 1, 0.36, 1] as const;
 const GRID_AVATAR_SCALE = 0.82;
@@ -150,13 +233,21 @@ export const ComponentsPage: React.FC<ComponentsPageProps> = ({
   const [gradientConfig, setGradientConfig] = useState<GradientTileConfig>(
     DEFAULT_GRADIENT_TILE_CONFIG
   );
+  const [downloadButtonConfig, setDownloadButtonConfig] = useState<DownloadButtonConfig>(
+    DEFAULT_DOWNLOAD_BUTTON_CONFIG
+  );
   const [paletteRollCount, setPaletteRollCount] = useState(0);
   const [gradientAnimKey, setGradientAnimKey] = useState(0);
+  const [downloadReplaySignal, setDownloadReplaySignal] = useState(0);
+  const [downloadResetKey, setDownloadResetKey] = useState(0);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [gridPickerOpen, setGridPickerOpen] = useState(false);
   const [stageTab, setStageTab] = useState<"block" | "code">("block");
+  const [codeMountedProduct, setCodeMountedProduct] = useState<ProductId | null>(null);
   const [copiedCode, setCopiedCode] = useState(false);
   const [copiedPrompt, setCopiedPrompt] = useState(false);
+  const [copiedShare, setCopiedShare] = useState(false);
+  const shareTimerRef = useRef<number | null>(null);
 
   const [activeProduct, setActiveProduct] = useState<ProductId | null>(selectedProduct);
   const [phase, setPhase] = useState<TransitionPhase>(selectedProduct !== null ? "open" : "idle");
@@ -169,7 +260,7 @@ export const ComponentsPage: React.FC<ComponentsPageProps> = ({
   const backdropRef = useRef<HTMLDivElement | null>(null);
   const previewScaleRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const expandedHeaderRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const expandedPlayRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const expandedPlayRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const fromRectRef = useRef<DOMRect | null>(null);
   const pointerDownOnBackdropRef = useRef(false);
@@ -181,6 +272,15 @@ export const ComponentsPage: React.FC<ComponentsPageProps> = ({
   const activeAnimsRef = useRef<Array<{ stop: () => void }>>([]);
   const playTimersRef = useRef<Record<string, number>>({});
   const shouldReduceMotion = useReducedMotion();
+  const columnCount = useSyncExternalStore(
+    subscribeMasonryQueries,
+    getMasonryColumnCountSnapshot,
+    () => 3
+  );
+  const masonryColumns = useMemo(
+    () => distributeMasonryColumns(PRODUCTS, columnCount),
+    [columnCount]
+  );
 
   const getGridScale = useCallback((id: ProductId) => {
     if (id === "bot-avatar") return GRID_AVATAR_SCALE;
@@ -401,6 +501,8 @@ export const ComponentsPage: React.FC<ComponentsPageProps> = ({
         setPaletteConfig(DEFAULT_PALETTE_CONFIG);
         setWakeSliderConfig(DEFAULT_WAKE_SLIDER_CONFIG);
         setGradientConfig(DEFAULT_GRADIENT_TILE_CONFIG);
+        setDownloadButtonConfig(DEFAULT_DOWNLOAD_BUTTON_CONFIG);
+        setDownloadResetKey((k) => k + 1);
         setPickerOpen(false);
         setActiveProduct(null);
         setPhase("idle");
@@ -414,6 +516,8 @@ export const ComponentsPage: React.FC<ComponentsPageProps> = ({
       setPaletteConfig(DEFAULT_PALETTE_CONFIG);
       setWakeSliderConfig(DEFAULT_WAKE_SLIDER_CONFIG);
       setGradientConfig(DEFAULT_GRADIENT_TILE_CONFIG);
+      setDownloadButtonConfig(DEFAULT_DOWNLOAD_BUTTON_CONFIG);
+      setDownloadResetKey((k) => k + 1);
       setPickerOpen(false);
       const dur = 0.3;
 
@@ -543,6 +647,37 @@ export const ComponentsPage: React.FC<ComponentsPageProps> = ({
     };
   }, []);
 
+  const resolveIsDarkForProduct = useCallback(
+    (id: ProductId) => {
+      if (id === "color-picker") {
+        return colorPickerConfig.theme !== "light";
+      }
+      return typeof document !== "undefined"
+        ? document.documentElement.classList.contains("dark")
+        : true;
+    },
+    [colorPickerConfig.theme]
+  );
+
+  // Keep Code panel mounted while promoted after first visit & warm registry/Shiki in background
+  useEffect(() => {
+    if (!activeProduct || phase === "closing") {
+      setCodeMountedProduct(null);
+      return;
+    }
+    if (stageTab === "code") {
+      setCodeMountedProduct(activeProduct);
+    }
+  }, [activeProduct, phase, stageTab]);
+
+  useEffect(() => {
+    if (phase !== "open" || !activeProduct) return;
+    const timerId = window.setTimeout(() => {
+      prefetchComponentCode(activeProduct, resolveIsDarkForProduct(activeProduct));
+    }, 220);
+    return () => window.clearTimeout(timerId);
+  }, [phase, activeProduct, resolveIsDarkForProduct]);
+
   useEffect(() => {
     if (activeProduct === null) return;
     const prevOverflow = document.body.style.overflow;
@@ -574,8 +709,11 @@ export const ComponentsPage: React.FC<ComponentsPageProps> = ({
     if (activeProduct === "gradient") {
       return buildGradientTileJsx(gradientConfig);
     }
+    if (activeProduct === "download-button") {
+      return buildDownloadButtonJsx(downloadButtonConfig);
+    }
     return buildBotAvatarJsx(botConfig);
-  }, [activeProduct, botConfig, colorPickerConfig, paletteConfig, wakeSliderConfig, gradientConfig]);
+  }, [activeProduct, botConfig, colorPickerConfig, paletteConfig, wakeSliderConfig, gradientConfig, downloadButtonConfig]);
 
   const handleCopyCode = async () => {
     try {
@@ -597,6 +735,27 @@ export const ComponentsPage: React.FC<ComponentsPageProps> = ({
       setTimeout(() => setCopiedPrompt(false), 2000);
     } catch {}
   };
+
+  const handleShare = async (productTitle: string) => {
+    const copied = await shareCurrentUrl(productTitle);
+    if (!copied) return;
+    setCopiedShare(true);
+    if (shareTimerRef.current !== null) {
+      window.clearTimeout(shareTimerRef.current);
+    }
+    shareTimerRef.current = window.setTimeout(() => {
+      setCopiedShare(false);
+      shareTimerRef.current = null;
+    }, 2000);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (shareTimerRef.current !== null) {
+        window.clearTimeout(shareTimerRef.current);
+      }
+    };
+  }, []);
 
   const toggleSaved = (id: ProductId) => {
     setSavedProducts((prev) =>
@@ -629,6 +788,11 @@ export const ComponentsPage: React.FC<ComponentsPageProps> = ({
 
     if (id === "gradient") {
       setGradientAnimKey((prev) => prev + 1);
+      return;
+    }
+
+    if (id === "download-button") {
+      setDownloadReplaySignal((prev) => prev + 1);
       return;
     }
 
@@ -705,33 +869,35 @@ export const ComponentsPage: React.FC<ComponentsPageProps> = ({
               </div>
             </section>
 
-            {/* Masonry Cards Grid (1 col mobile, 3 cols desktop) */}
+            {/* Masonry Cards Grid (1 col mobile, 2 cols sm, 3 cols lg+) */}
             <div
               id="products-grid"
-              className="scroll-mt-20 w-full max-w-6xl mx-auto px-4 sm:px-6 columns-1 md:columns-3 gap-5"
+              className="scroll-mt-20 w-full max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 items-start"
             >
-              {PRODUCTS.map((product) => {
-                const isSaved = savedProducts.includes(product.id);
-                const playStep = playingMap[product.id] ?? 0;
-                const isPromoted = activeProduct === product.id;
-                const playExpressions: AvatarExpression[] = ["excited", "happy", "wink", "surprised"];
-                const baseExpr = isPromoted ? botConfig.expression : "idle";
-                const pool = playExpressions.filter((e) => e !== baseExpr);
-                const botExpression: AvatarExpression =
-                  playStep > 0 ? pool[(playStep - 1) % pool.length] : baseExpr;
+              {masonryColumns.map((colProducts, colIdx) => (
+                <div key={colIdx} className="flex flex-col gap-5 min-w-0">
+                  {colProducts.map((product) => {
+                    const isSaved = savedProducts.includes(product.id);
+                    const playStep = playingMap[product.id] ?? 0;
+                    const isPromoted = activeProduct === product.id;
+                    const playExpressions: AvatarExpression[] = ["excited", "happy", "wink", "surprised"];
+                    const baseExpr = isPromoted ? botConfig.expression : "idle";
+                    const pool = playExpressions.filter((e) => e !== baseExpr);
+                    const botExpression: AvatarExpression =
+                      playStep > 0 ? pool[(playStep - 1) % pool.length] : baseExpr;
 
-                return (
-                  <div
-                    key={product.id}
-                    ref={(el) => {
-                      slotRefs.current[product.id] = el;
-                    }}
-                    className={cn(
-                      "relative break-inside-avoid mb-5",
-                      product.id === "color-picker" && gridPickerOpen && !isPromoted && "z-30",
-                      product.cardHeightClass ?? "h-[270px] sm:h-[300px]"
-                    )}
-                  >
+                    return (
+                      <div
+                        key={product.id}
+                        ref={(el) => {
+                          slotRefs.current[product.id] = el;
+                        }}
+                        className={cn(
+                          "relative",
+                          product.id === "color-picker" && gridPickerOpen && !isPromoted && "z-30",
+                          product.cardHeightClass
+                        )}
+                      >
                     <div
                       ref={(el) => {
                         cardRefs.current[product.id] = el;
@@ -792,6 +958,12 @@ export const ComponentsPage: React.FC<ComponentsPageProps> = ({
                           <ShowcaseStageHeader
                             stageTab={stageTab}
                             onStageTabChange={setStageTab}
+                            onCodeTabIntent={() =>
+                              prefetchComponentCode(
+                                product.id,
+                                resolveIsDarkForProduct(product.id)
+                              )
+                            }
                             hasCode={true}
                             hideTitle={true}
                             hasCopyPrompt={true}
@@ -804,18 +976,32 @@ export const ComponentsPage: React.FC<ComponentsPageProps> = ({
                         </div>
                       )}
 
-                      {/* Code panel when Code tab is active */}
-                      {isPromoted && stageTab === "code" && (
-                        <div className="relative z-10 flex-1 min-h-0 pt-11 flex flex-col">
-                          <ShowcaseCodePanel
-                            codeSnippet={jsxSnippet}
-                            copiedCode={copiedCode}
-                            onCopyCode={handleCopyCode}
-                            cliCommand={getRegistryCliCommand(product.id)}
-                            propsDocs={STUDIO_COMPONENT_PROPS[product.id]}
-                          />
-                        </div>
-                      )}
+                      {/* Code panel when Code tab is active (kept mounted after first open for instant toggling) */}
+                      {isPromoted &&
+                        (stageTab === "code" || codeMountedProduct === product.id) && (
+                          <div
+                            className={cn(
+                              "relative z-10 flex-1 min-h-0 pt-11 flex flex-col",
+                              stageTab !== "code" && "hidden"
+                            )}
+                          >
+                            {(() => {
+                              const codeDocs = getShowcaseComponentDocs(product.id);
+                              return (
+                                <ShowcaseCodePanel
+                                  componentId={product.id}
+                                  codeSnippet={jsxSnippet}
+                                  copiedCode={copiedCode}
+                                  onCopyCode={handleCopyCode}
+                                  cliCommand={getRegistryCliCommand(product.id)}
+                                  dependencies={codeDocs?.dependencies}
+                                  propsDocs={codeDocs?.props}
+                                  howItWorks={codeDocs?.howItWorks}
+                                />
+                              );
+                            })()}
+                          </div>
+                        )}
 
                       {/* Single live component instance (always centered at 50% / 50%, never shifts!) */}
                       <div
@@ -852,6 +1038,9 @@ export const ComponentsPage: React.FC<ComponentsPageProps> = ({
                             <BotAvatar
                               shape={isPromoted ? botConfig.shape : DEFAULT_BOT_SHAPE}
                               expression={botExpression}
+                              bodyColor={
+                                isPromoted ? botConfig.bodyColor : DEFAULT_BOT_BODY_COLOR
+                              }
                               size={200}
                               interactive={true}
                               interactivePadding={isPromoted ? undefined : 0}
@@ -940,8 +1129,34 @@ export const ComponentsPage: React.FC<ComponentsPageProps> = ({
                                   ? gradientConfig.radius
                                   : DEFAULT_GRADIENT_TILE_CONFIG.radius,
                               }}
-                              size={isPromoted ? gradientConfig.size : 172}
+                              size={isPromoted ? gradientConfig.size : 196}
                               animationKey={gradientAnimKey}
+                            />
+                          )}
+                          {product.id === "download-button" && (
+                            <DownloadButton
+                              key={downloadResetKey}
+                              sizeMB={
+                                isPromoted
+                                  ? downloadButtonConfig.sizeMB
+                                  : DEFAULT_DOWNLOAD_BUTTON_CONFIG.sizeMB
+                              }
+                              durationMs={Math.round(
+                                (isPromoted
+                                  ? downloadButtonConfig.durationSec
+                                  : DEFAULT_DOWNLOAD_BUTTON_CONFIG.durationSec) * 1000
+                              )}
+                              progressFormat={
+                                isPromoted
+                                  ? downloadButtonConfig.progressFormat
+                                  : DEFAULT_DOWNLOAD_BUTTON_CONFIG.progressFormat
+                              }
+                              size={
+                                isPromoted
+                                  ? downloadButtonConfig.size
+                                  : DEFAULT_DOWNLOAD_BUTTON_CONFIG.size
+                              }
+                              replaySignal={downloadReplaySignal}
                             />
                           )}
                         </div>
@@ -983,25 +1198,49 @@ export const ComponentsPage: React.FC<ComponentsPageProps> = ({
                         </>
                       )}
 
-                      {/* Expanded bottom-right Play button */}
+                      {/* Expanded bottom-right Play & Share circle buttons */}
                       {isPromoted && stageTab !== "code" && (
-                        <button
+                        <div
                           ref={(el) => {
                             expandedPlayRefs.current[product.id] = el;
                           }}
-                          type="button"
-                          onClick={() => triggerPlay(product.id)}
-                          aria-label={`Play ${product.title} animation`}
-                          title="Play"
-                          className="absolute bottom-[14px] right-[14px] sm:bottom-[18px] sm:right-[18px] z-20 size-10 md:size-9 rounded-full glass-control flex items-center justify-center text-foreground cursor-pointer transition-transform active:scale-95 before:content-[''] before:absolute before:-inset-0.5 md:before:hidden"
+                          className="absolute bottom-[14px] right-[14px] sm:bottom-[18px] sm:right-[18px] z-20 flex items-center gap-1.5"
                         >
-                          <Play className="size-[18px] md:size-4" />
-                        </button>
+                          <button
+                            type="button"
+                            onClick={() => triggerPlay(product.id)}
+                            aria-label={`Play ${product.title} animation`}
+                            title="Play"
+                            className="relative size-10 md:size-9 rounded-full glass-control flex items-center justify-center text-foreground cursor-pointer transition-transform active:scale-95 before:content-[''] before:absolute before:-inset-0.5 md:before:hidden"
+                          >
+                            <Play className="size-[18px] md:size-4" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleShare(product.title)}
+                            aria-label={copiedShare ? "Link copied" : `Share ${product.title}`}
+                            title={copiedShare ? "Copied" : "Share"}
+                            className={cn(
+                              "relative size-10 md:size-9 rounded-full flex items-center justify-center cursor-pointer transition-all active:scale-95 before:content-[''] before:absolute before:-inset-0.5 md:before:hidden",
+                              copiedShare
+                                ? "glass-chosen text-primary"
+                                : "glass-control text-foreground"
+                            )}
+                          >
+                            {copiedShare ? (
+                              <Check className="size-[18px] md:size-4" />
+                            ) : (
+                              <Share01 className="size-[18px] md:size-4" />
+                            )}
+                          </button>
+                        </div>
                       )}
                     </div>
                   </div>
                 );
               })}
+                </div>
+              ))}
             </div>
       </div>
 
@@ -1026,7 +1265,7 @@ export const ComponentsPage: React.FC<ComponentsPageProps> = ({
             }
           }}
           className={cn(
-            "fixed inset-0 z-[60] overflow-hidden lg:overflow-y-auto",
+            "fixed inset-0 z-[60] overflow-y-auto",
             phase === "closing" && "pointer-events-none"
           )}
         >
@@ -1036,7 +1275,7 @@ export const ComponentsPage: React.FC<ComponentsPageProps> = ({
           />
           <div
             data-showcase-backdrop="true"
-            className="relative z-10 h-dvh lg:h-auto lg:min-h-full w-full flex flex-col justify-start lg:justify-center"
+            className="relative z-10 min-h-full w-full flex flex-col justify-start"
           >
             {activeProduct === "bot-avatar" && (
               <BotAvatarDemo
@@ -1158,6 +1397,30 @@ export const ComponentsPage: React.FC<ComponentsPageProps> = ({
                 isClosing={phase === "closing"}
                 skipEntranceMotion={skipEntranceMotion}
                 onPlay={() => triggerPlay("gradient")}
+              />
+            )}
+            {activeProduct === "download-button" && (
+              <DownloadButtonDemo
+                key={activeProduct}
+                componentList={PRODUCTS.map(({ id, title }) => ({ id, title }))}
+                activeComponentId={activeProduct}
+                onSelectComponent={(id) => {
+                  if (id === activeProduct) return;
+                  openProduct(id as ProductId);
+                }}
+                onClose={() => onSelectProduct(null)}
+                onOpenInStudio={
+                  onOpenInStudio
+                    ? () => onOpenInStudio("download-button", downloadButtonConfig)
+                    : undefined
+                }
+                config={downloadButtonConfig}
+                onConfigChange={setDownloadButtonConfig}
+                stageSlotRef={targetSlotRef}
+                isClosing={phase === "closing"}
+                skipEntranceMotion={skipEntranceMotion}
+                onPlay={() => triggerPlay("download-button")}
+                onReset={() => setDownloadResetKey((k) => k + 1)}
               />
             )}
           </div>

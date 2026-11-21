@@ -2,36 +2,51 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import {
   BotAvatar,
   BOT_AVATAR_SHAPES,
+  BOT_BODY_COLORS,
   BOT_EXPRESSIONS,
   DEFAULT_BOT_BODY_COLOR,
   DEFAULT_BOT_SHAPE,
   type AvatarExpression,
   type BotAvatarShape,
-  type BotShapeDefinition,
 } from "../../bot-avatar";
+import {
+  Component as FluidDropdown,
+  type Category as DropdownCategory,
+} from "../../ui/fluid-dropdown";
 import { WakeSliderField } from "../../ui/wake-slider";
 import {
   ComponentDetailLayout,
-  ShowcaseSection,
   ShowcaseToggleField,
   type ShowcaseComponentNavItem,
 } from "../ComponentDetailLayout";
 import { cn } from "../../../utils/cn";
 
-const PANEL_SHAPE_IDS: readonly BotAvatarShape[] = ["circle", "squircle", "berry"];
-const PANEL_EXPRESSION_IDS: readonly AvatarExpression[] = ["idle", "happy", "sleepy"];
+const SHAPE_CATEGORIES: DropdownCategory[] = BOT_AVATAR_SHAPES.map((s) => ({
+  id: s.id,
+  label: s.label,
+  color: DEFAULT_BOT_BODY_COLOR,
+}));
 
-const PANEL_SHAPES: BotShapeDefinition[] = PANEL_SHAPE_IDS.map((id) =>
-  BOT_AVATAR_SHAPES.find((shapeDef) => shapeDef.id === id)
-).filter((shapeDef): shapeDef is BotShapeDefinition => Boolean(shapeDef));
+const SHAPE_PATH_BY_ID: Record<string, string> = Object.fromEntries(
+  BOT_AVATAR_SHAPES.map((s) => [s.id, s.path])
+);
 
-const PANEL_EXPRESSIONS = PANEL_EXPRESSION_IDS.map((id) =>
-  BOT_EXPRESSIONS.find((expr) => expr.id === id)
-).filter((expr): expr is (typeof BOT_EXPRESSIONS)[number] => Boolean(expr));
+const EXPRESSION_CATEGORIES: DropdownCategory[] = BOT_EXPRESSIONS.map((expr) => ({
+  id: expr.id,
+  label: expr.label,
+  color: DEFAULT_BOT_BODY_COLOR,
+}));
+
+const COLOR_CATEGORIES: DropdownCategory[] = BOT_BODY_COLORS.map((c) => ({
+  id: c.id,
+  label: c.label,
+  color: c.hex,
+}));
 
 export interface BotAvatarConfig {
   shape: BotAvatarShape;
   expression: AvatarExpression;
+  bodyColor: string;
   size: number;
   trackGaze: boolean;
 }
@@ -39,6 +54,7 @@ export interface BotAvatarConfig {
 export const DEFAULT_BOT_AVATAR_CONFIG: BotAvatarConfig = {
   shape: DEFAULT_BOT_SHAPE,
   expression: "idle",
+  bodyColor: DEFAULT_BOT_BODY_COLOR,
   size: 200,
   trackGaze: true,
 };
@@ -52,6 +68,9 @@ export function buildBotAvatarJsx(config: BotAvatarConfig): string {
     `  expression="${config.expression}"`,
     `  size={${config.size}}`,
   ];
+  if (config.bodyColor.toUpperCase() !== DEFAULT_BOT_BODY_COLOR.toUpperCase()) {
+    lines.push(`  bodyColor="${config.bodyColor}"`);
+  }
   if (!config.trackGaze) {
     lines.push(`  trackGaze={false}`);
   }
@@ -92,12 +111,14 @@ export const BotAvatarDemo: React.FC<BotAvatarDemoProps> = ({
   const {
     shape,
     expression,
+    bodyColor,
     size,
     trackGaze,
   } = config;
 
   const setShape = (v: BotAvatarShape) => patchConfig({ shape: v });
   const setExpression = (v: AvatarExpression) => patchConfig({ expression: v });
+  const setBodyColor = (v: string) => patchConfig({ bodyColor: v });
   const setSize = (v: number) => patchConfig({ size: v });
   const setTrackGaze = (v: boolean) => patchConfig({ trackGaze: v });
 
@@ -113,10 +134,15 @@ export const BotAvatarDemo: React.FC<BotAvatarDemoProps> = ({
     };
   }, []);
 
-  const activeShapeDef =
-    BOT_AVATAR_SHAPES.find((s) => s.id === shape) ?? BOT_AVATAR_SHAPES[0];
-  const activeExpressionDef =
-    BOT_EXPRESSIONS.find((e) => e.id === expression) ?? BOT_EXPRESSIONS[0];
+  const activeShapeCategory =
+    SHAPE_CATEGORIES.find((s) => s.id === shape) ?? SHAPE_CATEGORIES[0];
+  const activeExpressionCategory =
+    EXPRESSION_CATEGORIES.find((e) => e.id === expression) ??
+    EXPRESSION_CATEGORIES[0];
+  const activeColorCategory =
+    COLOR_CATEGORIES.find(
+      (c) => c.color.toUpperCase() === bodyColor.toUpperCase()
+    ) ?? COLOR_CATEGORIES[COLOR_CATEGORIES.length - 1];
 
   const jsxSnippet = useMemo(() => buildBotAvatarJsx(config), [config]);
 
@@ -154,7 +180,7 @@ export const BotAvatarDemo: React.FC<BotAvatarDemoProps> = ({
           <BotAvatar
             shape={shape}
             expression={playExpression ?? expression}
-            bodyColor={DEFAULT_BOT_BODY_COLOR}
+            bodyColor={bodyColor}
             size={size}
             interactive={true}
             trackGaze={trackGaze}
@@ -176,69 +202,69 @@ export const BotAvatarDemo: React.FC<BotAvatarDemoProps> = ({
       isClosing={isClosing}
       skipEntranceMotion={skipEntranceMotion}
     >
-      {/* Shape Picker */}
-      <ShowcaseSection
-        label={`Body Shape (${PANEL_SHAPES.length})`}
-        valueLabel={activeShapeDef.label}
-      >
-        <div className="grid grid-cols-3 gap-1.5">
-          {PANEL_SHAPES.map((item) => {
-            const isSelected = item.id === shape;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => setShape(item.id)}
-                className={cn(
-                  "flex flex-col items-center justify-center gap-1 py-2 px-1.5 rounded-xl border text-[11px] font-medium transition-all cursor-pointer",
-                  isSelected
-                    ? "glass-chosen text-foreground"
-                    : "bg-secondary/60 border-border text-muted-foreground hover:text-foreground hover:bg-secondary"
-                )}
-              >
-                <svg viewBox="0 0 100 100" className="size-5 shrink-0">
-                  <path
-                    d={item.path}
-                    fill={isSelected ? DEFAULT_BOT_BODY_COLOR : "currentColor"}
-                    fillOpacity={isSelected ? 1 : 0.35}
-                  />
-                </svg>
-                <span className="truncate max-w-full">{item.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </ShowcaseSection>
+      <div className="flex flex-col gap-2 text-xs">
+        {/* Shape Dropdown */}
+        <FluidDropdown
+          label="Shape"
+          categories={SHAPE_CATEGORIES}
+          selectedCategory={activeShapeCategory}
+          onSelectCategory={(cat) => setShape(cat.id as BotAvatarShape)}
+          showDividerAfterFirst={false}
+          portal
+          triggerClassName="h-11 rounded-xl bg-secondary/80 hover:bg-secondary border-border px-3.5 text-xs text-foreground"
+          renderIcon={(cat, { isSelected, inTrigger }) =>
+            inTrigger ? null : (
+              <svg viewBox="0 0 100 100" className="size-4 mr-2.5 shrink-0">
+                <path
+                  d={SHAPE_PATH_BY_ID[cat.id]}
+                  fill={isSelected ? bodyColor : "currentColor"}
+                  fillOpacity={isSelected ? 1 : 0.45}
+                />
+              </svg>
+            )
+          }
+        />
 
-      {/* Expression Picker */}
-      <ShowcaseSection
-        label={`Expression (${PANEL_EXPRESSIONS.length})`}
-        valueLabel={activeExpressionDef.label}
-      >
-        <div className="grid grid-cols-3 gap-1.5">
-          {PANEL_EXPRESSIONS.map((item) => {
-            const isSelected = item.id === expression;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => setExpression(item.id)}
+        {/* Expression Dropdown */}
+        <FluidDropdown
+          label="Expression"
+          categories={EXPRESSION_CATEGORIES}
+          selectedCategory={activeExpressionCategory}
+          onSelectCategory={(cat) => setExpression(cat.id as AvatarExpression)}
+          showDividerAfterFirst={false}
+          portal
+          triggerClassName="h-11 rounded-xl bg-secondary/80 hover:bg-secondary border-border px-3.5 text-xs text-foreground"
+          renderIcon={(_, { isSelected, inTrigger }) =>
+            inTrigger ? null : (
+              <span
                 className={cn(
-                  "h-8 px-2.5 rounded-xl border text-xs font-medium transition-all cursor-pointer flex items-center justify-center",
-                  isSelected
-                    ? "glass-chosen text-foreground font-semibold"
-                    : "bg-secondary/60 border-border text-muted-foreground hover:text-foreground hover:bg-secondary"
+                  "size-1.5 rounded-full mr-2.5 shrink-0 transition-opacity",
+                  isSelected ? "bg-primary opacity-100" : "bg-muted-foreground/40 opacity-0"
                 )}
-              >
-                {item.label}
-              </button>
-            );
-          })}
-        </div>
-      </ShowcaseSection>
+              />
+            )
+          }
+        />
 
-      {/* Dimensions & Behavior Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2 text-xs">
+        {/* Body Color Dropdown */}
+        <FluidDropdown
+          label="Color"
+          categories={COLOR_CATEGORIES}
+          selectedCategory={activeColorCategory}
+          onSelectCategory={(cat) => setBodyColor(cat.color)}
+          showDividerAfterFirst={false}
+          portal
+          triggerClassName="h-11 rounded-xl bg-secondary/80 hover:bg-secondary border-border px-3.5 text-xs text-foreground"
+          renderIcon={(cat, { inTrigger }) =>
+            inTrigger ? null : (
+              <span
+                className="size-3.5 rounded-full mr-2.5 shrink-0 ring-1 ring-white/25"
+                style={{ backgroundColor: cat.color }}
+              />
+            )
+          }
+        />
+
         {/* Size Slider */}
         <WakeSliderField
           label="Size"
@@ -246,16 +272,17 @@ export const BotAvatarDemo: React.FC<BotAvatarDemoProps> = ({
           min={64}
           max={280}
           step={4}
+          bars={22}
           unit="px"
           defaultValue={200}
           onChange={setSize}
         />
 
         <ShowcaseToggleField
-          label="3D Gaze Tracking"
+          label="Follow"
           checked={trackGaze}
           onCheckedChange={setTrackGaze}
-          ariaLabel="Toggle 3D gaze tracking"
+          ariaLabel="Toggle pointer follow"
         />
       </div>
     </ComponentDetailLayout>

@@ -5,6 +5,7 @@ import { ArrowDown as RawArrowDown } from "../animate-ui/icons/arrow-down";
 import { ArrowLeft as RawArrowLeft } from "../animate-ui/icons/arrow-left";
 import { ArrowRight as RawArrowRight } from "../animate-ui/icons/arrow-right";
 import { ArrowUp as RawArrowUp } from "../animate-ui/icons/arrow-up";
+import { ArrowUpRight as RawArrowUpRight } from "../animate-ui/icons/arrow-up-right";
 import { Bookmark as RawBookmark, type BookmarkProps as RawBookmarkProps } from "../animate-ui/icons/bookmark";
 import { Check as RawCheck } from "../animate-ui/icons/check";
 import { ChevronDown as RawChevronDown } from "../animate-ui/icons/chevron-down";
@@ -30,6 +31,7 @@ import { LockOpen as RawLockOpen } from "../animate-ui/icons/lock-open";
 import { Mail as RawMail } from "../animate-ui/icons/mail";
 import { Maximize as RawMaximize } from "../animate-ui/icons/maximize";
 import { Moon as RawMoon } from "../animate-ui/icons/moon";
+import { Pause as RawPause } from "../animate-ui/icons/pause";
 import { Pencil as RawPencil } from "../animate-ui/icons/pencil";
 import { Pipette as RawPipette } from "../animate-ui/icons/pipette";
 import { Play as RawPlay } from "../animate-ui/icons/play";
@@ -118,6 +120,7 @@ export const ArrowLeft01 = withAnimateDefaults(RawArrowLeft, "ArrowLeft01");
 export const ArrowRight01 = withAnimateDefaults(RawArrowRight, "ArrowRight01");
 export const ChevronRight = withAnimateDefaults(RawChevronRight, "ChevronRight");
 export const ArrowUp01 = withAnimateDefaults(RawArrowUp, "ArrowUp01");
+export const ArrowUpRight = withAnimateDefaults(RawArrowUpRight, "ArrowUpRight");
 export const ChevronUp = withAnimateDefaults(RawChevronUp, "ChevronUp");
 export const Bookmark: React.FC<BookmarkCompatProps> = ({
   size = 16,
@@ -163,6 +166,7 @@ export const LockUnlock = withAnimateDefaults(RawLockOpen, "LockUnlock");
 export const Mail = withAnimateDefaults(RawMail, "Mail");
 export const Maximize = withAnimateDefaults(RawMaximize, "Maximize");
 export const Moon = withAnimateDefaults(RawMoon, "Moon");
+export const Pause = withAnimateDefaults(RawPause, "Pause");
 export const MoreVertical = withAnimateDefaults(
   RawEllipsisVertical,
   "MoreVertical"

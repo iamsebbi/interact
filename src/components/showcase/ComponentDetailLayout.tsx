@@ -1,9 +1,18 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { animate, useReducedMotion } from "motion/react";
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { animate, AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Switch } from "../ui/switch";
 import { Button } from "../ui/button";
 import { CodeBlock } from "../ui/code-block";
-import type { ComponentPropDoc } from "../studio/registry";
+import {
+  getShowcaseComponentDocs,
+  type ComponentHowItWorksDoc,
+  type ComponentPropDoc,
+} from "../studio/registry";
+import {
+  fetchRegistryFiles,
+  getCachedRegistryFiles,
+  type RegistrySourceFile,
+} from "./registrySource";
 import {
   Tabs,
   TabsHighlight,
@@ -12,7 +21,17 @@ import {
   TabsTrigger,
 } from "../ui/tabs";
 import { cn } from "../../utils/cn";
-import { Bookmark, Cancel01, Check, Code01, Copy01, Play, Refresh, Share01, Sparkles, Terminal } from "../icons";
+import {
+  Bookmark,
+  Cancel01,
+  Check,
+  ChevronRight,
+  Copy01,
+  Loading01,
+  Play,
+  Refresh,
+  Share01,
+} from "../icons";
 
 export interface ShowcaseComponentNavItem {
   id: string;
@@ -22,6 +41,7 @@ export interface ShowcaseComponentNavItem {
 export interface ShowcaseStageHeaderProps {
   stageTab: "block" | "code";
   onStageTabChange: (tab: "block" | "code") => void;
+  onCodeTabIntent?: () => void;
   hasCode?: boolean;
   title?: React.ReactNode;
   hideTitle?: boolean;
@@ -38,9 +58,12 @@ export interface ShowcaseStageHeaderProps {
 const STAGE_TAB_TRIGGER_CLASS =
   "relative z-10 h-full px-4 rounded-full text-sm font-medium flex items-center justify-center transition-colors cursor-pointer text-muted-foreground hover:text-foreground data-[state=active]:text-primary-foreground data-[state=active]:font-semibold before:content-[''] before:absolute before:-inset-y-1.5 before:inset-x-0 md:before:hidden";
 
+const HEADER_MORPH_EASE = [0.22, 1, 0.36, 1] as const;
+
 export const ShowcaseStageHeader: React.FC<ShowcaseStageHeaderProps> = ({
   stageTab,
   onStageTabChange,
+  onCodeTabIntent,
   hasCode = false,
   title,
   hideTitle = false,
@@ -52,211 +75,755 @@ export const ShowcaseStageHeader: React.FC<ShowcaseStageHeaderProps> = ({
   isSaved = false,
   onToggleSave,
   saveLabel = "component",
-}) => (
-  <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 pb-2 shrink-0">
-    <div className="flex flex-wrap items-center gap-2 min-w-0">
-      {hasCode && (
-        <Tabs
-          value={stageTab}
-          onValueChange={(v) => onStageTabChange(v as "block" | "code")}
-        >
-          <TabsHighlight className="absolute inset-0 rounded-full bg-primary shadow-xs">
-            <TabsList className="inline-flex h-9 items-center rounded-full bg-secondary/80 p-0.5 ring-1 ring-border">
-              <TabsHighlightItem value="block" className="h-full">
-                <TabsTrigger value="block" className={STAGE_TAB_TRIGGER_CLASS}>
-                  Block
-                </TabsTrigger>
-              </TabsHighlightItem>
-              <TabsHighlightItem value="code" className="h-full">
-                <TabsTrigger value="code" className={STAGE_TAB_TRIGGER_CLASS}>
-                  Code
-                </TabsTrigger>
-              </TabsHighlightItem>
-            </TabsList>
-          </TabsHighlight>
-        </Tabs>
-      )}
-
-      {!hideTitle && title && (
-        <h2 className="text-base font-semibold tracking-tight text-foreground truncate">
-          {title}
-        </h2>
-      )}
-    </div>
-
-    {(stageHeaderRight ||
-      (stageTab === "code" && hasCopyPrompt) ||
-      (stageTab !== "code" && onToggleSave)) && (
-      <div className="flex items-center gap-1.5 shrink-0 ml-auto">
-        {stageHeaderRight}
-        {stageTab === "code" && hasCopyPrompt && (
-          <button
-            type="button"
-            onClick={onCopyPrompt}
-            title={promptText ? "Copy AI prompt" : "Copy Prompt"}
-            className="relative inline-flex h-9 items-center px-3.5 rounded-full glass-control text-sm font-medium text-foreground transition-transform active:scale-95 cursor-pointer before:content-[''] before:absolute before:-inset-y-1 before:inset-x-0 md:before:hidden"
-          >
-            <span>{copiedPrompt ? "Copied" : "Copy Prompt"}</span>
-          </button>
-        )}
-        {stageTab !== "code" && onToggleSave && (
-          <button
-            type="button"
-            aria-label={isSaved ? `Unsave ${saveLabel}` : `Save ${saveLabel}`}
-            aria-pressed={isSaved}
-            title={isSaved ? "Saved" : "Save"}
-            onClick={onToggleSave}
-            className={cn(
-              "relative size-10 md:size-9 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer active:scale-95 before:content-[''] before:absolute before:-inset-0.5 md:before:hidden",
-              isSaved
-                ? "glass-chosen text-primary"
-                : "glass-control text-muted-foreground hover:text-foreground"
-            )}
-          >
-            <Bookmark active={isSaved} className="size-[18px] md:size-4" />
-          </button>
-        )}
-      </div>
-    )}
-  </div>
-);
-
-export interface ShowcaseCodePanelProps {
-  codeTitle?: string;
-  codeSnippet: string;
-  copiedCode: boolean;
-  onCopyCode: () => void;
-  cliCommand?: string;
-  propsDocs?: readonly ComponentPropDoc[];
-}
-
-export const ShowcaseCodePanel: React.FC<ShowcaseCodePanelProps> = ({
-  codeTitle = "React / TSX Usage",
-  codeSnippet,
-  copiedCode,
-  onCopyCode,
-  cliCommand,
-  propsDocs,
 }) => {
-  const [panelTab, setPanelTab] = useState<"usage" | "props">("usage");
-  const [copiedCli, setCopiedCli] = useState(false);
+  const shouldReduceMotion = Boolean(useReducedMotion());
+  const isCodeMode = stageTab === "code" && hasCopyPrompt;
+  const showMorphAction = isCodeMode || (stageTab !== "code" && Boolean(onToggleSave));
+  const morphContentKey = isCodeMode
+    ? copiedPrompt
+      ? "copied"
+      : "prompt"
+    : "save";
 
-  const handleCopyCli = async () => {
-    if (!cliCommand) return;
-    try {
-      await navigator.clipboard.writeText(cliCommand);
-      setCopiedCli(true);
-      setTimeout(() => setCopiedCli(false), 1800);
-    } catch {}
-  };
+  const morphTransition = shouldReduceMotion
+    ? { duration: 0 }
+    : { duration: 0.32, ease: HEADER_MORPH_EASE };
 
   return (
-    <div className="relative z-10 flex-1 min-h-0 w-full mt-1 rounded-2xl border border-border bg-background/70 flex flex-col overflow-hidden">
-      <div className="flex items-center justify-between gap-2 px-3.5 py-2 border-b border-border bg-secondary/40 shrink-0">
-        <div className="flex items-center gap-2 min-w-0">
-          {propsDocs && propsDocs.length > 0 ? (
-            <div className="inline-flex items-center gap-1 p-0.5 rounded-lg bg-background/60 border border-border/70">
-              <button
-                type="button"
-                onClick={() => setPanelTab("usage")}
-                className={cn(
-                  "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors cursor-pointer",
-                  panelTab === "usage"
-                    ? "bg-secondary text-foreground shadow-2xs"
-                    : "text-muted-foreground hover:text-foreground"
-                )}
-              >
-                <Code01 size={12} />
-                <span>Usage</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setPanelTab("props")}
-                className={cn(
-                  "px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors cursor-pointer",
-                  panelTab === "props"
-                    ? "bg-secondary text-foreground shadow-2xs"
-                    : "text-muted-foreground hover:text-foreground"
-                )}
-              >
-                Props ({propsDocs.length})
-              </button>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2 text-xs font-medium text-foreground">
-              <Code01 size={14} className="text-muted-foreground" />
-              <span>{codeTitle}</span>
-            </div>
-          )}
-        </div>
-        {panelTab === "usage" && (
-          <button
-            type="button"
-            onClick={onCopyCode}
-            className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-lg bg-secondary hover:bg-secondary/80 border border-border text-foreground transition-colors cursor-pointer shrink-0"
+    <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 pb-2 shrink-0">
+      <div className="flex flex-wrap items-center gap-2 min-w-0">
+        {hasCode && (
+          <Tabs
+            value={stageTab}
+            onValueChange={(v) => onStageTabChange(v as "block" | "code")}
           >
-            {copiedCode ? <Check size={13} /> : <Copy01 size={13} />}
-            <span>{copiedCode ? "Copied" : "Copy JSX"}</span>
-          </button>
+            <TabsHighlight className="absolute inset-0 rounded-full bg-primary shadow-xs">
+              <TabsList className="inline-flex h-9 items-center rounded-full bg-secondary/80 p-0.5 ring-1 ring-border">
+                <TabsHighlightItem value="block" className="h-full">
+                  <TabsTrigger value="block" className={STAGE_TAB_TRIGGER_CLASS}>
+                    Preview
+                  </TabsTrigger>
+                </TabsHighlightItem>
+                <TabsHighlightItem value="code" className="h-full">
+                  <TabsTrigger
+                    value="code"
+                    onPointerEnter={onCodeTabIntent}
+                    onFocus={onCodeTabIntent}
+                    className={STAGE_TAB_TRIGGER_CLASS}
+                  >
+                    Code
+                  </TabsTrigger>
+                </TabsHighlightItem>
+              </TabsList>
+            </TabsHighlight>
+          </Tabs>
+        )}
+
+        {!hideTitle && title && (
+          <h2 className="text-base font-semibold tracking-tight text-foreground truncate">
+            {title}
+          </h2>
         )}
       </div>
 
-      {cliCommand && panelTab === "usage" && (
-        <div className="flex items-center justify-between gap-2 px-3.5 py-2 border-b border-border/70 bg-secondary/20 shrink-0">
-          <div className="flex items-center gap-2 min-w-0 text-[11px] font-mono text-muted-foreground">
-            <Terminal size={13} className="text-primary shrink-0" />
-            <code className="truncate select-all text-foreground/90">{cliCommand}</code>
-          </div>
-          <button
-            type="button"
-            onClick={handleCopyCli}
-            className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-md bg-secondary/80 hover:bg-secondary border border-border/80 text-foreground transition-colors cursor-pointer shrink-0"
-          >
-            {copiedCli ? <Check size={12} /> : <Copy01 size={12} />}
-            <span>{copiedCli ? "Copied" : "CLI"}</span>
-          </button>
-        </div>
-      )}
-
-      {panelTab === "usage" ? (
-        <div className="flex-1 min-h-0 p-3.5 overflow-auto">
-          <CodeBlock code={codeSnippet} lang="tsx" />
-        </div>
-      ) : (
-        <div className="flex-1 min-h-0 overflow-auto p-3.5">
-          <table className="w-full text-left border-collapse text-[11px]">
-            <thead>
-              <tr className="border-b border-border text-muted-foreground font-mono">
-                <th className="py-1.5 pr-3 font-medium">Prop</th>
-                <th className="py-1.5 pr-3 font-medium">Type</th>
-                <th className="py-1.5 pr-3 font-medium">Default</th>
-                <th className="py-1.5 font-medium">Description</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border/50">
-              {propsDocs?.map((prop) => (
-                <tr key={prop.name} className="align-top">
-                  <td className="py-2 pr-3 font-mono font-semibold text-foreground whitespace-nowrap">
-                    {prop.name}
-                  </td>
-                  <td className="py-2 pr-3 font-mono text-primary/90 break-words max-w-[180px]">
-                    {prop.type}
-                  </td>
-                  <td className="py-2 pr-3 font-mono text-muted-foreground whitespace-nowrap">
-                    {prop.defaultValue}
-                  </td>
-                  <td className="py-2 text-muted-foreground leading-relaxed">
-                    {prop.description}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {(stageHeaderRight || showMorphAction) && (
+        <div className="flex items-center justify-end gap-1.5 shrink-0 ml-auto">
+          {stageHeaderRight}
+          {showMorphAction && (
+            <motion.button
+              type="button"
+              layout
+              whileTap={shouldReduceMotion ? undefined : { scale: 0.95 }}
+              transition={{ layout: morphTransition }}
+              style={{ borderRadius: 9999 }}
+              onClick={isCodeMode ? onCopyPrompt : onToggleSave}
+              aria-label={
+                isCodeMode
+                  ? copiedPrompt
+                    ? "Prompt copied"
+                    : "Copy prompt"
+                  : isSaved
+                    ? `Unsave ${saveLabel}`
+                    : `Save ${saveLabel}`
+              }
+              aria-pressed={isCodeMode ? undefined : isSaved}
+              title={
+                isCodeMode
+                  ? copiedPrompt
+                    ? "Copied"
+                    : promptText
+                      ? "Copy AI prompt"
+                      : "Copy prompt"
+                  : isSaved
+                    ? "Saved"
+                    : "Save"
+              }
+              className={cn(
+                "relative inline-flex h-10 md:h-9 items-center justify-center text-sm font-medium transition-colors duration-200 cursor-pointer before:content-[''] before:absolute before:-inset-0.5 md:before:hidden",
+                isCodeMode ? "px-3.5" : "w-10 md:w-9 px-0",
+                isCodeMode
+                  ? copiedPrompt
+                    ? "glass-chosen text-primary"
+                    : "glass-control text-foreground"
+                  : isSaved
+                    ? "glass-chosen text-primary"
+                    : "glass-control text-muted-foreground hover:text-foreground"
+              )}
+            >
+              <span className="relative inline-flex items-center justify-center overflow-hidden">
+                <AnimatePresence mode="popLayout" initial={false}>
+                  {isCodeMode ? (
+                    <motion.span
+                      key={morphContentKey}
+                      initial={
+                        shouldReduceMotion
+                          ? false
+                          : { opacity: 0, filter: "blur(6px)", scale: 0.92 }
+                      }
+                      animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
+                      exit={
+                        shouldReduceMotion
+                          ? undefined
+                          : { opacity: 0, filter: "blur(6px)", scale: 0.92 }
+                      }
+                      transition={morphTransition}
+                      className="inline-flex items-center whitespace-nowrap"
+                    >
+                      {copiedPrompt ? "Copied" : "Copy prompt"}
+                    </motion.span>
+                  ) : (
+                    <motion.span
+                      key="save"
+                      initial={
+                        shouldReduceMotion
+                          ? false
+                          : { opacity: 0, filter: "blur(6px)", scale: 0.85 }
+                      }
+                      animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
+                      exit={
+                        shouldReduceMotion
+                          ? undefined
+                          : { opacity: 0, filter: "blur(6px)", scale: 0.85 }
+                      }
+                      transition={morphTransition}
+                      className="inline-flex items-center justify-center"
+                    >
+                      <Bookmark active={isSaved} className="size-[18px] md:size-4" />
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </span>
+            </motion.button>
+          )}
         </div>
       )}
     </div>
   );
 };
+
+export interface ShowcaseCodePanelProps {
+  componentId?: string;
+  codeTitle?: string;
+  codeSnippet: string;
+  copiedCode?: boolean;
+  onCopyCode?: () => void;
+  cliCommand?: string;
+  dependencies?: readonly string[];
+  propsDocs?: readonly ComponentPropDoc[];
+  howItWorks?: ComponentHowItWorksDoc;
+}
+
+type CodePanelSectionId =
+  | "install"
+  | "usage"
+  | "code"
+  | "props"
+  | "how-it-works";
+
+interface CodeAccordionCardProps {
+  title: string;
+  badge?: React.ReactNode;
+  isOpen: boolean;
+  onSelect: () => void;
+  headerRight?: React.ReactNode;
+  copied: boolean;
+  onCopy?: () => void;
+  copyDisabled?: boolean;
+  copyLabel: string;
+  fillHeight?: boolean;
+  reduceMotion?: boolean;
+  children: React.ReactNode;
+}
+
+const ACCORDION_EASE = [0.22, 1, 0.36, 1] as const;
+
+function wrapTextLines(text: string, maxWidth = 66): string[] {
+  const words = text.trim().split(/\s+/);
+  const lines: string[] = [];
+  let current = "";
+  for (const word of words) {
+    if (!current) {
+      current = word;
+    } else if (current.length + 1 + word.length <= maxWidth) {
+      current += ` ${word}`;
+    } else {
+      lines.push(current);
+      current = word;
+    }
+  }
+  if (current) lines.push(current);
+  return lines;
+}
+
+function formatHowItWorksCode(doc: ComponentHowItWorksDoc): string {
+  const lines: string[] = [...wrapTextLines(doc.summary)];
+  for (const point of doc.points) {
+    lines.push("", `## ${point.title}`, ...wrapTextLines(point.detail));
+  }
+  return lines.join("\n");
+}
+
+function getPropsInterfaceName(componentId?: string): string {
+  if (!componentId) return "ComponentProps";
+  if (componentId === "gradient") return "GradientTileProps";
+  const pascal = componentId
+    .split("-")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join("");
+  return `${pascal}Props`;
+}
+
+function formatPropsCode(
+  propsDocs: readonly ComponentPropDoc[],
+  componentId?: string
+): string {
+  const interfaceName = getPropsInterfaceName(componentId);
+  const lines: string[] = [`export interface ${interfaceName} {`];
+
+  propsDocs.forEach((prop, index) => {
+    if (index > 0) lines.push("");
+
+    const descLines = wrapTextLines(prop.description, 60);
+    if (descLines.length === 1) {
+      lines.push(`  /** ${descLines[0]} */`);
+    } else {
+      lines.push(`  /**`);
+      for (const descLine of descLines) {
+        lines.push(`   * ${descLine}`);
+      }
+      lines.push(`   */`);
+    }
+
+    const names = prop.name.split(/\s*\/\s*/).filter(Boolean);
+    const defaults = prop.defaultValue.split(/\s*\/\s*/);
+
+    names.forEach((name, nameIdx) => {
+      const def =
+        defaults.length === names.length
+          ? defaults[nameIdx]
+          : prop.defaultValue;
+      const defaultComment =
+        def && def !== "undefined" ? ` // default: ${def}` : "";
+      const singleLine = `  ${name}?: ${prop.type};${defaultComment}`;
+
+      if (singleLine.length > 68 && prop.type.includes(" | ")) {
+        const unionParts = prop.type.split(/\s*\|\s*/);
+        lines.push(`  ${name}?:`);
+        unionParts.forEach((part, partIdx) => {
+          const isLast = partIdx === unionParts.length - 1;
+          lines.push(
+            `    | ${part}${isLast ? `;${defaultComment}` : ""}`
+          );
+        });
+      } else {
+        lines.push(singleLine);
+      }
+    });
+  });
+
+  lines.push(`}`);
+  return lines.join("\n");
+}
+
+const CodeAccordionCard: React.FC<CodeAccordionCardProps> = ({
+  title,
+  badge,
+  isOpen,
+  onSelect,
+  headerRight,
+  copied,
+  onCopy,
+  copyDisabled = false,
+  copyLabel,
+  fillHeight = true,
+  reduceMotion = false,
+  children,
+}) => (
+  <motion.section
+    initial={false}
+    animate={fillHeight ? { flexGrow: isOpen ? 1 : 0 } : undefined}
+    transition={
+      reduceMotion
+        ? { duration: 0 }
+        : { duration: 0.22, ease: ACCORDION_EASE }
+    }
+    style={
+      fillHeight
+        ? { flexBasis: "42px", minHeight: "42px" }
+        : { minHeight: "42px" }
+    }
+    className={cn(
+      "rounded-2xl border border-border bg-secondary/45 overflow-hidden flex flex-col transition-colors",
+      !fillHeight && "shrink-0"
+    )}
+  >
+    <div className="flex items-center justify-between gap-2 px-3 h-[42px] shrink-0">
+      <button
+        type="button"
+        aria-expanded={isOpen}
+        onClick={onSelect}
+        className="flex-1 min-w-0 flex items-center gap-2 text-left py-0.5 text-foreground hover:text-foreground/90 transition-colors cursor-pointer"
+      >
+        <ChevronRight
+          size={14}
+          className={cn(
+            "shrink-0 text-muted-foreground transition-transform duration-200",
+            isOpen && "rotate-90 text-foreground"
+          )}
+        />
+        <span className="text-xs font-semibold tracking-tight truncate">
+          {title}
+        </span>
+        {badge}
+      </button>
+
+      <div className="flex items-center gap-1.5 shrink-0 max-w-[65%]">
+        {headerRight}
+        {onCopy && (
+          <button
+            type="button"
+            disabled={copyDisabled}
+            onClick={(e) => {
+              e.stopPropagation();
+              onCopy();
+            }}
+            aria-label={copyLabel}
+            title={copied ? "Copied" : copyLabel}
+            className={cn(
+              "h-7 rounded-lg flex items-center justify-center gap-1 transition-all cursor-pointer shrink-0",
+              copyDisabled && "opacity-40 cursor-not-allowed",
+              copied
+                ? "px-2 text-primary bg-primary/10 text-[11px] font-medium"
+                : "w-7 text-muted-foreground hover:text-foreground hover:bg-secondary/80"
+            )}
+          >
+            {copied ? (
+              <>
+                <Check size={13} />
+                <span>Copied</span>
+              </>
+            ) : (
+              <Copy01 size={14} />
+            )}
+          </button>
+        )}
+      </div>
+    </div>
+
+    <AnimatePresence initial={false}>
+      {isOpen && (
+        <motion.div
+          key="body"
+          initial={
+            reduceMotion
+              ? false
+              : fillHeight
+                ? { opacity: 0, y: 4 }
+                : { opacity: 0, height: 0 }
+          }
+          animate={fillHeight ? { opacity: 1, y: 0 } : { opacity: 1, height: "auto" }}
+          exit={
+            reduceMotion
+              ? undefined
+              : fillHeight
+                ? { opacity: 0 }
+                : { opacity: 0, height: 0 }
+          }
+          transition={
+            reduceMotion
+              ? { duration: 0 }
+              : { duration: 0.18, ease: ACCORDION_EASE }
+          }
+          className={cn(
+            "overflow-hidden",
+            fillHeight && "flex-1 min-h-0 flex flex-col"
+          )}
+        >
+          <div
+            className={cn(
+              "px-2.5 pb-2.5",
+              fillHeight && "flex-1 min-h-0 flex flex-col"
+            )}
+          >
+            {children}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  </motion.section>
+);
+
+export const ShowcaseCodePanel: React.FC<ShowcaseCodePanelProps> = ({
+  componentId,
+  codeSnippet,
+  copiedCode = false,
+  onCopyCode,
+  cliCommand,
+  dependencies,
+  propsDocs,
+  howItWorks,
+}) => {
+  const shouldReduceMotion = Boolean(useReducedMotion());
+  const hasInstall = Boolean(
+    cliCommand || (dependencies ?? []).some((dep) => dep !== "react")
+  );
+  const [activeSection, setActiveSection] = useState<CodePanelSectionId | null>(
+    () => (hasInstall ? "install" : "usage")
+  );
+  const [copiedSection, setCopiedSection] = useState<CodePanelSectionId | null>(
+    null
+  );
+  const copyTimerRef = useRef<number | null>(null);
+
+  const initialFiles = componentId ? getCachedRegistryFiles(componentId) : null;
+  const [sourceFiles, setSourceFiles] = useState<RegistrySourceFile[]>(
+    () => initialFiles ?? []
+  );
+  const [sourceLoading, setSourceLoading] = useState(
+    () => Boolean(componentId && !initialFiles)
+  );
+  const [sourceError, setSourceError] = useState<string | null>(null);
+  const [activeFilePath, setActiveFilePath] = useState<string>(
+    () => initialFiles?.[0]?.path ?? ""
+  );
+  const [reloadNonce, setReloadNonce] = useState(0);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current !== null) {
+        window.clearTimeout(copyTimerRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!componentId) {
+      setSourceFiles([]);
+      setSourceError(null);
+      setSourceLoading(false);
+      setActiveFilePath("");
+      return;
+    }
+
+    const cached = getCachedRegistryFiles(componentId);
+    if (cached && reloadNonce === 0) {
+      setSourceFiles(cached);
+      setActiveFilePath((prev) =>
+        cached.some((f) => f.path === prev) ? prev : cached[0]?.path ?? ""
+      );
+      setSourceError(null);
+      setSourceLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    setSourceLoading(true);
+    setSourceError(null);
+
+    fetchRegistryFiles(componentId)
+      .then((files) => {
+        if (cancelled) return;
+        setSourceFiles(files);
+        setActiveFilePath((prev) =>
+          files.some((f) => f.path === prev) ? prev : files[0]?.path ?? ""
+        );
+        setSourceLoading(false);
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        setSourceFiles([]);
+        setSourceError(
+          err instanceof Error ? err.message : "Could not load source files"
+        );
+        setSourceLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [componentId, reloadNonce]);
+
+  const activeFile = useMemo(
+    () =>
+      sourceFiles.find((file) => file.path === activeFilePath) ??
+      sourceFiles[0] ??
+      null,
+    [sourceFiles, activeFilePath]
+  );
+
+  const npmDeps = useMemo(
+    () => (dependencies ?? []).filter((dep) => dep !== "react"),
+    [dependencies]
+  );
+
+  const installCopyText = useMemo(() => {
+    if (cliCommand) return cliCommand;
+    if (npmDeps.length > 0) return `npm install ${npmDeps.join(" ")}`;
+    return "";
+  }, [cliCommand, npmDeps]);
+
+  const propsCode = useMemo(() => {
+    if (!propsDocs || propsDocs.length === 0) return "";
+    return formatPropsCode(propsDocs, componentId);
+  }, [propsDocs, componentId]);
+
+  const howItWorksCode = useMemo(
+    () => (howItWorks ? formatHowItWorksCode(howItWorks) : ""),
+    [howItWorks]
+  );
+
+  const toggleSection = (id: CodePanelSectionId) => {
+    setActiveSection((prev) => (prev === id ? null : id));
+  };
+
+  const openSection = (id: CodePanelSectionId) => {
+    setActiveSection(id);
+  };
+
+  const copySectionText = async (
+    section: CodePanelSectionId,
+    text: string
+  ) => {
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      if (section === "usage") {
+        onCopyCode?.();
+      }
+      setCopiedSection(section);
+      if (copyTimerRef.current !== null) {
+        window.clearTimeout(copyTimerRef.current);
+      }
+      copyTimerRef.current = window.setTimeout(() => {
+        setCopiedSection(null);
+        copyTimerRef.current = null;
+      }, 1800);
+    } catch {}
+  };
+
+  const hasProps = Boolean(propsDocs && propsDocs.length > 0);
+
+  return (
+    <div className="relative z-10 flex-1 min-h-0 w-full mt-1 flex flex-col gap-2 overflow-hidden">
+      {hasInstall && (
+        <CodeAccordionCard
+          title="Install"
+          isOpen={activeSection === "install"}
+          onSelect={() => toggleSection("install")}
+          copied={copiedSection === "install"}
+          onCopy={() => copySectionText("install", installCopyText)}
+          copyDisabled={!installCopyText}
+          copyLabel="Copy install command"
+          fillHeight={false}
+          reduceMotion={shouldReduceMotion}
+        >
+          <div className="rounded-xl border border-border/70 bg-background/85 px-3.5 py-2.5 overflow-x-auto">
+            <CodeBlock
+              code={installCopyText}
+              lang="bash"
+              wrap
+              className="text-[15px]"
+            />
+          </div>
+        </CodeAccordionCard>
+      )}
+
+      <CodeAccordionCard
+        title="Usage"
+        isOpen={activeSection === "usage"}
+        onSelect={() => toggleSection("usage")}
+        copied={copiedSection === "usage" || copiedCode}
+        onCopy={() => copySectionText("usage", codeSnippet)}
+        copyDisabled={!codeSnippet}
+        copyLabel="Copy usage JSX"
+        reduceMotion={shouldReduceMotion}
+      >
+        <div className="flex-1 min-h-0 rounded-xl border border-border/70 bg-background/85 py-3 pr-3.5 pl-2 overflow-auto">
+          <CodeBlock
+            code={codeSnippet}
+            lang="tsx"
+            showLineNumbers
+            className="text-[15px]"
+          />
+        </div>
+      </CodeAccordionCard>
+
+      {componentId && (
+        <CodeAccordionCard
+          title="Code"
+          isOpen={activeSection === "code"}
+          onSelect={() => toggleSection("code")}
+          copied={copiedSection === "code"}
+          onCopy={() => copySectionText("code", activeFile?.content ?? "")}
+          copyDisabled={!activeFile}
+          copyLabel={
+            activeFile ? `Copy ${activeFile.name}` : "Copy component source"
+          }
+          reduceMotion={shouldReduceMotion}
+          headerRight={
+            activeSection === "code" ? (
+              sourceFiles.length > 1 ? (
+                <div
+                  className="inline-flex items-center gap-0.5 p-0.5 rounded-lg bg-background/75 border border-border/80"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {sourceFiles.map((file) => {
+                    const isActive = activeFile?.path === file.path;
+                    return (
+                      <button
+                        key={file.path}
+                        type="button"
+                        title={file.target ?? file.path}
+                        onClick={() => {
+                          setActiveFilePath(file.path);
+                          openSection("code");
+                        }}
+                        className={cn(
+                          "px-2 py-0.5 rounded-md text-[11px] font-mono transition-colors cursor-pointer whitespace-nowrap",
+                          isActive
+                            ? "bg-secondary text-foreground font-semibold shadow-2xs"
+                            : "text-muted-foreground hover:text-foreground"
+                        )}
+                      >
+                        {file.tabLabel}
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : activeFile ? (
+                <span
+                  title={activeFile.target ?? activeFile.path}
+                  className="px-2 py-0.5 rounded-md bg-background/70 border border-border/70 text-[11px] font-mono text-muted-foreground"
+                >
+                  {activeFile.tabLabel}
+                </span>
+              ) : null
+            ) : null
+          }
+        >
+          <div className="flex-1 min-h-0 rounded-xl border border-border/70 bg-background/85 overflow-auto py-3 pr-3.5 pl-2">
+            {sourceLoading ? (
+              <div className="h-full min-h-[140px] flex items-center justify-center gap-2 text-xs text-muted-foreground">
+                <Loading01 size={14} />
+                <span>Loading source files...</span>
+              </div>
+            ) : sourceError ? (
+              <div className="h-full min-h-[140px] flex flex-col items-center justify-center gap-2 text-xs text-muted-foreground text-center">
+                <span>{sourceError}</span>
+                <button
+                  type="button"
+                  onClick={() => setReloadNonce((n) => n + 1)}
+                  className="px-2.5 py-1 rounded-lg bg-secondary hover:bg-secondary/80 border border-border text-foreground text-[11px] font-medium cursor-pointer"
+                >
+                  Retry
+                </button>
+              </div>
+            ) : activeFile ? (
+              <CodeBlock
+                code={activeFile.content}
+                lang={activeFile.lang}
+                showLineNumbers
+                className="text-[15px]"
+              />
+            ) : (
+              <div className="h-full min-h-[140px] flex items-center justify-center text-xs text-muted-foreground">
+                No source files found.
+              </div>
+            )}
+          </div>
+        </CodeAccordionCard>
+      )}
+
+      {hasProps && (
+        <CodeAccordionCard
+          title="Props"
+          badge={
+            <span className="px-1.5 py-0.2 rounded-full bg-background/70 border border-border/70 text-[10px] font-mono text-muted-foreground">
+              {propsDocs!.length}
+            </span>
+          }
+          isOpen={activeSection === "props"}
+          onSelect={() => toggleSection("props")}
+          copied={copiedSection === "props"}
+          onCopy={() => copySectionText("props", propsCode)}
+          copyDisabled={!propsCode}
+          copyLabel="Copy props interface"
+          reduceMotion={shouldReduceMotion}
+        >
+          <div className="flex-1 min-h-0 rounded-xl border border-border/70 bg-background/85 overflow-auto py-3 pr-3.5 pl-2">
+            <CodeBlock
+              code={propsCode}
+              lang="ts"
+              showLineNumbers
+              className="text-[15px]"
+            />
+          </div>
+        </CodeAccordionCard>
+      )}
+
+      {howItWorks && (
+        <CodeAccordionCard
+          title="How it works"
+          isOpen={activeSection === "how-it-works"}
+          onSelect={() => toggleSection("how-it-works")}
+          copied={copiedSection === "how-it-works"}
+          onCopy={() => copySectionText("how-it-works", howItWorksCode)}
+          copyDisabled={!howItWorksCode}
+          copyLabel="Copy how it works notes"
+          reduceMotion={shouldReduceMotion}
+        >
+          <div className="flex-1 min-h-0 rounded-xl border border-border/70 bg-background/85 overflow-auto py-3 pr-3.5 pl-2">
+            <CodeBlock
+              code={howItWorksCode}
+              lang="markdown"
+              showLineNumbers
+              className="text-[15px]"
+            />
+          </div>
+        </CodeAccordionCard>
+      )}
+    </div>
+  );
+};
+
+export async function shareCurrentUrl(shareTitle: string): Promise<boolean> {
+  if (typeof window === "undefined") return false;
+  const shareUrl = window.location.href;
+  if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
+    try {
+      await navigator.share({ title: shareTitle, url: shareUrl });
+      return false;
+    } catch (err) {
+      if (err instanceof DOMException && err.name === "AbortError") return false;
+    }
+  }
+  try {
+    await navigator.clipboard.writeText(shareUrl);
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 export interface ComponentDetailLayoutProps {
   /** Component title displayed in the stage card header */
@@ -370,6 +937,7 @@ export const ComponentDetailLayout: React.FC<ComponentDetailLayoutProps> = ({
 
   const leftListRef = useRef<HTMLElement | null>(null);
   const sidepanelRef = useRef<HTMLDivElement | null>(null);
+  const bottomDocRef = useRef<HTMLElement | null>(null);
   const hasEnteredRef = useRef(false);
 
   useEffect(() => {
@@ -380,7 +948,7 @@ export const ComponentDetailLayout: React.FC<ComponentDetailLayoutProps> = ({
     };
   }, []);
 
-  // Sidepanel & left list enter smoothly when the card expands
+  // Sidepanel, left list & bottom documentation card enter smoothly when the card expands
   useLayoutEffect(() => {
     if (hasEnteredRef.current) return;
     hasEnteredRef.current = true;
@@ -398,9 +966,14 @@ export const ComponentDetailLayout: React.FC<ComponentDetailLayoutProps> = ({
       sidepanelRef.current.style.transform = "translate3d(16px, 0, 0)";
       animate(sidepanelRef.current, { opacity: 1, x: 0 }, enterOpts);
     }
+    if (bottomDocRef.current) {
+      bottomDocRef.current.style.opacity = "0";
+      bottomDocRef.current.style.transform = "translate3d(0, 12px, 0)";
+      animate(bottomDocRef.current, { opacity: 1, y: 0 }, enterOpts);
+    }
   }, [shouldReduceMotion, skipEntranceMotion, stageSlotRef]);
 
-  // Fade out sidepanel & left list cleanly on close
+  // Fade out sidepanel, left list & bottom documentation card cleanly on close
   useLayoutEffect(() => {
     if (!isClosing || shouldReduceMotion) return;
 
@@ -410,6 +983,9 @@ export const ComponentDetailLayout: React.FC<ComponentDetailLayoutProps> = ({
     }
     if (sidepanelRef.current) {
       animate(sidepanelRef.current, { opacity: 0, x: 12 }, exitOpts);
+    }
+    if (bottomDocRef.current) {
+      animate(bottomDocRef.current, { opacity: 0, y: 8 }, exitOpts);
     }
   }, [isClosing, shouldReduceMotion]);
 
@@ -440,47 +1016,41 @@ export const ComponentDetailLayout: React.FC<ComponentDetailLayoutProps> = ({
       onShare();
       return;
     }
-    if (typeof window === "undefined") return;
-    const shareUrl = window.location.href;
-    if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
-      try {
-        await navigator.share({
-          title: typeof title === "string" ? title : document.title,
-          url: shareUrl,
-        });
-        return;
-      } catch (err) {
-        if (err instanceof DOMException && err.name === "AbortError") return;
-      }
+    const copied = await shareCurrentUrl(
+      typeof title === "string" ? title : document.title
+    );
+    if (!copied) return;
+    setCopiedShare(true);
+    if (shareTimerRef.current !== null) {
+      window.clearTimeout(shareTimerRef.current);
     }
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      setCopiedShare(true);
-      if (shareTimerRef.current !== null) {
-        window.clearTimeout(shareTimerRef.current);
-      }
-      shareTimerRef.current = window.setTimeout(() => {
-        setCopiedShare(false);
-        shareTimerRef.current = null;
-      }, 2000);
-    } catch {}
+    shareTimerRef.current = window.setTimeout(() => {
+      setCopiedShare(false);
+      shareTimerRef.current = null;
+    }, 2000);
   };
 
   const hasCopyPrompt = showCopyPrompt || Boolean(promptText) || Boolean(onCopyPrompt);
 
   const hasSidebarList = Boolean(componentList && componentList.length > 0);
+  const showcaseDocs = getShowcaseComponentDocs(activeComponentId);
+  const docProps = showcaseDocs?.props;
+  const docOverview =
+    showcaseDocs?.overview ??
+    (typeof configDescription === "string" ? configDescription : undefined);
+  const docTitle = showcaseDocs?.title ?? title ?? configTitle;
 
   return (
     <div
       data-showcase-backdrop="true"
       className={cn(
-        "w-full max-w-[1440px] mx-auto h-full lg:h-auto p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:p-5 lg:px-6 lg:py-8 flex flex-col",
+        "w-full max-w-[1440px] mx-auto p-2 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:p-5 lg:px-6 lg:pt-[max(2rem,calc((100dvh_-_min(800px,calc(100dvh_-_5rem)))_/_2))] lg:pb-8 flex flex-col",
         className
       )}
     >
       <div
         data-showcase-backdrop="true"
-        className="flex-1 min-h-0 lg:flex-none flex flex-col lg:flex-row lg:items-start lg:justify-center gap-4 lg:gap-5 xl:gap-6"
+        className="flex flex-col lg:flex-row lg:items-start lg:justify-center gap-4 lg:gap-5 xl:gap-6"
       >
         {/* 1. Desktop-only Component List on the left (no card) */}
         {hasSidebarList && (
@@ -489,7 +1059,7 @@ export const ComponentDetailLayout: React.FC<ComponentDetailLayoutProps> = ({
             aria-label="Components list"
             onPointerDown={(e) => e.stopPropagation()}
             onClick={(e) => e.stopPropagation()}
-            className="hidden lg:flex lg:w-40 xl:w-44 shrink-0 flex-col gap-1 pt-1"
+            className="hidden lg:flex lg:sticky lg:top-8 lg:w-40 xl:w-44 shrink-0 flex-col gap-1 pt-1"
           >
             <span className="px-2.5 pb-1.5 text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
               Components
@@ -526,14 +1096,14 @@ export const ComponentDetailLayout: React.FC<ComponentDetailLayoutProps> = ({
           </aside>
         )}
 
-        {/* Main Workspace: Square Stage (up to 800x800 on 2K) + 300px/320px Quick Config Sidepanel */}
+        {/* Main Workspace: Square Stage (up to 800x800 on 2K) + 300px/320px Quick Config Sidepanel + Bottom Docs Card */}
         <div
           data-showcase-backdrop="true"
-          className="flex-1 min-h-0 lg:flex-initial lg:w-full lg:max-w-[calc(min(800px,calc(100dvh_-_5rem))_+_320px)] xl:max-w-[calc(min(800px,calc(100dvh_-_5rem))_+_340px)] lg:min-w-0 flex flex-col"
+          className="lg:flex-initial lg:w-full lg:max-w-[calc(min(800px,calc(100dvh_-_5rem))_+_320px)] xl:max-w-[calc(min(800px,calc(100dvh_-_5rem))_+_340px)] lg:min-w-0 flex flex-col gap-3 sm:gap-4 lg:gap-5"
         >
           <div
             data-showcase-backdrop="true"
-            className="flex-1 min-h-0 lg:flex-none grid grid-cols-1 grid-rows-[auto_minmax(0,1fr)] lg:grid-rows-none lg:grid-cols-[minmax(0,min(800px,calc(100dvh-5rem)))_300px] xl:grid-cols-[minmax(0,min(800px,calc(100dvh-5rem)))_320px] gap-2 sm:gap-4 lg:gap-5 lg:items-stretch"
+            className="h-[calc(100dvh-1rem)] sm:h-[calc(100dvh-2.5rem)] lg:h-auto shrink-0 grid grid-cols-1 grid-rows-[auto_minmax(0,1fr)] lg:grid-rows-none lg:grid-cols-[minmax(0,min(800px,calc(100dvh-5rem)))_300px] xl:grid-cols-[minmax(0,min(800px,calc(100dvh-5rem)))_320px] gap-2 sm:gap-4 lg:gap-5 lg:items-stretch"
           >
             {/* 1. Standardized Square Stage Container (or external slot when parent promotes card) */}
             {stageSlotRef ? (
@@ -601,17 +1171,37 @@ export const ComponentDetailLayout: React.FC<ComponentDetailLayoutProps> = ({
                       </div>
                     )}
 
-                    {onPlay && (
+                    <div className="absolute bottom-[14px] right-[14px] sm:bottom-[18px] sm:right-[18px] z-20 flex items-center gap-1.5">
+                      {onPlay && (
+                        <button
+                          type="button"
+                          onClick={onPlay}
+                          aria-label={`Play ${typeof title === "string" ? title : "component"} animation`}
+                          title="Play"
+                          className="relative size-10 md:size-9 rounded-full glass-control flex items-center justify-center text-foreground cursor-pointer transition-transform active:scale-95 before:content-[''] before:absolute before:-inset-0.5 md:before:hidden"
+                        >
+                          <Play className="size-[18px] md:size-4" />
+                        </button>
+                      )}
                       <button
                         type="button"
-                        onClick={onPlay}
-                        aria-label={`Play ${typeof title === "string" ? title : "component"} animation`}
-                        title="Play"
-                        className="absolute bottom-[14px] right-[14px] sm:bottom-[18px] sm:right-[18px] z-20 size-10 md:size-9 rounded-full glass-control flex items-center justify-center text-foreground cursor-pointer transition-transform active:scale-95 before:content-[''] before:absolute before:-inset-0.5 md:before:hidden"
+                        onClick={handleShare}
+                        aria-label={copiedShare ? "Link copied" : shareTitle}
+                        title={copiedShare ? "Copied" : shareTitle}
+                        className={cn(
+                          "relative size-10 md:size-9 rounded-full flex items-center justify-center cursor-pointer transition-all active:scale-95 before:content-[''] before:absolute before:-inset-0.5 md:before:hidden",
+                          copiedShare
+                            ? "glass-chosen text-primary"
+                            : "glass-control text-foreground"
+                        )}
                       >
-                        <Play className="size-[18px] md:size-4" />
+                        {copiedShare ? (
+                          <Check className="size-[18px] md:size-4" />
+                        ) : (
+                          <Share01 className="size-[18px] md:size-4" />
+                        )}
                       </button>
-                    )}
+                    </div>
                   </>
                 )}
               </div>
@@ -626,60 +1216,49 @@ export const ComponentDetailLayout: React.FC<ComponentDetailLayoutProps> = ({
             >
               <div className="w-full h-full min-h-0 lg:absolute lg:inset-0 rounded-[28px] bg-card border border-border p-[14px] sm:p-[18px] text-card-foreground select-none flex flex-col gap-2 lg:gap-3 overflow-hidden">
                 {/* Anchored Header */}
-                <div className="shrink-0 flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <h2 className="text-base font-semibold tracking-tight text-foreground truncate min-w-0">
-                        {configTitle}
-                      </h2>
-                      {configBadge && (
-                        <span className="px-2 py-0.5 rounded-full bg-secondary border border-border text-[10px] font-mono text-muted-foreground shrink-0">
-                          {configBadge}
-                        </span>
-                      )}
-                    </div>
-
-                    {(configHeaderActions || onClose) && (
-                      <div className="flex items-center gap-2 shrink-0">
-                        {configHeaderActions}
-                        {onClose && (
-                          <button
-                            type="button"
-                            onClick={onClose}
-                            aria-label="Close component details"
-                            title="Exit"
-                            className="relative size-10 md:size-9 rounded-full glass-control flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors cursor-pointer before:content-[''] before:absolute before:-inset-0.5 md:before:hidden"
-                          >
-                            <Cancel01 className="size-[18px]" />
-                          </button>
-                        )}
-                      </div>
+                <div className="shrink-0 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <h2 className="text-base font-semibold tracking-tight text-foreground truncate min-w-0">
+                      {configTitle}
+                    </h2>
+                    {configBadge && (
+                      <span className="px-2 py-0.5 rounded-full bg-secondary border border-border text-[10px] font-mono text-muted-foreground shrink-0">
+                        {configBadge}
+                      </span>
                     )}
                   </div>
 
-                  {configDescription && (
-                    <p className="hidden lg:block text-xs text-muted-foreground leading-relaxed">
-                      {configDescription}
-                    </p>
+                  {(configHeaderActions || onClose) && (
+                    <div className="flex items-center gap-2 shrink-0">
+                      {configHeaderActions}
+                      {onClose && (
+                        <button
+                          type="button"
+                          onClick={onClose}
+                          aria-label="Close component details"
+                          title="Exit"
+                          className="relative size-10 rounded-full glass-control flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors cursor-pointer before:content-[''] before:absolute before:-inset-0.5 lg:before:hidden"
+                        >
+                          <Cancel01 className="size-[18px]" />
+                        </button>
+                      )}
+                    </div>
                   )}
                 </div>
 
                 {/* Scrollable Body */}
-                <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar flex flex-col gap-3.5 pr-0.5">
-                  {configDescription && (
-                    <p className="lg:hidden text-xs text-muted-foreground leading-relaxed">
-                      {configDescription}
-                    </p>
-                  )}
+                <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar flex flex-col gap-3.5 px-1 -mx-1 py-0.5">
                   {children}
                 </div>
 
                 {/* Anchored Footer */}
-                <div className="shrink-0 pt-0.5 flex flex-col gap-2">
+                {(onReset || onOpenInStudio) && (
                   <div
                     className={cn(
-                      "grid gap-2",
-                      onReset ? "grid-cols-2" : "grid-cols-1"
+                      "shrink-0 pt-0.5 gap-2",
+                      onReset && onOpenInStudio
+                        ? "grid grid-cols-2 lg:flex lg:flex-col"
+                        : "flex flex-col"
                     )}
                   >
                     {onReset && (
@@ -688,39 +1267,102 @@ export const ComponentDetailLayout: React.FC<ComponentDetailLayoutProps> = ({
                         size="md"
                         onClick={onReset}
                         title={resetTitle}
-                        className="w-full h-10"
+                        className="relative w-full h-10 before:content-[''] before:absolute before:-inset-y-0.5 before:inset-x-0 lg:before:hidden"
                         iconLeft={<Refresh />}
                       >
                         Reset
                       </Button>
                     )}
-                    <Button
-                      variant={onOpenInStudio ? "outline" : "primary"}
-                      size="md"
-                      onClick={handleShare}
-                      title={shareTitle}
-                      className="w-full h-10"
-                      iconLeft={copiedShare ? <Check /> : <Share01 />}
-                    >
-                      {copiedShare ? "Copied" : "Share"}
-                    </Button>
+                    {onOpenInStudio && (
+                      <Button
+                        variant="primary"
+                        size="md"
+                        onClick={onOpenInStudio}
+                        title="Open in Studio Pro"
+                        className="relative w-full h-10 before:content-[''] before:absolute before:-inset-y-0.5 before:inset-x-0 lg:before:hidden"
+                      >
+                        Open in Studio
+                      </Button>
+                    )}
                   </div>
-                  {onOpenInStudio && (
-                    <Button
-                      variant="primary"
-                      size="md"
-                      onClick={onOpenInStudio}
-                      title="Open in Studio Pro"
-                      className="w-full h-11"
-                      iconLeft={<Sparkles />}
-                    >
-                      Open in Studio
-                    </Button>
-                  )}
-                </div>
+                )}
               </div>
             </div>
           </div>
+
+          {/* 3. Full-width Documentation & Props Card below the 2 cards */}
+          {(docOverview || (docProps && docProps.length > 0)) && (
+            <section
+              ref={bottomDocRef}
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full rounded-[28px] bg-card border border-border p-[18px] sm:p-6 text-card-foreground flex flex-col gap-4"
+            >
+              <div className="flex flex-col gap-1.5 max-w-3xl">
+                {docTitle && (
+                  <h3 className="text-base sm:text-lg font-semibold tracking-tight text-foreground">
+                    {docTitle}
+                  </h3>
+                )}
+                {docOverview && (
+                  <div className="flex flex-col gap-1 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                    {docOverview.split("\n").map((paragraph, idx) => (
+                      <p key={idx}>{paragraph}</p>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {docProps && docProps.length > 0 && (
+                <div className="rounded-2xl border border-border bg-background/40 overflow-x-auto">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="border-b border-border/80 text-xs font-medium text-muted-foreground">
+                        <th className="py-3 pl-4 pr-3 font-medium">Name</th>
+                        <th className="py-3 px-3 font-medium">Type</th>
+                        <th className="py-3 px-3 font-medium">Default</th>
+                        <th className="py-3 pl-3 pr-4 font-medium">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border/50">
+                      {docProps.map((prop) => (
+                        <tr key={prop.name} className="align-middle">
+                          <td className="py-3 pl-4 pr-3 whitespace-nowrap">
+                            <code className="inline-flex px-2 py-0.5 rounded-md bg-secondary border border-border text-xs font-mono text-foreground">
+                              {prop.name}
+                            </code>
+                          </td>
+                          <td className="py-3 px-3 font-mono text-xs text-muted-foreground min-w-[110px] max-w-[260px] break-words">
+                            {prop.type}
+                          </td>
+                          <td className="py-3 px-3 whitespace-nowrap">
+                            <code className="inline-flex px-2 py-0.5 rounded-md bg-secondary/70 border border-border text-xs font-mono text-foreground">
+                              {prop.defaultValue}
+                            </code>
+                          </td>
+                          <td className="py-3 pl-3 pr-4 text-xs sm:text-[13px] text-muted-foreground leading-relaxed min-w-[220px]">
+                            {prop.description}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              <p className="text-xs text-muted-foreground pt-0.5">
+                Free under MIT.{" "}
+                <a
+                  href="https://github.com/iamsebbi/interact/blob/main/LICENSE"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-foreground font-medium hover:underline underline-offset-4"
+                >
+                  License
+                </a>
+              </p>
+            </section>
+          )}
         </div>
       </div>
     </div>
@@ -744,7 +1386,7 @@ export const ShowcaseToggleField: React.FC<ShowcaseToggleFieldProps> = ({
 }) => (
   <div
     className={cn(
-      "h-10 px-3.5 bg-secondary/80 hover:bg-secondary border border-border rounded-xl flex items-center justify-between gap-2 transition-colors text-xs",
+      "h-11 px-3.5 bg-secondary/80 hover:bg-secondary border border-border rounded-xl flex items-center justify-between gap-2 transition-colors text-xs",
       className
     )}
   >

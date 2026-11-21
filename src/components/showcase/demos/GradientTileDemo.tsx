@@ -156,7 +156,7 @@ export const GradientTileDemo: React.FC<GradientTileDemoProps> = ({
                   "h-9 px-2.5 rounded-xl border text-xs font-medium transition-all cursor-pointer flex items-center gap-2 text-left",
                   isSelected
                     ? "glass-chosen text-foreground font-semibold"
-                    : "bg-secondary/60 border-border text-muted-foreground hover:text-foreground hover:bg-secondary"
+                    : "bg-secondary/80 border-border text-muted-foreground hover:text-foreground hover:bg-secondary"
                 )}
               >
                 <span
@@ -189,7 +189,7 @@ export const GradientTileDemo: React.FC<GradientTileDemoProps> = ({
                   "h-8 px-1.5 rounded-xl border text-[11px] font-medium capitalize transition-all cursor-pointer flex items-center justify-center",
                   isSelected
                     ? "glass-chosen text-foreground font-semibold"
-                    : "bg-secondary/60 border-border text-muted-foreground hover:text-foreground hover:bg-secondary"
+                    : "bg-secondary/80 border-border text-muted-foreground hover:text-foreground hover:bg-secondary"
                 )}
               >
                 {mode}

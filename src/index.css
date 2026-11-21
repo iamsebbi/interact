@@ -134,3 +134,22 @@ input[type="range"]::-moz-range-thumb {
   box-shadow: 0 0 0 2px var(--background), 0 1px 3px 0 rgba(0, 0, 0, 0.5);
   cursor: ew-resize;
 }
+
+/* Shiki / CodeBlock line numbers */
+.code-line-numbers code {
+  counter-reset: line;
+}
+
+.code-line-numbers .line::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 2.2em;
+  margin-right: 0.6em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted-foreground);
+  opacity: 0.45;
+  user-select: none;
+  -webkit-user-select: none;
+}

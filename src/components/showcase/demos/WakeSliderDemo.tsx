@@ -177,7 +177,7 @@ export const WakeSliderDemo: React.FC<WakeSliderDemoProps> = ({
                     "h-8 rounded-xl border font-mono text-xs transition-all cursor-pointer flex items-center justify-center",
                     isSelected
                       ? "glass-chosen text-foreground font-semibold"
-                      : "bg-secondary/60 border-border text-muted-foreground hover:text-foreground hover:bg-secondary"
+                      : "bg-secondary/80 border-border text-muted-foreground hover:text-foreground hover:bg-secondary"
                   )}
                 >
                   {u || "—"}

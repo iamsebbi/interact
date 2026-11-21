@@ -20,6 +20,7 @@ const VALID_PRODUCTS: ProductId[] = [
   "palette",
   "wake-slider",
   "gradient",
+  "download-button",
 ];
 
 function parseRouteState(): { page: AppPage; product: ProductId | null } {

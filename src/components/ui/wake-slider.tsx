@@ -217,7 +217,7 @@ export const WakeSlider: React.FC<WakeSliderProps> = ({
     >
       <div
         ref={track}
-        className={cn("wks-track", fullWidth && "w-full")}
+        className={cn("wks-track", fullWidth && "flex-1 min-w-0")}
         role="slider"
         tabIndex={disabled ? -1 : 0}
         aria-label={ariaLabel}
@@ -225,7 +225,7 @@ export const WakeSlider: React.FC<WakeSliderProps> = ({
         aria-valuemax={max}
         aria-valuenow={value}
         style={{
-          width: fullWidth ? "100%" : n * (BAR + GAP) - GAP,
+          width: fullWidth ? undefined : n * (BAR + GAP) - GAP,
           height: H * 2.6,
         }}
         onPointerDown={(e) => {
@@ -329,7 +329,7 @@ export const WakeSliderField: React.FC<WakeSliderFieldProps> = ({
   bars,
   ...sliderProps
 }) => {
-  const effectiveBars = bars ?? (layout === "inline" ? 16 : 32);
+  const effectiveBars = bars ?? (layout === "inline" ? 18 : 32);
 
   const handleReset = () => {
     if (defaultValue !== undefined && onChange) {
@@ -374,7 +374,7 @@ export const WakeSliderField: React.FC<WakeSliderFieldProps> = ({
   return (
     <div
       className={cn(
-        "h-10 px-3.5 bg-secondary/80 hover:bg-secondary border border-border rounded-xl flex items-center justify-between gap-2.5 transition-colors",
+        "h-11 px-3.5 bg-secondary/80 hover:bg-secondary border border-border rounded-xl flex items-center justify-between gap-3 transition-colors",
         fieldClassName
       )}
     >
@@ -392,7 +392,7 @@ export const WakeSliderField: React.FC<WakeSliderFieldProps> = ({
       >
         {label}
       </span>
-      <div className="flex items-center gap-2 justify-end min-w-0">
+      <div className="flex-1 min-w-0 flex items-center justify-end">
         <WakeSlider
           {...sliderProps}
           bars={effectiveBars}
@@ -400,6 +400,7 @@ export const WakeSliderField: React.FC<WakeSliderFieldProps> = ({
           defaultValue={defaultValue}
           onChange={onChange}
           unit={unit}
+          fullWidth={sliderProps.fullWidth ?? true}
           showReading={true}
         />
       </div>

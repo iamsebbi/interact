@@ -11,6 +11,7 @@ import { GradientTile } from "../GradientTile";
 import { BotAvatar, type AvatarExpression } from "../bot-avatar";
 import { Palette } from "../palette/Palette";
 import { WakeSlider } from "../ui/wake-slider";
+import { DownloadButton } from "../ui/download-button";
 import {
   COLOR_PICKER_PLAY_COLORS,
   ColorPickerStagePreview,
@@ -18,6 +19,7 @@ import {
 } from "../showcase/demos/ColorPickerDemo";
 import { type PaletteConfig } from "../showcase/demos/PaletteDemo";
 import { type WakeSliderConfig } from "../showcase/demos/WakeSliderDemo";
+import { type DownloadButtonConfig } from "../showcase/demos/DownloadButtonDemo";
 import { BlobHandlesOverlay } from "./BlobHandlesOverlay";
 import { ExportModal } from "./ExportModal";
 import { PresetsModal } from "./PresetsModal";
@@ -28,6 +30,7 @@ import { ColorPickerInspector } from "./inspectors/ColorPickerInspector";
 import { PaletteInspector } from "./inspectors/PaletteInspector";
 import { WakeSliderInspector } from "./inspectors/WakeSliderInspector";
 import { GradientInspector } from "./inspectors/GradientInspector";
+import { DownloadButtonInspector } from "./inspectors/DownloadButtonInspector";
 import {
   STUDIO_COMPONENTS,
   StudioBotConfig,
@@ -65,6 +68,7 @@ function createInitialConfigs(): StudioConfigMap {
       ...getDefaultStudioConfig("gradient"),
       globals: { ...getDefaultStudioConfig("gradient").globals, size: 280 },
     },
+    "download-button": getDefaultStudioConfig("download-button"),
   };
 
   if (typeof window !== "undefined") {
@@ -97,6 +101,12 @@ function createInitialConfigs(): StudioConfigMap {
             globals: { ...base.gradient.globals, ...parsed.gradient.globals },
           };
         }
+        if (parsed["download-button"]) {
+          base["download-button"] = {
+            ...base["download-button"],
+            ...parsed["download-button"],
+          };
+        }
       }
     } catch {
       // ignore invalid stored state
@@ -114,6 +124,7 @@ const EMPTY_HISTORY: HistoryMap = {
   palette: [],
   "wake-slider": [],
   gradient: [],
+  "download-button": [],
 };
 
 export default function Studio({ incomingTarget }: StudioProps = {}) {
@@ -144,6 +155,7 @@ export default function Studio({ incomingTarget }: StudioProps = {}) {
     palette: JSON.stringify(configs.palette),
     "wake-slider": JSON.stringify(configs["wake-slider"]),
     gradient: JSON.stringify(configs.gradient),
+    "download-button": JSON.stringify(configs["download-button"]),
   });
 
   // Scene & Dock state
@@ -171,6 +183,8 @@ export default function Studio({ incomingTarget }: StudioProps = {}) {
   ]);
 
   const [gradAnimKey, setGradAnimKey] = useState(0);
+  const [downloadReplaySignal, setDownloadReplaySignal] = useState(0);
+  const [downloadResetKey, setDownloadResetKey] = useState(0);
   const [blobIdx, setBlobIdx] = useState(0);
   const [draggingBlob, setDraggingBlob] = useState<number | null>(null);
   const [hoveredBlob, setHoveredBlob] = useState<number | null>(null);
@@ -298,6 +312,9 @@ export default function Studio({ incomingTarget }: StudioProps = {}) {
     if (activeId === "gradient") {
       (fresh as StudioGradientConfig).globals.size = 280;
     }
+    if (activeId === "download-button") {
+      setDownloadResetKey((k) => k + 1);
+    }
     updateActiveConfig(activeId, fresh as never);
     setBlobIdx(0);
   };
@@ -345,6 +362,10 @@ export default function Studio({ incomingTarget }: StudioProps = {}) {
         ...configs["wake-slider"],
         value: next,
       });
+      return;
+    }
+    if (activeId === "download-button") {
+      setDownloadReplaySignal((s) => s + 1);
       return;
     }
     setGradAnimKey((k) => k + 1);
@@ -683,6 +704,24 @@ export default function Studio({ incomingTarget }: StudioProps = {}) {
                 />
               </div>
             )}
+
+            {activeId === "download-button" && (
+              <DownloadButton
+                key={downloadResetKey}
+                sizeMB={configs["download-button"].sizeMB}
+                durationMs={Math.round(configs["download-button"].durationSec * 1000)}
+                progressFormat={configs["download-button"].progressFormat}
+                size={configs["download-button"].size}
+                theme={
+                  sceneBg === "light"
+                    ? "light"
+                    : sceneBg === "dark"
+                    ? "dark"
+                    : undefined
+                }
+                replaySignal={downloadReplaySignal}
+              />
+            )}
           </div>
         </div>
 
@@ -814,6 +853,15 @@ export default function Studio({ incomingTarget }: StudioProps = {}) {
               onOpenPresets={() => setIsPresetsModalOpen(true)}
               onBumpAnimation={() => setGradAnimKey((k) => k + 1)}
               onDebouncedBumpAnimation={() => setGradAnimKey((k) => k + 1)}
+            />
+          )}
+
+          {activeId === "download-button" && (
+            <DownloadButtonInspector
+              config={configs["download-button"]}
+              onChange={(next: DownloadButtonConfig) =>
+                updateActiveConfig("download-button", next)
+              }
             />
           )}
         </div>

@@ -51,7 +51,8 @@ npx shadcn@latest add ${registryBaseUrl}/bot-avatar.json
 npx shadcn@latest add ${registryBaseUrl}/color-picker.json
 npx shadcn@latest add ${registryBaseUrl}/palette.json
 npx shadcn@latest add ${registryBaseUrl}/wake-slider.json
-npx shadcn@latest add ${registryBaseUrl}/gradient.json`,
+npx shadcn@latest add ${registryBaseUrl}/gradient.json
+npx shadcn@latest add ${registryBaseUrl}/download-button.json`,
     },
     {
       title: "2. Optional: Add @interact namespace in components.json",
@@ -99,7 +100,7 @@ export function InteractiveCard() {
           </h1>
 
           <p className="mt-4 text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Explore Bot Avatar, Color Picker, OKLCH Palette, Wake Slider, and Squircle Gradient in Studio, then install straight into your project with one shadcn CLI command.
+            Explore Bot Avatar, Color Picker, OKLCH Palette, Wake Slider, Squircle Gradient, and Download Button in Studio, then install straight into your project with one shadcn CLI command.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -244,7 +245,7 @@ export function InteractiveCard() {
                 </li>
                 <li className="flex items-center gap-2">
                   <Check size={14} className="text-emerald-400" />
-                  <span>All 5 components currently free to install</span>
+                  <span>All 6 components currently free to install</span>
                 </li>
               </ul>
             </div>

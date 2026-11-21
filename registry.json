@@ -155,6 +155,39 @@
           "target": "@components/animate-ui/icons/sparkles.tsx"
         }
       ]
+    },
+    {
+      "name": "download-button",
+      "type": "registry:ui",
+      "title": "Download Button",
+      "description": "Interactive pill download button that spawns a Pause/Play circle, reveals a left Cancel action while paused, contracts to a checkmark, and expands into Open.",
+      "dependencies": ["@base-ui/react", "motion", "@number-flow/react", "@animate-ui/react"],
+      "files": [
+        {
+          "path": "src/components/ui/download-button.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/components/animate-ui/icons/pause.tsx",
+          "type": "registry:ui",
+          "target": "@components/animate-ui/icons/pause.tsx"
+        },
+        {
+          "path": "src/components/animate-ui/icons/play.tsx",
+          "type": "registry:ui",
+          "target": "@components/animate-ui/icons/play.tsx"
+        },
+        {
+          "path": "src/components/animate-ui/icons/x.tsx",
+          "type": "registry:ui",
+          "target": "@components/animate-ui/icons/x.tsx"
+        },
+        {
+          "path": "src/components/animate-ui/icons/check.tsx",
+          "type": "registry:ui",
+          "target": "@components/animate-ui/icons/check.tsx"
+        }
+      ]
     }
   ]
 }
