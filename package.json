@@ -1,0 +1,53 @@
+{
+  "name": "interact-dev",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "registry:build": "shadcn build",
+    "registry:check": "tsx scripts/check-registry.ts"
+  },
+  "dependencies": {
+    "@animate-ui/react": "^2.4.6",
+    "@number-flow/react": "^0.6.2",
+    "@ui-sdk/core": "0.1.0-beta.13",
+    "@ui-sdk/react": "0.1.0-beta.13",
+    "clsx": "^2.1.1",
+    "distortion-waves": "^0.1.0",
+    "motion": "^14.14.0",
+    "next": "^16.4.6",
+    "next-themes": "^0.4.6",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "shiki": "^4.6.0",
+    "tailwind-merge": "^3.7.1",
+    "voice-glow": "^0.5.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.8",
+    "@tailwindcss/postcss": "^4.3.5",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^8.0.0",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.13",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "jsdom": "^31.0.1",
+    "shadcn": "^4.23.0",
+    "tailwindcss": "^4.3.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "^5.1.1"
+  }
+}

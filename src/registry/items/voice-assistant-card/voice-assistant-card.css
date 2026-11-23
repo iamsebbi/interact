@@ -1,0 +1,478 @@
+﻿/* @motion
+[Streaming transcript] spoken words under the message
+--stream-fade: Duration
+--stream-ease: Easing
+--stream-blur: Blur
+[Status swap] caption above the button
+--text-swap-dur: Duration
+--text-swap-ease: Easing
+--text-swap-translate-y: Distance
+more --text-swap-blur: Blur
+[Voice lines] bars in the voice button
+--wave-dur: Duration
+--wave-min: Rest scale
+more [Bubble float] assistant message
+--float-dur: Duration
+--float-distance: Distance
+more [Button press] voice button
+--press-scale: Scale
+--press-dur: Duration
+--ease-smooth-out: Easing
+*/
+
+.va-card {
+  --stage-bg: #fdfdfd;
+  --stage-fg: #0d0d0d;
+  --stage-muted: #6c6c6c;
+  --stage-border: rgba(0, 0, 0, 0.08);
+  --stage-surface: #ffffff;
+  --stage-accent: #171717;
+  --stage-on-accent: #ffffff;
+
+  --stream-fade: 350ms;
+  --stream-blur: 1px;
+  --stream-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --text-swap-dur: 150ms;
+  --text-swap-translate-y: 4px;
+  --text-swap-blur: 2px;
+  --text-swap-ease: ease-in-out;
+  --wave-dur: 900ms;
+  --wave-min: 0.35;
+  --float-dur: 4000ms;
+  --float-distance: 3px;
+  --press-scale: 0.99;
+  --press-dur: 150ms;
+  --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --va-btn-bg: rgba(255, 255, 255, 0.4);
+  --va-btn-shadow:
+    0 1px 3px 0 rgba(0, 0, 0, 0.04), inset 0 0 0 1px rgba(0, 0, 0, 0.08),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.08);
+  --va-hover: rgba(0, 0, 0, 0.02);
+  --va-card-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.04),
+    0 14px 32px -6px rgba(0, 0, 0, 0.08);
+  --divider: color-mix(in srgb, var(--stage-border) 49%, transparent);
+  --bubble: color-mix(in srgb, var(--stage-fg) 6%, var(--stage-surface));
+
+  display: grid;
+  width: 360px;
+  max-width: 100%;
+  height: 340px;
+  border-radius: 24px;
+  background: var(--stage-surface);
+  box-shadow: var(--va-card-shadow);
+  color: var(--stage-fg);
+  text-align: left;
+  -webkit-font-smoothing: antialiased;
+}
+
+.va-card[data-theme="dark"] {
+  --va-btn-bg: rgba(255, 255, 255, 0.1);
+  --va-btn-shadow:
+    0 1px 1px 0 rgba(0, 0, 0, 0.24), inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+  --va-hover: rgba(255, 255, 255, 0.02);
+  --va-card-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06), 0 8px 32px -4px rgba(0, 0, 0, 0.36),
+    0 1px 3px 0 rgba(0, 0, 0, 0.24);
+  --bubble: color-mix(in srgb, var(--stage-fg) 9%, var(--stage-surface));
+}
+
+.va-card[data-theme="dark"] {
+  --stage-bg: #121212;
+  --stage-fg: #ffffff;
+  --stage-muted: rgba(202, 202, 202, 0.7);
+  --stage-border: rgba(255, 255, 255, 0.08);
+  --stage-surface: #1b1b1b;
+  --stage-accent: #f2f2f2;
+  --stage-on-accent: #111111;
+}
+
+.va-card[data-theme="light"] {
+  --stage-bg: #fdfdfd;
+  --stage-fg: #0d0d0d;
+  --stage-muted: #6c6c6c;
+  --stage-border: rgba(0, 0, 0, 0.08);
+  --stage-surface: #ffffff;
+  --stage-accent: #171717;
+  --stage-on-accent: #ffffff;
+  --va-btn-bg: rgba(255, 255, 255, 0.4);
+  --va-btn-shadow:
+    0 1px 3px 0 rgba(0, 0, 0, 0.04), inset 0 0 0 1px rgba(0, 0, 0, 0.08),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.08);
+  --va-hover: rgba(0, 0, 0, 0.02);
+  --va-card-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.04),
+    0 14px 32px -6px rgba(0, 0, 0, 0.08);
+  --bubble: color-mix(in srgb, var(--stage-fg) 6%, var(--stage-surface));
+}
+
+.va-beam {
+  margin: -1px;
+  border-radius: 25px;
+}
+
+.va-inner {
+  position: relative;
+  height: 100%;
+  border-radius: 25px;
+  background: transparent;
+}
+
+.va-content {
+  position: relative;
+  z-index: 5;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+:where(.va-card) button {
+  font: inherit;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.va-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+}
+
+.va-top-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.va-name {
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 500;
+}
+
+.va-meta {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--stage-muted);
+}
+
+.va-divider {
+  height: 1px;
+  flex: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--divider) 20%,
+    var(--divider) 80%,
+    transparent
+  );
+}
+
+.va-body {
+  padding: 24px 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.va-bubble-row {
+  padding-left: 8px;
+  animation: va-float var(--float-dur) ease-in-out infinite;
+}
+
+@keyframes va-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(calc(var(--float-distance) * -1));
+  }
+}
+
+.va-bubble {
+  position: relative;
+  display: inline-block;
+  max-width: 240px;
+  padding: 8px 12px;
+  border-radius: 18px;
+  background: var(--bubble);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.va-bubble span {
+  position: relative;
+  z-index: 1;
+}
+
+.va-bubble::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: -7px;
+  width: 20px;
+  height: 20px;
+  background: var(--bubble);
+  border-bottom-right-radius: 16px 14px;
+}
+
+.va-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: -26px;
+  width: 26px;
+  height: 20px;
+  background: var(--stage-surface);
+  border-bottom-right-radius: 10px;
+}
+
+.va-transcript {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--stage-fg);
+  text-align: right;
+  text-wrap: pretty;
+  padding-left: 32px;
+}
+
+.t-stream-w {
+  opacity: 0;
+  filter: blur(var(--stream-blur));
+  transition:
+    opacity var(--stream-fade) var(--stream-ease),
+    filter var(--stream-fade) var(--stream-ease);
+}
+
+.t-stream-w.is-in {
+  opacity: 1;
+  filter: blur(0);
+}
+
+.va-bottom {
+  margin-top: auto;
+  padding: 0 24px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.va-caption {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--stage-muted);
+}
+
+.t-text-swap {
+  display: inline-block;
+  transform: translateY(0);
+  filter: blur(0);
+  opacity: 1;
+  transition:
+    transform var(--text-swap-dur) var(--text-swap-ease),
+    filter var(--text-swap-dur) var(--text-swap-ease),
+    opacity var(--text-swap-dur) var(--text-swap-ease);
+  will-change: transform, filter, opacity;
+}
+
+.t-text-swap.is-exit {
+  transform: translateY(calc(var(--text-swap-translate-y) * -1));
+  filter: blur(var(--text-swap-blur));
+  opacity: 0;
+}
+
+.t-text-swap.is-enter-start {
+  transform: translateY(var(--text-swap-translate-y));
+  filter: blur(var(--text-swap-blur));
+  opacity: 0;
+  transition: none;
+}
+
+.va-mic {
+  --press-scale: 0.95;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--va-btn-bg);
+  box-shadow: var(--va-btn-shadow);
+  color: var(--stage-fg);
+  transition: transform var(--press-dur) var(--ease-smooth-out);
+}
+
+:where(.va-card) .va-mic {
+  background: var(--va-btn-bg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .va-mic:hover {
+    background-image: linear-gradient(var(--va-hover), var(--va-hover));
+  }
+}
+
+.va-mic:is(:active, .is-pressed) {
+  scale: 1;
+  transform: scale(var(--press-scale));
+}
+
+.va-mic:focus-visible {
+  outline: none;
+  box-shadow:
+    var(--va-btn-shadow),
+    0 0 0 2px var(--stage-surface),
+    0 0 0 4px var(--stage-accent);
+}
+
+.va-wave {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 20px;
+}
+
+.va-wave i {
+  display: block;
+  width: 2px;
+  border-radius: 1px;
+  background: currentColor;
+  transform-origin: center;
+}
+
+.va-wave i:nth-child(1) {
+  height: 6px;
+}
+.va-wave i:nth-child(2) {
+  height: 12px;
+}
+.va-wave i:nth-child(3) {
+  height: 18px;
+}
+.va-wave i:nth-child(4) {
+  height: 12px;
+}
+.va-wave i:nth-child(5) {
+  height: 6px;
+}
+
+.va-mic.is-live .va-wave i {
+  animation: va-wave var(--wave-dur) ease-in-out infinite;
+}
+.va-mic.is-live .va-wave i:nth-child(2) {
+  animation-delay: calc(var(--wave-dur) * -0.3);
+}
+.va-mic.is-live .va-wave i:nth-child(3) {
+  animation-delay: calc(var(--wave-dur) * -0.6);
+}
+.va-mic.is-live .va-wave i:nth-child(4) {
+  animation-delay: calc(var(--wave-dur) * -0.15);
+}
+.va-mic.is-live .va-wave i:nth-child(5) {
+  animation-delay: calc(var(--wave-dur) * -0.45);
+}
+
+@keyframes va-wave {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(var(--wave-min));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .va-bubble-row,
+  .va-mic.is-live .va-wave i {
+    animation: none !important;
+  }
+  .t-text-swap {
+    transition: none !important;
+  }
+  .t-stream-w {
+    transition: none !important;
+    filter: none !important;
+  }
+  .va-mic {
+    transition: none;
+  }
+  .va-mic:is(:active, .is-pressed) {
+    transform: none;
+  }
+}
+
+/* Avatars: avvvatars colors (MIT, github.com/nusu/avvvatars) */
+.t-av {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  box-sizing: border-box;
+  width: var(--av-size, 24px);
+  height: var(--av-size, 24px);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--av-bg) 70%, transparent);
+  color: var(--av-fg);
+  font-size: max(10px, calc(var(--av-size, 24px) * 0.4));
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.02);
+  user-select: none;
+}
+
+.va-card[data-theme="dark"] .t-av {
+  background: color-mix(in srgb, var(--av-fg) 30%, #202020);
+  color: var(--av-bg);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.va-card[data-theme="light"] .t-av {
+  background: color-mix(in srgb, var(--av-bg) 70%, transparent);
+  color: var(--av-fg);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.02);
+}
+
+.t-av[data-empty] {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--stage-muted, #8a8a8a);
+}
+
+.va-card[data-theme="dark"] .t-av[data-empty] {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--stage-muted, #8a8a8a);
+}
+
+.t-av[data-empty] svg {
+  width: 55%;
+  height: 55%;
+}
+
+/* Touch: controls press in full on a tap, never select their label, and hover only applies with a mouse. */
+:where(
+  button,
+  [role="button"],
+  [role="tab"],
+  [role="menuitem"],
+  [role="menuitemcheckbox"],
+  [role="menuitemradio"],
+  [role="option"],
+  [role="switch"],
+  summary,
+  .t-pressable
+) {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+/* end touch */

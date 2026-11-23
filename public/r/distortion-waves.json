@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "distortion-waves",
+  "title": "Distortion Waves",
+  "description": "WebGL2 optical wave transition from Libraries.dev that opens from the triggering element and bends the DOM between two views",
+  "dependencies": [
+    "react",
+    "distortion-waves"
+  ],
+  "files": [
+    {
+      "path": "src/registry/items/distortion-waves/distortion-waves.tsx",
+      "content": "﻿\"use client\";\n\n/**\n * DistortionWave integration notes (Libraries.dev `distortion-waves`):\n * - Outer shell vs. inner views: Put `borderRadius`, `overflow: \"hidden\"`, outer\n *   border/hairline, and `boxShadow` on `<DistortionWave style={...} />`, NOT on\n *   `children` or `revealedContent`. Inner views must have opaque backgrounds and\n *   no outer perimeter border so only interior elements bend (not the card edge).\n * - Tailwind v4 preflight: `[data-distortion-wave]` keeps `border-style: none`\n *   in `src/index.css` to prevent 3px fallback borders in the SVG snapshot; set\n *   explicit inline `borderTop: \"1px solid ...\"` / `border: \"1px solid ...\"` only\n *   on inner boxes/dividers that intentionally draw hairlines.\n * - `source` & `overlay`: Pass the triggering control (`\"vertical\"`/`\"horizontal\"`)\n *   or top/center badge/token (`\"center\"`) as `source`, and place live controls\n *   that must stay sharp and unbent inside `overlay`.\n * - One-shot replay: Use `ref.current?.reset()` before setting `revealed={false}`\n *   if returning to the initial view without a reverse collapse animation.\n * - Assets: External images/fonts need CORS to appear in snapshots; iframes are skipped.\n */\n\nexport {\n  backgroundOf,\n  bezierEase,\n  type CaptureFunction,\n  type CaptureRequest,\n  COVER_ZONE,\n  DistortionWave,\n  DistortionWave as DistortionWaves,\n  DistortionWave as default,\n  type DistortionWaveHandle,\n  type DistortionWaveProps,\n  type DistortionWaveProps as DistortionWavesProps,\n  type DotBuffer,\n  defaultStyle,\n  duration,\n  type FrameOptions,\n  type Front,\n  hexToRgb,\n  LUMPS,\n  makeParticles,\n  newFront,\n  PALETTES as DISTORTION_WAVE_PALETTES,\n  type Palette,\n  type PaletteLike,\n  type PaletteName,\n  type PaletteName as DistortionWavePalette,\n  type PlayOptions,\n  type Point,\n  particleAt,\n  type Rect,\n  type RendererOptions,\n  type RGB,\n  rgbToHex,\n  rimLumps,\n  type ScreenSlot,\n  type Snapshot,\n  type SnapshotOptions,\n  type SourceLike,\n  type Spot,\n  singlePalette,\n  smooth,\n  snapshot,\n  WaveController,\n  type WaveOptions,\n  WaveRenderer,\n  type WaveStyle,\n  type WaveStyleInput,\n  type WaveStyleInput as DistortionWaveStyleInput,\n  type WaveType,\n  type WaveType as DistortionWaveType,\n  waveFront,\n} from \"distortion-waves\";\n",
+      "type": "registry:ui",
+      "target": "components/ui/distortion-waves.tsx"
+    }
+  ],
+  "type": "registry:ui"
+}

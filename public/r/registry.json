@@ -1,0 +1,298 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "interact-dev",
+  "homepage": "https://interact.dev",
+  "items": [
+    {
+      "name": "download-button",
+      "type": "registry:ui",
+      "title": "Download Button",
+      "description": "Multi-state pill download button with Pause/Play, Cancel, and morphing Open state",
+      "dependencies": [
+        "@ui-sdk/react",
+        "@ui-sdk/core",
+        "motion",
+        "@animate-ui/react"
+      ],
+      "files": [
+        {
+          "path": "src/registry/items/download-button/download-button.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/download-button.tsx"
+        },
+        {
+          "path": "src/registry/icons/pause.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/pause.tsx"
+        },
+        {
+          "path": "src/registry/icons/play.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/play.tsx"
+        },
+        {
+          "path": "src/registry/icons/x.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/x.tsx"
+        },
+        {
+          "path": "src/registry/icons/check.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/check.tsx"
+        }
+      ]
+    },
+    {
+      "name": "upload-button",
+      "type": "registry:ui",
+      "title": "Upload Button",
+      "description": "Expandable file upload trigger with stacked progress queue, inline Retry, and Copy link",
+      "dependencies": [
+        "@ui-sdk/react",
+        "@ui-sdk/core",
+        "motion",
+        "@animate-ui/react"
+      ],
+      "files": [
+        {
+          "path": "src/registry/items/upload-button/upload-button.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/upload-button.tsx"
+        },
+        {
+          "path": "src/registry/icons/check.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/check.tsx"
+        }
+      ]
+    },
+    {
+      "name": "search-button",
+      "type": "registry:ui",
+      "title": "Search Button",
+      "description": "Magnetic circular search button that springs open into an interactive pill search bar",
+      "dependencies": [
+        "@ui-sdk/react",
+        "@ui-sdk/core",
+        "motion",
+        "@animate-ui/react"
+      ],
+      "files": [
+        {
+          "path": "src/registry/items/search-button/search-button.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/search-button.tsx"
+        },
+        {
+          "path": "src/registry/icons/search.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/search.tsx"
+        },
+        {
+          "path": "src/registry/icons/x.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/x.tsx"
+        }
+      ]
+    },
+    {
+      "name": "update-button",
+      "type": "registry:ui",
+      "title": "Update Button",
+      "description": "Interactive update pill button with inner progress sweep and emerging Cancel circle",
+      "dependencies": [
+        "@ui-sdk/react",
+        "@ui-sdk/core",
+        "motion",
+        "@animate-ui/react"
+      ],
+      "files": [
+        {
+          "path": "src/registry/items/update-button/update-button.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/update-button.tsx"
+        },
+        {
+          "path": "src/registry/icons/refresh-cw.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/refresh-cw.tsx"
+        },
+        {
+          "path": "src/registry/icons/check.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/check.tsx"
+        },
+        {
+          "path": "src/registry/icons/x.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/x.tsx"
+        }
+      ]
+    },
+    {
+      "name": "voice-button",
+      "type": "registry:ui",
+      "title": "Voice Button",
+      "description": "Interactive voice pill button with VoiceGlow reactive beam, NumberFlow timer, and emerging Stop circle",
+      "dependencies": [
+        "@ui-sdk/react",
+        "@ui-sdk/core",
+        "@number-flow/react",
+        "voice-glow",
+        "motion",
+        "@animate-ui/react"
+      ],
+      "files": [
+        {
+          "path": "src/registry/items/voice-button/voice-button.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/voice-button.tsx"
+        },
+        {
+          "path": "src/registry/icons/mic.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/mic.tsx"
+        },
+        {
+          "path": "src/registry/icons/square.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/square.tsx"
+        }
+      ]
+    },
+    {
+      "name": "approve-reject",
+      "type": "registry:ui",
+      "title": "Approve Reject",
+      "description": "Contextual two-button decision pair where the chosen pill expands into confirmation and the opposite morphs into Undo",
+      "dependencies": [
+        "@ui-sdk/react",
+        "@ui-sdk/core",
+        "motion",
+        "@animate-ui/react"
+      ],
+      "files": [
+        {
+          "path": "src/registry/items/approve-reject/approve-reject.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/approve-reject.tsx"
+        },
+        {
+          "path": "src/registry/icons/check.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/check.tsx"
+        },
+        {
+          "path": "src/registry/icons/undo-2.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/undo-2.tsx"
+        },
+        {
+          "path": "src/registry/icons/x.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/x.tsx"
+        }
+      ]
+    },
+    {
+      "name": "delete-button",
+      "type": "registry:ui",
+      "title": "Delete Button",
+      "description": "Circular delete trigger that splits via an SVG gooey bridge into Confirm and Cancel pills",
+      "dependencies": [
+        "@ui-sdk/react",
+        "@ui-sdk/core",
+        "motion",
+        "@animate-ui/react"
+      ],
+      "files": [
+        {
+          "path": "src/registry/items/delete-button/delete-button.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/delete-button.tsx"
+        },
+        {
+          "path": "src/registry/icons/check.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/check.tsx"
+        },
+        {
+          "path": "src/registry/icons/trash-2.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/trash-2.tsx"
+        }
+      ]
+    },
+    {
+      "name": "step-player",
+      "type": "registry:ui",
+      "title": "Step Player",
+      "description": "Two-pill step timeline with two-edge slot easing, boat-wake dot ripple, and quad-morphed Play/Pause mark",
+      "dependencies": ["react"],
+      "files": [
+        {
+          "path": "src/registry/items/step-player/step-player.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/step-player.tsx"
+        },
+        {
+          "path": "src/registry/items/step-player/step-player.css",
+          "type": "registry:ui",
+          "target": "components/ui/step-player.css"
+        }
+      ]
+    },
+    {
+      "name": "heat-map",
+      "type": "registry:ui",
+      "title": "Heat Map",
+      "description": "Interactive canvas field with 256-entry thermal LUT, melting cursor cooling, and click-to-cycle liquid shapes",
+      "dependencies": ["react"],
+      "files": [
+        {
+          "path": "src/registry/items/heat-map/heat-map.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/heat-map.tsx"
+        },
+        {
+          "path": "src/registry/items/heat-map/heat-map.css",
+          "type": "registry:ui",
+          "target": "components/ui/heat-map.css"
+        }
+      ]
+    },
+    {
+      "name": "voice-assistant-card",
+      "type": "registry:ui",
+      "title": "Voice Assistant Card",
+      "description": "Voice assistant card with floating iMessage greeting, word-by-word transcript stream, and VoiceBeam glow",
+      "dependencies": ["react", "voice-glow", "motion"],
+      "files": [
+        {
+          "path": "src/registry/items/voice-assistant-card/voice-assistant-card.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/voice-assistant-card.tsx"
+        },
+        {
+          "path": "src/registry/items/voice-assistant-card/voice-assistant-card.css",
+          "type": "registry:ui",
+          "target": "components/ui/voice-assistant-card.css"
+        }
+      ]
+    },
+    {
+      "name": "distortion-waves",
+      "type": "registry:ui",
+      "title": "Distortion Waves",
+      "description": "WebGL2 optical wave transition from Libraries.dev that opens from the triggering element and bends the DOM between two views",
+      "dependencies": ["react", "distortion-waves"],
+      "files": [
+        {
+          "path": "src/registry/items/distortion-waves/distortion-waves.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/distortion-waves.tsx"
+        }
+      ]
+    }
+  ]
+}
