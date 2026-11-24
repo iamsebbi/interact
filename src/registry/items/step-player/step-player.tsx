@@ -324,6 +324,7 @@ export interface StepPlayerProps {
   pace?: number;
   wake?: number;
   size?: StepPlayerSize;
+  playing?: boolean;
   defaultPlaying?: boolean;
   paused?: boolean;
 }
@@ -336,6 +337,7 @@ export function StepPlayer({
   /* how far back the ripple runs, 0..100 */
   wake = 100,
   size = "md",
+  playing: controlledPlaying,
   defaultPlaying = false,
   paused = false,
 }: StepPlayerProps = {}) {
@@ -346,7 +348,10 @@ export function StepPlayer({
   const wk = wakeOf(clamp(wake, 0, 100) / 100);
 
   const [at, setAt] = useState(0);
-  const [playing, setPlaying] = useState(defaultPlaying);
+  const [internalPlaying, setInternalPlaying] = useState(defaultPlaying);
+  const playing = controlledPlaying ?? internalPlaying;
+  const setPlaying = setInternalPlaying;
+  const prevControlledPlayingRef = useRef(controlledPlaying);
   /* bumped each frame something moves, and nothing else reads it */
   const [, setTick] = useState(0);
 
@@ -516,6 +521,22 @@ export function StepPlayer({
     if (fromHand) prog.current = 0;
     run();
   }
+
+  const goRef = useRef(go);
+  goRef.current = go;
+
+  useEffect(() => {
+    const prev = prevControlledPlayingRef.current;
+    prevControlledPlayingRef.current = controlledPlaying;
+    if (prev === true && controlledPlaying === false) {
+      prog.current = 0;
+      if (live.current.at !== 0) {
+        goRef.current(0, true);
+      } else {
+        runRef.current();
+      }
+    }
+  }, [controlledPlaying]);
 
   const toggle = () => {
     if (playing) {

@@ -10,6 +10,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
   const pathname = usePathname() ?? "/";
   const isGridMounted = useIsShowcaseGridMounted();
   const isStudio = pathname === "/studio" || pathname.startsWith("/studio/");
+  const isPricing = pathname === "/pricing" || pathname.startsWith("/pricing/");
   const isComponentDetail =
     pathname === "/components" || pathname.startsWith("/components/");
   const isStandaloneComponentPage = isComponentDetail && !isGridMounted;
@@ -18,7 +19,9 @@ export function SiteChrome({ children }: { children: ReactNode }) {
     <div className="flex min-h-dvh w-full flex-col bg-background text-foreground">
       {!isStandaloneComponentPage && <Navbar />}
       <div className="flex-1">{children}</div>
-      {!isStudio && !isStandaloneComponentPage && <Footer />}
+      {!isStudio && !isStandaloneComponentPage && (
+        <Footer showCta={!isPricing} />
+      )}
     </div>
   );
 }

@@ -13,17 +13,11 @@ export function StepPlayerPreview({
   previewActive,
 }: ComponentPreviewProps) {
   const signal = replaySignal ?? 0;
-  const isActive = previewActive ?? signal > 0;
+  const isActive = (previewActive ?? signal > 0) && signal > 0;
 
   return (
     <div className={className}>
-      <StepPlayer
-        key={signal}
-        size="xl"
-        pace={0.85}
-        defaultPlaying={signal > 0}
-        paused={signal > 0 && !isActive}
-      />
+      <StepPlayer size="xl" pace={0.85} playing={isActive} />
     </div>
   );
 }

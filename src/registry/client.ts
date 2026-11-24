@@ -169,6 +169,36 @@ export const COMPONENT_CLIENT_REGISTRY: Record<
     },
     COMPONENT_GENERATORS["delete-button"],
   ),
+  "expandable-tabs": buildClientEntry(
+    () => import("./items/expandable-tabs/demo"),
+    () => import("./items/expandable-tabs/inspector"),
+    {
+      preview: "ExpandableTabsPreview",
+      demo: "ExpandableTabsDemo",
+      inspector: "ExpandableTabsInspector",
+    },
+    COMPONENT_GENERATORS["expandable-tabs"],
+  ),
+  "segmented-control": buildClientEntry(
+    () => import("./items/segmented-control/demo"),
+    () => import("./items/segmented-control/inspector"),
+    {
+      preview: "SegmentedControlPreview",
+      demo: "SegmentedControlDemo",
+      inspector: "SegmentedControlInspector",
+    },
+    COMPONENT_GENERATORS["segmented-control"],
+  ),
+  "select-menu": buildClientEntry(
+    () => import("./items/select-menu/demo"),
+    () => import("./items/select-menu/inspector"),
+    {
+      preview: "SelectMenuPreview",
+      demo: "SelectMenuDemo",
+      inspector: "SelectMenuInspector",
+    },
+    COMPONENT_GENERATORS["select-menu"],
+  ),
   "step-player": buildClientEntry(
     () => import("./items/step-player/demo"),
     () => import("./items/step-player/inspector"),

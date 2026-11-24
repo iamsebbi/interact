@@ -15,16 +15,13 @@ export function DeleteButtonPreview({
 }: ComponentPreviewProps) {
   const signal = replaySignal ?? 0;
   const isActive = previewActive ?? signal > 0;
-  const [trackedSignal, setTrackedSignal] = useState(signal);
   const [status, setStatus] = useState<DeleteButtonStatus>("idle");
 
-  if (signal !== trackedSignal) {
-    setTrackedSignal(signal);
-    setStatus("idle");
-  }
-
   useEffect(() => {
-    if (!isActive || trackedSignal <= 0) return;
+    if (!isActive || signal <= 0) {
+      setStatus("idle");
+      return;
+    }
 
     const timers = [
       window.setTimeout(() => setStatus("confirming"), 50),
@@ -38,11 +35,10 @@ export function DeleteButtonPreview({
         window.clearTimeout(timer);
       }
     };
-  }, [isActive, trackedSignal]);
+  }, [isActive, signal]);
 
   return (
     <DeleteButton
-      key={trackedSignal}
       size="xl"
       theme="light"
       status={status}

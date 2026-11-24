@@ -6,7 +6,7 @@ import type {
   ComponentPreviewProps,
 } from "@/registry/types";
 import type { DownloadButtonConfig } from "./config";
-import { DownloadButton } from "./download-button";
+import { DownloadButton, type DownloadButtonStatus } from "./download-button";
 
 export function DownloadButtonPreview({
   className,
@@ -15,30 +15,26 @@ export function DownloadButtonPreview({
 }: ComponentPreviewProps) {
   const signal = replaySignal ?? 0;
   const isActive = previewActive ?? signal > 0;
-  const [trackedSignal, setTrackedSignal] = useState(signal);
-  const [innerReplay, setInnerReplay] = useState(0);
-
-  if (signal !== trackedSignal) {
-    setTrackedSignal(signal);
-    setInnerReplay(0);
-  }
+  const [status, setStatus] = useState<DownloadButtonStatus>("idle");
 
   useEffect(() => {
-    if (!isActive || trackedSignal <= 0) return;
+    if (!isActive || signal <= 0) {
+      setStatus("idle");
+      return;
+    }
     const t = window.setTimeout(() => {
-      setInnerReplay((prev) => prev + 1);
+      setStatus("downloading");
     }, 50);
     return () => window.clearTimeout(t);
-  }, [isActive, trackedSignal]);
+  }, [isActive, signal]);
 
   return (
     <DownloadButton
-      key={trackedSignal}
       size="xl"
       durationMs={2200}
       checkDurationMs={650}
-      paused={!isActive}
-      replaySignal={innerReplay}
+      status={status}
+      onStatusChange={setStatus}
       className={className}
     />
   );

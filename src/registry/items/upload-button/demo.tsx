@@ -16,25 +16,21 @@ export function UploadButtonPreview({
 }: ComponentPreviewProps) {
   const signal = replaySignal ?? 0;
   const isActive = previewActive ?? signal > 0;
-  const [trackedSignal, setTrackedSignal] = useState(signal);
   const [innerReplay, setInnerReplay] = useState(0);
 
-  if (signal !== trackedSignal) {
-    setTrackedSignal(signal);
-    setInnerReplay(0);
-  }
-
   useEffect(() => {
-    if (!isActive || trackedSignal <= 0) return;
+    if (!isActive || signal <= 0) {
+      setInnerReplay(0);
+      return;
+    }
     const t = window.setTimeout(() => {
-      setInnerReplay((prev) => prev + 1);
+      setInnerReplay(signal);
     }, 50);
     return () => window.clearTimeout(t);
-  }, [isActive, trackedSignal]);
+  }, [isActive, signal]);
 
   return (
     <UploadButton
-      key={trackedSignal}
       size="xl"
       anchored={false}
       durationMs={2200}
@@ -42,7 +38,6 @@ export function UploadButtonPreview({
       autoRetryDelayMs={900}
       autoCopyDelayMs={800}
       resetAfterCopied={false}
-      paused={!isActive}
       replaySignal={innerReplay}
       className={className}
     />

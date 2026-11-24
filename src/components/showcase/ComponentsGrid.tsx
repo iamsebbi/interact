@@ -99,31 +99,34 @@ function SafePreviewFrame({
   bounds,
 }: SafePreviewFrameProps) {
   const frameRef = useRef<HTMLDivElement>(null);
-  const freezeHostRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(preferredScale);
+  const [ready, setReady] = useState(false);
 
-  const shouldFreeze = !previewActive && replaySignal > 0;
-
-  useEffect(() => {
-    const host = freezeHostRef.current;
-    if (!host || typeof host.getAnimations !== "function") return;
-    for (const anim of host.getAnimations({ subtree: true })) {
-      if (shouldFreeze) {
-        anim.pause();
-      } else if (anim.playState === "paused") {
-        anim.play();
-      }
-    }
-  }, [shouldFreeze]);
-
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const el = frameRef.current;
-    if (!el || !bounds) {
-      setScale(preferredScale);
-      return;
-    }
+    const innerEl = innerRef.current;
+    let rafId: number | null = null;
+    let revealed = false;
+
+    const scheduleReveal = () => {
+      if (revealed) return;
+      if (!innerEl || innerEl.childElementCount === 0) return;
+      if (rafId !== null) return;
+      // Wait one animation frame after scale & dynamic child mount so inner sizer measurements settle before reveal.
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null;
+        revealed = true;
+        setReady(true);
+      });
+    };
 
     const updateScale = () => {
+      if (!el || !bounds) {
+        setScale(preferredScale);
+        scheduleReveal();
+        return;
+      }
       const { clientWidth, clientHeight } = el;
       if (clientWidth <= 0 || clientHeight <= 0) return;
       // Leave margin inside the safe stage so ambient elevation shadows never clip against card controls.
@@ -136,13 +139,32 @@ function SafePreviewFrame({
       );
       const clamped = Math.max(0.35, Math.round(next * 1000) / 1000);
       setScale((prev) => (prev === clamped ? prev : clamped));
+      scheduleReveal();
     };
 
     updateScale();
-    if (typeof ResizeObserver === "undefined") return;
-    const ro = new ResizeObserver(updateScale);
-    ro.observe(el);
-    return () => ro.disconnect();
+
+    const ro =
+      el && typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(updateScale)
+        : null;
+    if (ro && el) ro.observe(el);
+
+    const mo =
+      innerEl && typeof MutationObserver !== "undefined"
+        ? new MutationObserver(scheduleReveal)
+        : null;
+    if (mo && innerEl) {
+      mo.observe(innerEl, { childList: true });
+    }
+
+    return () => {
+      ro?.disconnect();
+      mo?.disconnect();
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+      }
+    };
   }, [preferredScale, bounds]);
 
   return (
@@ -152,10 +174,12 @@ function SafePreviewFrame({
     >
       {Preview && (
         <div
-          ref={freezeHostRef}
-          data-preview-frozen={shouldFreeze ? "true" : undefined}
-          className="inline-flex shrink-0 items-center justify-center"
-          style={{ transform: `scale(${scale})` }}
+          ref={innerRef}
+          className={cn(
+            "inline-flex shrink-0 items-center justify-center transition-opacity duration-200 ease-out",
+            ready ? "opacity-100" : "opacity-0",
+          )}
+          style={scale === 1 ? undefined : { transform: `scale(${scale})` }}
         >
           <Preview replaySignal={replaySignal} previewActive={previewActive} />
         </div>
@@ -199,7 +223,7 @@ const GridCard = memo(function GridCard({
       onPointerLeave={() => onHoverLeave(slug)}
       onPointerDown={() => onWarm(slug)}
       onFocus={() => onWarm(slug)}
-      className="surface-panel group relative flex aspect-square w-full flex-col justify-between overflow-hidden rounded-[28px] p-[14px] transition-colors sm:p-[18px]"
+      className="surface-panel group relative flex aspect-square w-full flex-col justify-between overflow-hidden rounded-[28px] p-[14px] transition-colors [contain:layout_paint] sm:p-[18px]"
     >
       <Link
         href={`/components/${slug}`}
@@ -272,6 +296,7 @@ export function ComponentsGrid() {
   const [session, setSession] = useState<OverlaySession | null>(null);
 
   const cardRefs = useRef<Map<string, HTMLElement>>(new Map());
+  const gridContainerRef = useRef<HTMLDivElement | null>(null);
   const hiddenCardRef = useRef<HTMLElement | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null);
   const stageWrapperRef = useRef<HTMLDivElement | null>(null);
@@ -312,6 +337,13 @@ export function ComponentsGrid() {
       window.clearTimeout(timer);
     }
     hoverTimersRef.current.clear();
+  }, []);
+
+  const setGridHidden = useCallback((hidden: boolean) => {
+    const gridEl = gridContainerRef.current;
+    if (gridEl) {
+      gridEl.style.visibility = hidden ? "hidden" : "";
+    }
   }, []);
 
   const restoreHiddenCard = useCallback(() => {
@@ -357,8 +389,14 @@ export function ComponentsGrid() {
       clearAnimationTimers();
       clearHoverTimers();
       restoreHiddenCard();
+      setGridHidden(false);
     };
-  }, [clearAnimationTimers, clearHoverTimers, restoreHiddenCard]);
+  }, [
+    clearAnimationTimers,
+    clearHoverTimers,
+    restoreHiddenCard,
+    setGridHidden,
+  ]);
 
   const toggleSaved = useCallback((slug: string) => {
     setSavedSlugs((prev) => {
@@ -488,6 +526,7 @@ export function ComponentsGrid() {
 
       isClosingRef.current = true;
       clearAnimationTimers();
+      setGridHidden(false);
       setActiveSlug(null);
       setReplayCounts((prev) =>
         prev[current.slug] ? { ...prev, [current.slug]: 0 } : prev,
@@ -578,7 +617,12 @@ export function ComponentsGrid() {
         setSession(null);
       }, CLOSE_FADE_UNMOUNT_MS);
     },
-    [clearAnimationTimers, restoreHiddenCard, shouldReduceMotion],
+    [
+      clearAnimationTimers,
+      restoreHiddenCard,
+      setGridHidden,
+      shouldReduceMotion,
+    ],
   );
 
   const handleOpenPreview = useCallback(
@@ -644,7 +688,14 @@ export function ComponentsGrid() {
   }, [overlayPresent]);
 
   useIsomorphicLayoutEffect(() => {
-    if (!session?.needsOpenFlip) return;
+    if (!session) {
+      setGridHidden(false);
+      return;
+    }
+    if (!session.needsOpenFlip) {
+      setGridHidden(true);
+      return;
+    }
 
     const overlayEl = overlayRef.current;
     const stageEl = stageRef.current;
@@ -653,12 +704,14 @@ export function ComponentsGrid() {
 
     if (!overlayEl || !stageEl || !wrapperEl || !sourceRect) {
       if (overlayEl) overlayEl.dataset.on = "true";
+      setGridHidden(true);
       return;
     }
 
     const wrapperRect = toRectBox(wrapperEl.getBoundingClientRect());
     if (wrapperRect.width <= 0 || wrapperRect.height <= 0) {
       overlayEl.dataset.on = "true";
+      setGridHidden(true);
       return;
     }
 
@@ -683,8 +736,9 @@ export function ComponentsGrid() {
       openCleanupTimerRef.current = null;
       stageEl.style.transform = "";
       stageEl.style.willChange = "";
+      setGridHidden(true);
     }, OPEN_MORPH_MS + 30);
-  }, [session]);
+  }, [session, setGridHidden]);
 
   useEffect(() => {
     const onPopState = () => {
@@ -744,7 +798,10 @@ export function ComponentsGrid() {
         onValueChange={setActiveCategory}
       />
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div
+        ref={gridContainerRef}
+        className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
+      >
         {items.map((entry) => (
           <GridCard
             key={entry.slug}
@@ -786,7 +843,7 @@ export function ComponentsGrid() {
               closePreview(false);
             }
           }}
-          className="dtl-overlay no-scrollbar fixed inset-0 z-[45] overflow-y-auto overscroll-contain"
+          className="dtl-overlay no-scrollbar fixed inset-0 z-[45] overflow-y-auto overscroll-contain pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]"
         >
           <div
             aria-hidden="true"

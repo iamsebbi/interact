@@ -15,11 +15,11 @@ import {
   useReducedMotion,
 } from "motion/react";
 import * as React from "react";
+import { Check } from "@/components/animate-ui/icons/check";
+import { Pause } from "@/components/animate-ui/icons/pause";
+import { Play } from "@/components/animate-ui/icons/play";
+import { X } from "@/components/animate-ui/icons/x";
 import { cn } from "@/lib/utils";
-import { Check } from "@/registry/icons/check";
-import { Pause } from "@/registry/icons/pause";
-import { Play } from "@/registry/icons/play";
-import { X } from "@/registry/icons/x";
 
 export type DownloadButtonStatus =
   | "idle"

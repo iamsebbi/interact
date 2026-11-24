@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import type {
   ComponentDemoProps,
   ComponentPreviewProps,
@@ -13,13 +14,23 @@ export function VoiceAssistantCardPreview({
   previewActive,
 }: ComponentPreviewProps) {
   const signal = replaySignal ?? 0;
-  const paused = signal > 0 && previewActive === false;
+  const isActive = previewActive === true;
+  const [paused, setPaused] = useState(!isActive);
+
+  useEffect(() => {
+    if (isActive) {
+      setPaused(false);
+      return;
+    }
+    const t = window.setTimeout(() => setPaused(true), 600);
+    return () => window.clearTimeout(t);
+  }, [isActive]);
 
   return (
     <VoiceAssistantCard
       theme="light"
       paused={paused}
-      replaySignal={signal}
+      replaySignal={isActive ? signal : 0}
       className={className}
     />
   );

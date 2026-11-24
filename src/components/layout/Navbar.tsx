@@ -29,14 +29,13 @@ import {
   Sun,
 } from "@/components/icons";
 import { useTheme } from "@/components/layout/ThemeProvider";
-import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { cn } from "@/lib/utils";
 
 const GITHUB_URL = "https://github.com/iamsebbi/interact";
 const CONTACT_EMAIL = "hello@interact.dev";
 
 const NAV_LINKS = [
-  { href: "/", label: "Products" },
+  { href: "/", label: "Components" },
   { href: "/how-to-use", label: "How to use" },
   { href: "/pricing", label: "Pricing" },
   { href: "/studio", label: "Studio", pro: true },
@@ -75,15 +74,15 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-background/90 backdrop-blur-md">
+    <header className="sticky top-0 z-40 w-full bg-background/90 pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)] backdrop-blur-md">
       <div className="mx-auto flex h-16 w-full max-w-[1240px] items-center justify-between gap-4 px-4 sm:px-6">
         <div className="flex min-w-0 items-center gap-6 md:gap-8">
           <Link
             href="/"
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-sm py-1 text-foreground transition-opacity duration-150 hover:opacity-85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            className="inline-flex shrink-0 items-center gap-2 rounded-sm py-1 text-foreground transition-opacity duration-150 hover:opacity-85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
           >
-            <AsteriskSymbol size={18} className="shrink-0 text-foreground" />
-            <span className="text-[15px] font-medium tracking-tight whitespace-nowrap">
+            <AsteriskSymbol size={20} className="shrink-0 text-foreground" />
+            <span className="text-[17px] font-medium tracking-tight whitespace-nowrap sm:text-[18px]">
               <span className="text-foreground">interact</span>
               <span className="text-muted-foreground">.dev</span>
             </span>
@@ -142,11 +141,13 @@ export function Navbar() {
               <span>GitHub</span>
             </a>
 
-            <Button variant="pro" size="md" render={<Link href="/pricing" />}>
+            <Button
+              variant="primary"
+              size="md"
+              render={<Link href="/pricing" />}
+            >
               Get Pro
             </Button>
-
-            <ThemeToggle />
 
             <Menu>
               <MenuTrigger
@@ -201,7 +202,6 @@ export function Navbar() {
           </div>
 
           <div className="flex items-center gap-2 md:hidden">
-            <ThemeToggle />
             <Dialog open={mobileOpen} onOpenChange={setMobileOpen}>
               <DialogTrigger
                 aria-label="Open navigation menu"
@@ -212,7 +212,7 @@ export function Navbar() {
               <DialogBackdrop />
               <DialogContent className="w-[min(calc(100vw-1.5rem),22rem)] p-5">
                 <DialogTitle className="mb-4 flex items-center gap-1.5">
-                  <AsteriskSymbol size={16} />
+                  <AsteriskSymbol size={18} />
                   <span>interact.dev</span>
                 </DialogTitle>
                 <nav
@@ -242,10 +242,36 @@ export function Navbar() {
                     );
                   })}
                 </nav>
-                <div className="mt-4 flex flex-col gap-2 border-t border-menu-divider pt-4">
+                <div className="mt-3 flex flex-col gap-1 border-t border-menu-divider pt-3">
+                  <button
+                    type="button"
+                    onClick={() => setTheme(isDark ? "light" : "dark")}
+                    className="flex h-10 w-full cursor-pointer items-center gap-2.5 rounded-sm px-3 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-menu-hover hover:text-foreground"
+                  >
+                    {isDark ? (
+                      <Sun size={15} aria-hidden="true" />
+                    ) : (
+                      <Moon size={15} aria-hidden="true" />
+                    )}
+                    <span>{isDark ? "Light theme" : "Dark theme"}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCopyUrl}
+                    className="flex h-10 w-full cursor-pointer items-center gap-2.5 rounded-sm px-3 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-menu-hover hover:text-foreground"
+                  >
+                    {copiedUrl ? (
+                      <Check size={15} aria-hidden="true" />
+                    ) : (
+                      <Share2 size={15} aria-hidden="true" />
+                    )}
+                    <span>{copiedUrl ? "Link copied" : "Copy page link"}</span>
+                  </button>
+                </div>
+                <div className="mt-3 flex flex-col gap-2 border-t border-menu-divider pt-3">
                   <DialogClose
                     render={<Link href="/pricing" />}
-                    className="control-pro flex h-10 items-center justify-center rounded-pill text-sm font-medium no-underline"
+                    className="flex h-10 items-center justify-center rounded-pill bg-primary text-sm font-medium text-primary-foreground shadow-primary no-underline transition-colors hover:bg-primary-hover active:bg-primary-active"
                   >
                     Get Pro
                   </DialogClose>

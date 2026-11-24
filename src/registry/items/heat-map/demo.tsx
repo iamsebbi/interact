@@ -12,13 +12,10 @@ export function HeatMapPreview({
   replaySignal,
   previewActive,
 }: ComponentPreviewProps) {
-  return (
-    <HeatMap
-      replaySignal={replaySignal ?? 0}
-      paused={previewActive === false}
-      className={className}
-    />
-  );
+  const signal = replaySignal ?? 0;
+  const isActive = previewActive ?? signal > 0;
+
+  return <HeatMap replaySignal={isActive ? signal : 0} className={className} />;
 }
 
 export function HeatMapDemo({

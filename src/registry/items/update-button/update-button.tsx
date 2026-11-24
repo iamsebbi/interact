@@ -15,10 +15,10 @@ import {
   useReducedMotion,
 } from "motion/react";
 import * as React from "react";
+import { Check } from "@/components/animate-ui/icons/check";
+import { RefreshCw } from "@/components/animate-ui/icons/refresh-cw";
+import { X } from "@/components/animate-ui/icons/x";
 import { cn } from "@/lib/utils";
-import { Check } from "@/registry/icons/check";
-import { RefreshCw } from "@/registry/icons/refresh-cw";
-import { X } from "@/registry/icons/x";
 
 export type UpdateButtonStatus =
   | "idle"

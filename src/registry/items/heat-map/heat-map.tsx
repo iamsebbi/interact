@@ -570,12 +570,8 @@ export function HeatMap({
         prevReplayRef.current = 0;
         actionsRef.current.stopSweep();
         const s = st.current;
-        cancelAnimationFrame(s.raf);
-        s.raf = 0;
-        s.power = 0;
         s.want = 0;
-        s.grow = 1;
-        actionsRef.current.paint();
+        actionsRef.current.run();
       }
       return;
     }

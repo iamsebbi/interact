@@ -15,8 +15,8 @@ import {
   useReducedMotion,
 } from "motion/react";
 import * as React from "react";
+import { Check } from "@/components/animate-ui/icons/check";
 import { cn } from "@/lib/utils";
-import { Check } from "@/registry/icons/check";
 
 export type UploadButtonStatus =
   | "idle"
@@ -316,6 +316,7 @@ function ItemThumbnail({
           sizeClass,
         )}
       >
+        {/* biome-ignore lint/performance/noImgElement: framework-agnostic distributable registry component */}
         <img
           src={item.thumbnail}
           alt=""
@@ -677,8 +678,17 @@ function useUploadSimulation(
     if (replaySignal === undefined || prevReplayRef.current === replaySignal)
       return;
     prevReplayRef.current = replaySignal;
+    if (replaySignal <= 0) {
+      const resetItems = createInitialItems(inputItems);
+      itemsRef.current = resetItems;
+      srProgressRef.current = 0;
+      setSrProgress(0);
+      setUploadItems(resetItems);
+      updateStatus("idle");
+      return;
+    }
     beginUpload();
-  }, [replaySignal, beginUpload]);
+  }, [replaySignal, beginUpload, inputItems, updateStatus]);
 
   const hasUploadingItems = uploadItems.some(
     (item) => item.status === "uploading",
@@ -819,7 +829,7 @@ function useUploadSimulation(
     (itemId: string) => {
       if (disabled) return;
       const target = itemsRef.current.find((it) => it.id === itemId);
-      if (!target || target.status !== "error") return;
+      if (target?.status !== "error") return;
 
       const nextItems = itemsRef.current.map((it) =>
         it.id === itemId

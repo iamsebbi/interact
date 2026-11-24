@@ -12,9 +12,9 @@ import {
   useSpring,
 } from "motion/react";
 import * as React from "react";
+import { Check } from "@/components/animate-ui/icons/check";
+import { Trash2 } from "@/components/animate-ui/icons/trash-2";
 import { cn } from "@/lib/utils";
-import { Check } from "@/registry/icons/check";
-import { Trash2 } from "@/registry/icons/trash-2";
 
 export type DeleteButtonStatus = "idle" | "confirming" | "deleted";
 export type DeleteButtonSize = "sm" | "md" | "lg" | "xl";
@@ -76,7 +76,7 @@ const SIZE_PRESETS: Record<DeleteButtonSize, SizePreset> = {
     pillHeightClass: "h-12",
     btnPx: 48,
     gapPx: 10,
-    gooBlur: 6.4,
+    gooBlur: 6,
     pxPx: 20,
     contentGapPx: 8,
     textClass: "text-base",
@@ -86,7 +86,7 @@ const SIZE_PRESETS: Record<DeleteButtonSize, SizePreset> = {
     pillHeightClass: "h-[54px]",
     btnPx: 54,
     gapPx: 12,
-    gooBlur: 7.5,
+    gooBlur: 6.2,
     pxPx: 24,
     contentGapPx: 9,
     textClass: "text-[17px]",
@@ -159,10 +159,10 @@ function useGooFilter(blur = 6, cut = 26) {
         <defs>
           <filter
             id={id}
-            x="-40%"
-            y="-80%"
-            width="180%"
-            height="260%"
+            x="-20%"
+            y="-45%"
+            width="140%"
+            height="190%"
             colorInterpolationFilters="sRGB"
           >
             <feGaussianBlur
@@ -212,7 +212,7 @@ function createSwapMotion(reduceMotion: boolean) {
     initial: { opacity: 0, scale: 0.9, filter: "blur(6px)" },
     animate: { opacity: 1, scale: 1, filter: "blur(0px)", transition: enter },
     exit: { opacity: 0, scale: 0.9, filter: "blur(6px)", transition: exit },
-    style: { willChange: "transform, filter, opacity" } as const,
+    style: undefined,
   };
 }
 
@@ -247,7 +247,7 @@ export const DeleteButton = React.forwardRef<HTMLDivElement, DeleteButtonProps>(
     const reduceMotion = Boolean(useReducedMotion());
     const dim = SIZE_PRESETS[size];
     const styles = theme ? THEME_STYLES[theme] : THEME_STYLES.default;
-    const goo = useGooFilter(dim.gooBlur, 28);
+    const goo = useGooFilter(dim.gooBlur, 26);
 
     const [internalStatus, setInternalStatus] =
       React.useState<DeleteButtonStatus>(defaultStatus);
@@ -438,7 +438,7 @@ export const DeleteButton = React.forwardRef<HTMLDivElement, DeleteButtonProps>(
     );
 
     const measureRowClass = cn(
-      "pointer-events-none invisible fixed left-0 top-0 inline-flex items-center whitespace-nowrap font-medium",
+      "pointer-events-none invisible absolute top-0 left-0 inline-flex items-center whitespace-nowrap font-medium",
       dim.textClass,
     );
     const measureSpecs = React.useMemo(
@@ -489,7 +489,7 @@ export const DeleteButton = React.forwardRef<HTMLDivElement, DeleteButtonProps>(
           {/* Gooey backdrop layer: solid shapes only so liquid bridge never blurs text */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 z-0 [filter:drop-shadow(0_0_1px_rgba(0,0,0,0.12))_drop-shadow(0_2px_5px_rgba(0,0,0,0.04))_drop-shadow(0_12px_24px_rgba(0,0,0,0.07))]"
+            className="pointer-events-none absolute inset-0 z-0 [filter:drop-shadow(0_1px_2px_rgba(0,0,0,0.09))_drop-shadow(0_10px_20px_rgba(0,0,0,0.07))]"
           >
             <div
               style={{ filter: reduceMotion ? undefined : goo.url }}
@@ -621,7 +621,7 @@ export const DeleteButton = React.forwardRef<HTMLDivElement, DeleteButtonProps>(
                       <motion.span
                         key="delete-done"
                         {...swapProps}
-                        style={{ ...swapProps.style, gap: dim.contentGapPx }}
+                        style={{ gap: dim.contentGapPx }}
                         className="absolute inset-0 flex items-center justify-center whitespace-nowrap"
                       >
                         <Check

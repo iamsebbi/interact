@@ -390,17 +390,25 @@ more [Button press] voice button
   }
 }
 
+.va-card[data-paused="true"] .va-bubble-row,
+.va-card[data-paused="true"] .va-mic.is-live .va-wave i {
+  animation-play-state: paused;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .va-bubble-row,
   .va-mic.is-live .va-wave i {
-    animation: none !important;
+    animation: none;
   }
-  .t-text-swap {
-    transition: none !important;
+  .t-text-swap,
+  .t-text-swap.is-exit,
+  .t-text-swap.is-enter-start {
+    transition: none;
   }
-  .t-stream-w {
-    transition: none !important;
-    filter: none !important;
+  .t-stream-w,
+  .t-stream-w.is-in {
+    transition: none;
+    filter: none;
   }
   .va-mic {
     transition: none;

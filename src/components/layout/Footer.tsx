@@ -12,9 +12,20 @@ export interface FooterProps {
 const GITHUB_URL = "https://github.com/iamsebbi/interact";
 const CONTACT_EMAIL = "hello@interact.dev";
 
+const FEATURED_SLUGS = [
+  "select-menu",
+  "segmented-control",
+  "distortion-waves",
+  "voice-assistant-card",
+  "expandable-tabs",
+] as const;
+
 export function Footer({ showCta = true, className }: FooterProps) {
   const linkClass =
     "w-fit text-[13px] text-muted-foreground transition-colors duration-150 ease-smooth hover:text-foreground";
+  const featuredComponents = FEATURED_SLUGS.map((slug) =>
+    CATALOG_META.find((item) => item.slug === slug),
+  ).filter((item): item is (typeof CATALOG_META)[number] => Boolean(item));
 
   return (
     <div className={cn("w-full bg-background text-foreground", className)}>
@@ -31,14 +42,14 @@ export function Footer({ showCta = true, className }: FooterProps) {
           <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2">
             <Button
               variant="chip"
-              size="lg"
+              size="md"
               render={<Link href="/#products-grid" />}
             >
               Browse Components
             </Button>
             <Button
               variant="primary"
-              size="lg"
+              size="md"
               render={<Link href="/pricing" />}
             >
               Get Pro
@@ -47,24 +58,24 @@ export function Footer({ showCta = true, className }: FooterProps) {
         </section>
       )}
 
-      <footer className="w-full select-none">
+      <footer className="w-full select-none pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]">
         <div className="mx-auto max-w-[1240px] px-4 py-14 sm:px-6 sm:py-20">
           <div className="flex flex-col justify-between gap-12 md:flex-row md:gap-10">
             <div className="flex flex-col justify-between gap-10 md:min-h-40">
               <div className="space-y-2.5">
                 <Link
                   href="/"
-                  className="inline-flex items-center gap-1.5 rounded-sm py-0.5 text-foreground transition-opacity hover:opacity-85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                  className="inline-flex items-center gap-2 rounded-sm py-0.5 text-foreground transition-opacity hover:opacity-85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                 >
-                  <AsteriskSymbol size={16} className="shrink-0" />
-                  <span className="text-sm font-medium tracking-tight">
+                  <AsteriskSymbol size={20} className="shrink-0" />
+                  <span className="text-[17px] font-medium tracking-tight sm:text-[18px]">
                     <span className="text-foreground">interact</span>
                     <span className="text-muted-foreground">.dev</span>
                   </span>
                 </Link>
                 <p className="max-w-[260px] text-[13px] leading-relaxed text-muted-foreground">
-                  Interactive React UI components built on ui-sdk, Tailwind CSS
-                  v4, and Motion.
+                  Interactive UI components and micro-interactions crafted for
+                  modern products.
                 </p>
               </div>
 
@@ -89,12 +100,7 @@ export function Footer({ showCta = true, className }: FooterProps) {
                 <ul className="flex flex-col gap-2">
                   <li>
                     <Link href="/" className={linkClass}>
-                      Products
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/studio" className={linkClass}>
-                      Studio
+                      Components
                     </Link>
                   </li>
                   <li>
@@ -107,15 +113,20 @@ export function Footer({ showCta = true, className }: FooterProps) {
                       Pricing
                     </Link>
                   </li>
+                  <li>
+                    <Link href="/studio" className={linkClass}>
+                      Studio
+                    </Link>
+                  </li>
                 </ul>
               </div>
 
               <div>
                 <h3 className="mb-3 text-[13px] font-medium text-foreground-strong">
-                  Registry
+                  Components
                 </h3>
                 <ul className="flex flex-col gap-2">
-                  {CATALOG_META.slice(0, 8).map((item) => (
+                  {featuredComponents.map((item) => (
                     <li key={item.slug}>
                       <Link
                         href={`/components/${item.slug}`}
@@ -125,6 +136,11 @@ export function Footer({ showCta = true, className }: FooterProps) {
                       </Link>
                     </li>
                   ))}
+                  <li>
+                    <Link href="/#products-grid" className={linkClass}>
+                      View all ({CATALOG_META.length})
+                    </Link>
+                  </li>
                 </ul>
               </div>
 

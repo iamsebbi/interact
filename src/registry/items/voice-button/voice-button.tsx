@@ -18,9 +18,9 @@ import {
   type VoiceBeamColorVariant,
   type VoiceBeamLook,
 } from "voice-glow";
+import { Mic } from "@/components/animate-ui/icons/mic";
+import { Square } from "@/components/animate-ui/icons/square";
 import { cn } from "@/lib/utils";
-import { Mic } from "@/registry/icons/mic";
-import { Square } from "@/registry/icons/square";
 
 export type VoiceButtonStatus = "idle" | "listening";
 export type VoiceButtonMode = "voice" | "live";

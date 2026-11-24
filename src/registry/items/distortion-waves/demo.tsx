@@ -180,9 +180,8 @@ export function DistortionWavesShowcase({
       window.clearTimeout(returnTimerRef.current);
       returnTimerRef.current = null;
     }
-    const dbg = waveRef.current?.controller?.debug;
-    if (dbg && (dbg.running || (dbg.progress > 0 && dbg.progress < 1))) {
-      setFrozenScrub(dbg.progress);
+    if (revealedRef.current) {
+      setRevealed(false);
     }
   }, [previewActive]);
 
@@ -530,6 +529,7 @@ export function DistortionWavesShowcase({
                 <CheckIcon className="size-5" strokeWidth={2.5} />
               </div>
             ) : (
+              /* biome-ignore lint/performance/noImgElement: local asset serialized inside distortion-waves SVG foreignObject snapshot */
               <img
                 src="/images/maya-chen.jpg"
                 alt={recipientName}

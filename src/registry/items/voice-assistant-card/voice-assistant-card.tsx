@@ -85,7 +85,7 @@ function SwapText({
     void shown;
     if (reduceMotion) return;
     const el = ref.current;
-    if (!el || !el.classList.contains("is-exit")) return;
+    if (!el?.classList.contains("is-exit")) return;
     el.classList.remove("is-exit");
     el.classList.add("is-enter-start");
     void el.offsetHeight;
@@ -264,7 +264,11 @@ export function VoiceAssistantCard({
   } as CSSProperties;
 
   return (
-    <div data-theme={theme} className={cn("va-card", className)}>
+    <div
+      data-theme={theme}
+      data-paused={paused ? "true" : undefined}
+      className={cn("va-card", className)}
+    >
       <VoiceBeam
         className="va-beam"
         level={level}
@@ -310,9 +314,7 @@ export function VoiceAssistantCard({
                   wordTokens.map((token) => (
                     <span key={token.id}>
                       <span
-                        className={
-                          "t-stream-w" + (token.offset < count ? " is-in" : "")
-                        }
+                        className={`t-stream-w${token.offset < count ? " is-in" : ""}`}
                       >
                         {token.word}
                       </span>
@@ -327,7 +329,7 @@ export function VoiceAssistantCard({
               </span>
               <button
                 type="button"
-                className={"va-mic" + (live ? " is-live" : "")}
+                className={`va-mic${live ? " is-live" : ""}`}
                 aria-label={live ? "Stop speaking" : "Start speaking"}
                 aria-pressed={live}
                 onClick={onTap}

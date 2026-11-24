@@ -12,10 +12,10 @@ import {
   useSpring,
 } from "motion/react";
 import * as React from "react";
+import { Check } from "@/components/animate-ui/icons/check";
+import { Undo2 } from "@/components/animate-ui/icons/undo-2";
+import { X } from "@/components/animate-ui/icons/x";
 import { cn } from "@/lib/utils";
-import { Check } from "@/registry/icons/check";
-import { Undo2 } from "@/registry/icons/undo-2";
-import { X } from "@/registry/icons/x";
 
 export type ApproveRejectStatus = "idle" | "approved" | "rejected";
 export type ApproveRejectSize = "sm" | "md" | "lg" | "xl";
@@ -507,7 +507,7 @@ export const ApproveReject = React.forwardRef<
     status === "approved" ? "active" : status === "rejected" ? "undo" : "idle";
 
   const measureRowClass = cn(
-    "pointer-events-none invisible fixed left-0 top-0 inline-flex items-center whitespace-nowrap font-medium",
+    "pointer-events-none invisible absolute top-0 left-0 inline-flex items-center whitespace-nowrap font-medium",
     dim.textClass,
   );
   const measureLabels = [

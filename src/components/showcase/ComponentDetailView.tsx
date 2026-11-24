@@ -276,7 +276,7 @@ export function ComponentDetailView({
     .filter(Boolean);
 
   return (
-    <div className="mx-auto flex w-full max-w-[1440px] flex-col p-2 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:p-5 lg:px-6 lg:pt-[max(2rem,calc((100dvh_-_min(800px,calc(100dvh_-_5rem)))_/_2))] lg:pb-8">
+    <div className="mx-auto flex w-full max-w-[1440px] flex-col p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:p-5 lg:px-6 lg:pt-[max(2rem,calc((100dvh_-_min(800px,calc(100dvh_-_5rem)))_/_2))] lg:pb-8">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-center lg:gap-5 xl:gap-6">
         {componentList.length > 0 && (
           <aside
@@ -333,10 +333,10 @@ export function ComponentDetailView({
         )}
 
         <div className="flex flex-col gap-3 sm:gap-4 lg:w-full lg:max-w-[calc(min(800px,calc(100dvh_-_5rem))_+_320px)] lg:min-w-0 lg:flex-initial lg:gap-5 xl:max-w-[calc(min(800px,calc(100dvh_-_5rem))_+_340px)]">
-          <div className="grid h-[calc(100dvh-1rem)] shrink-0 grid-cols-1 grid-rows-[auto_minmax(0,1fr)] gap-2 sm:h-[calc(100dvh-2.5rem)] sm:gap-4 lg:h-auto lg:grid-cols-[minmax(0,min(800px,calc(100dvh-5rem)))_300px] lg:grid-rows-none lg:items-stretch lg:gap-5 xl:grid-cols-[minmax(0,min(800px,calc(100dvh-5rem)))_320px]">
+          <div className="grid h-[calc(100dvh-1rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] shrink-0 grid-cols-1 grid-rows-1 sm:h-[calc(100dvh-2.5rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] lg:h-auto lg:grid-cols-[minmax(0,min(800px,calc(100dvh-5rem)))_300px] lg:grid-rows-none lg:items-stretch lg:gap-5 xl:grid-cols-[minmax(0,min(800px,calc(100dvh-5rem)))_320px]">
             <div
               ref={stageWrapperRef}
-              className="relative z-20 aspect-square w-full shrink-0"
+              className="relative z-20 h-full w-full shrink-0 lg:aspect-square lg:h-auto"
             >
               <div
                 ref={stageRef}
@@ -400,6 +400,30 @@ export function ComponentDetailView({
                             </motion.span>
                           </AnimatePresence>
                         </Button>
+
+                        {onClose ? (
+                          <Button
+                            variant="chip"
+                            size="icon"
+                            onClick={onClose}
+                            aria-label="Close code view"
+                            title="Exit"
+                            className="size-10 shrink-0 text-muted-foreground hover:text-foreground md:size-9 lg:hidden"
+                          >
+                            <X size={18} aria-hidden="true" />
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="chip"
+                            size="icon"
+                            render={<Link href="/" />}
+                            aria-label="Close code view"
+                            title="Exit"
+                            className="size-10 shrink-0 text-muted-foreground hover:text-foreground md:size-9 lg:hidden"
+                          >
+                            <X size={18} aria-hidden="true" />
+                          </Button>
+                        )}
                       </div>
                     )}
                   </div>
@@ -415,6 +439,10 @@ export function ComponentDetailView({
                         )}
                       </div>
                     </div>
+
+                    <span className="dtl-stage-tools pointer-events-none absolute bottom-0 left-0 z-20 flex h-10 max-w-[calc(100%-9rem)] items-center truncate px-1 text-sm font-medium tracking-tight text-foreground-strong lg:hidden">
+                      {title}
+                    </span>
 
                     <div className="dtl-stage-tools absolute right-0 bottom-0 z-20 flex items-center gap-1.5">
                       <Button
@@ -446,6 +474,29 @@ export function ComponentDetailView({
                           <Share2 size={16} aria-hidden="true" />
                         )}
                       </Button>
+                      {onClose ? (
+                        <Button
+                          variant="chip"
+                          size="icon"
+                          onClick={onClose}
+                          aria-label="Close preview"
+                          title="Exit"
+                          className="size-10 shrink-0 text-muted-foreground hover:text-foreground md:size-9 lg:hidden"
+                        >
+                          <X size={18} aria-hidden="true" />
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="chip"
+                          size="icon"
+                          render={<Link href="/" />}
+                          aria-label="Close preview"
+                          title="Exit"
+                          className="size-10 shrink-0 text-muted-foreground hover:text-foreground md:size-9 lg:hidden"
+                        >
+                          <X size={18} aria-hidden="true" />
+                        </Button>
+                      )}
                     </div>
                   </TabsPanel>
 
@@ -462,7 +513,7 @@ export function ComponentDetailView({
             <aside
               aria-label="Quick Config"
               data-overlay-surface
-              className="dtl-side-panel relative z-10 h-full min-h-0 w-full lg:h-auto"
+              className="dtl-side-panel relative z-10 hidden h-full min-h-0 w-full lg:block lg:h-auto"
             >
               <div className="surface-panel flex h-full min-h-0 w-full flex-col gap-2 overflow-hidden rounded-[28px] p-[14px] select-none sm:p-[18px] lg:absolute lg:inset-0 lg:gap-3">
                 <div className="flex shrink-0 items-center justify-between gap-2">
@@ -537,7 +588,7 @@ export function ComponentDetailView({
             <section
               aria-labelledby="component-docs-heading"
               data-overlay-surface
-              className="dtl-docs-panel surface-panel flex w-full flex-col gap-4 rounded-[28px] p-[18px] sm:p-6"
+              className="dtl-docs-panel surface-panel hidden w-full flex-col gap-4 rounded-[28px] p-[18px] sm:p-6 lg:flex"
             >
               <div className="flex max-w-3xl flex-col gap-1.5">
                 <h1

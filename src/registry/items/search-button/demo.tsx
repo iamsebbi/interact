@@ -17,18 +17,15 @@ export function SearchButtonPreview({
 }: ComponentPreviewProps) {
   const signal = replaySignal ?? 0;
   const isActive = previewActive ?? signal > 0;
-  const [trackedSignal, setTrackedSignal] = useState(signal);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
 
-  if (signal !== trackedSignal) {
-    setTrackedSignal(signal);
-    setOpen(false);
-    setQuery("");
-  }
-
   useEffect(() => {
-    if (!isActive || trackedSignal <= 0) return;
+    if (!isActive || signal <= 0) {
+      setOpen(false);
+      setQuery("");
+      return;
+    }
 
     const timers: number[] = [];
     timers.push(window.setTimeout(() => setOpen(true), 50));
@@ -51,11 +48,10 @@ export function SearchButtonPreview({
         window.clearTimeout(timer);
       }
     };
-  }, [isActive, trackedSignal]);
+  }, [isActive, signal]);
 
   return (
     <SearchButton
-      key={trackedSignal}
       size="xl"
       theme="light"
       expandedWidth={260}

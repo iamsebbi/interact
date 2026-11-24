@@ -19,6 +19,7 @@
       }
     ],
     "paths": {
+      "@/components/animate-ui/icons/*": ["./src/registry/icons/*"],
       "@/*": ["./src/*"]
     }
   },

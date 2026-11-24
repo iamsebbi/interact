@@ -14,6 +14,9 @@ Element.prototype.getAnimations = () => [];
 Element.prototype.scrollIntoView = () => {};
 Element.prototype.checkVisibility = () => true;
 Element.prototype.getClientRects = () => [] as unknown as DOMRectList;
+HTMLCanvasElement.prototype.getContext = (() =>
+  null) as unknown as typeof HTMLCanvasElement.prototype.getContext;
+window.scrollTo = () => {};
 document.elementFromPoint = () => null;
 document.elementsFromPoint = () => [];
 window.matchMedia ??= (query: string) =>

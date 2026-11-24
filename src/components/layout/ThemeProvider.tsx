@@ -42,6 +42,28 @@ function readStoredTheme(): AppTheme {
   }
 }
 
+const THEME_COLORS: Record<AppTheme, string> = {
+  dark: "#121212",
+  light: "#fdfdfd",
+};
+
+function syncThemeColorMeta(next: AppTheme) {
+  const color = THEME_COLORS[next];
+  const metas = document.querySelectorAll<HTMLMetaElement>(
+    'meta[name="theme-color"]',
+  );
+  if (metas.length === 0) {
+    const meta = document.createElement("meta");
+    meta.name = "theme-color";
+    meta.content = color;
+    document.head.appendChild(meta);
+    return;
+  }
+  for (const meta of metas) {
+    meta.content = color;
+  }
+}
+
 function applyThemeToRoot(next: AppTheme, disableTransitions: boolean) {
   if (typeof document === "undefined") return;
   const root = document.documentElement;
@@ -65,6 +87,7 @@ function applyThemeToRoot(next: AppTheme, disableTransitions: boolean) {
 
   root.setAttribute("data-theme", next);
   root.style.colorScheme = next;
+  syncThemeColorMeta(next);
   cleanupStyle?.();
 }
 

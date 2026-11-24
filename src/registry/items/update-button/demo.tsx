@@ -6,7 +6,7 @@ import type {
   ComponentPreviewProps,
 } from "@/registry/types";
 import type { UpdateButtonConfig } from "./config";
-import { UpdateButton } from "./update-button";
+import { UpdateButton, type UpdateButtonStatus } from "./update-button";
 
 export function UpdateButtonPreview({
   className,
@@ -15,32 +15,28 @@ export function UpdateButtonPreview({
 }: ComponentPreviewProps) {
   const signal = replaySignal ?? 0;
   const isActive = previewActive ?? signal > 0;
-  const [trackedSignal, setTrackedSignal] = useState(signal);
-  const [innerReplay, setInnerReplay] = useState(0);
-
-  if (signal !== trackedSignal) {
-    setTrackedSignal(signal);
-    setInnerReplay(0);
-  }
+  const [status, setStatus] = useState<UpdateButtonStatus>("idle");
 
   useEffect(() => {
-    if (!isActive || trackedSignal <= 0) return;
+    if (!isActive || signal <= 0) {
+      setStatus("idle");
+      return;
+    }
     const t = window.setTimeout(() => {
-      setInnerReplay((prev) => prev + 1);
+      setStatus("updating");
     }, 50);
     return () => window.clearTimeout(t);
-  }, [isActive, trackedSignal]);
+  }, [isActive, signal]);
 
   return (
     <UpdateButton
-      key={trackedSignal}
       size="xl"
       theme="light"
       durationMs={2100}
       checkDurationMs={650}
       autoReset={false}
-      paused={!isActive}
-      replaySignal={innerReplay}
+      status={status}
+      onStatusChange={setStatus}
       className={className}
     />
   );

@@ -39,16 +39,16 @@ const FAQ_ITEMS = [
       "No. Using the shadcn registry model, component source files are copied straight into your codebase so you own and customize every line, while peer libraries like motion or @ui-sdk/react are installed automatically.",
   },
   {
-    id: "oklch-palette",
-    question: "How does the OKLCH Palette generator avoid muddy colors?",
+    id: "theming",
+    question: "How do light and dark themes work on the components?",
     answer:
-      "Standard sRGB and HSL ramps produce uneven perceived brightness and dull midtones. The Palette component computes perceptually uniform lightness ramps in OKLCH space and maps chroma cleanly inside the sRGB gamut.",
+      "Every interactive component ships with an explicit theme prop (light by default, or dark) so it stays crisp on any background. Because the source lives in your codebase, you can also remap any surface or accent color directly to your own design tokens.",
   },
   {
     id: "tailwind-nextjs",
     question: "Are the components compatible with Tailwind CSS & Next.js?",
     answer:
-      "Yes. Components use semantic Tailwind tokens (bg-primary, bg-control, text-foreground, border-border) and standard React hooks. BotAvatar also works standalone without Tailwind CSS.",
+      "Yes. Components are built for React 19, Next.js App Router, and Tailwind CSS v4 with clean client boundaries and SSR-safe layout measurement, so they drop straight into existing projects without hydration warnings.",
   },
   {
     id: "reduced-motion",
@@ -341,7 +341,12 @@ export function HowToUseContent() {
                 return (
                   <tr key={row.slug} className="group">
                     <td className="py-3.5 pr-6 font-medium whitespace-nowrap text-foreground-strong">
-                      {row.shortTitle}
+                      <Link
+                        href={`/components/${row.slug}`}
+                        className="underline-offset-4 transition-colors hover:text-foreground hover:underline"
+                      >
+                        {row.shortTitle}
+                      </Link>
                     </td>
                     <td className="py-3.5 pr-6 whitespace-nowrap">
                       <Button

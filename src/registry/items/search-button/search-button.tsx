@@ -14,9 +14,9 @@ import {
   useSpring,
 } from "motion/react";
 import * as React from "react";
+import { Search } from "@/components/animate-ui/icons/search";
+import { X } from "@/components/animate-ui/icons/x";
 import { cn } from "@/lib/utils";
-import { Search } from "@/registry/icons/search";
-import { X } from "@/registry/icons/x";
 
 export type SearchButtonSize = "sm" | "md" | "lg" | "xl";
 export type SearchButtonTheme = "dark" | "light";

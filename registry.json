@@ -224,6 +224,48 @@
       ]
     },
     {
+      "name": "expandable-tabs",
+      "type": "registry:ui",
+      "title": "Expandable Tabs",
+      "description": "Bottom-docked navigation bar that expands upward into dynamic content panels while smoothly revealing active tab labels",
+      "dependencies": ["react", "motion", "clsx", "tailwind-merge"],
+      "files": [
+        {
+          "path": "src/registry/items/expandable-tabs/expandable-tabs.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/expandable-tabs.tsx"
+        }
+      ]
+    },
+    {
+      "name": "segmented-control",
+      "type": "registry:ui",
+      "title": "Segmented Control",
+      "description": "Elastic pill selector with two-edge spring physics where the leading edge shoots ahead and the trailing edge catches up cleanly",
+      "dependencies": ["@ui-sdk/react", "@ui-sdk/core", "motion"],
+      "files": [
+        {
+          "path": "src/registry/items/segmented-control/segmented-control.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/segmented-control.tsx"
+        }
+      ]
+    },
+    {
+      "name": "select-menu",
+      "type": "registry:ui",
+      "title": "Select Menu",
+      "description": "Morphing pill selector that opens in place around its current value and collapses cleanly back around the newly chosen option",
+      "dependencies": ["react", "motion", "clsx", "tailwind-merge"],
+      "files": [
+        {
+          "path": "src/registry/items/select-menu/select-menu.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/select-menu.tsx"
+        }
+      ]
+    },
+    {
       "name": "step-player",
       "type": "registry:ui",
       "title": "Step Player",

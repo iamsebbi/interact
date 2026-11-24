@@ -2,8 +2,11 @@ import { approveRejectMeta } from "./items/approve-reject/meta";
 import { deleteButtonMeta } from "./items/delete-button/meta";
 import { distortionWavesMeta } from "./items/distortion-waves/meta";
 import { downloadButtonMeta } from "./items/download-button/meta";
+import { expandableTabsMeta } from "./items/expandable-tabs/meta";
 import { heatMapMeta } from "./items/heat-map/meta";
 import { searchButtonMeta } from "./items/search-button/meta";
+import { segmentedControlMeta } from "./items/segmented-control/meta";
+import { selectMenuMeta } from "./items/select-menu/meta";
 import { stepPlayerMeta } from "./items/step-player/meta";
 import { updateButtonMeta } from "./items/update-button/meta";
 import { uploadButtonMeta } from "./items/upload-button/meta";
@@ -26,6 +29,9 @@ export const CATALOG_META: readonly ComponentMeta<Record<string, unknown>>[] = [
   heatMapMeta,
   approveRejectMeta,
   deleteButtonMeta,
+  expandableTabsMeta,
+  segmentedControlMeta,
+  selectMenuMeta,
   voiceAssistantCardMeta,
   distortionWavesMeta,
 ] as unknown as readonly ComponentMeta<Record<string, unknown>>[];
