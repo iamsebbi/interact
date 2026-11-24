@@ -8,9 +8,11 @@ import { ApproveReject } from "@/registry/items/approve-reject/approve-reject";
 import { DeleteButton } from "@/registry/items/delete-button/delete-button";
 import { DownloadButton } from "@/registry/items/download-button/download-button";
 import { ExpandableTabs } from "@/registry/items/expandable-tabs/expandable-tabs";
+import { MeetingScheduler } from "@/registry/items/meeting-scheduler/meeting-scheduler";
 import { SearchButton } from "@/registry/items/search-button/search-button";
 import { SegmentedControl } from "@/registry/items/segmented-control/segmented-control";
 import { SelectMenu } from "@/registry/items/select-menu/select-menu";
+import { StatusPill } from "@/registry/items/status-pill/status-pill";
 import { UpdateButton } from "@/registry/items/update-button/update-button";
 
 describe("registry catalog and generators", () => {
@@ -340,5 +342,126 @@ describe("stateful registry components", () => {
       target: screen.getByRole("button", { name: "Outside select target" }),
     });
     expect(combobox).toHaveAttribute("aria-expanded", "false");
+  });
+
+  test("MeetingScheduler walks through day/time -> people/duration -> confirmed booking and supports Escape cancel", async () => {
+    const user = userEvent.setup();
+    const onSchedule = vi.fn().mockResolvedValue(true);
+    const onCancel = vi.fn();
+
+    const { container } = render(
+      <MeetingScheduler
+        onSchedule={onSchedule}
+        onCancel={onCancel}
+        resetAfterMs={0}
+      />,
+    );
+
+    const root = container.querySelector('[data-slot="meeting-scheduler"]');
+    expect(root).toHaveAttribute("data-step", "rest");
+
+    await user.click(screen.getByRole("button", { name: "Schedule a call" }));
+    expect(root).toHaveAttribute("data-step", "time");
+
+    // Pick an available (non-busy) time slot; day 0, index 0 is 09:00 (not busy).
+    await user.click(screen.getByRole("button", { name: "09:00" }));
+    await user.click(screen.getByRole("button", { name: "Next" }));
+    expect(root).toHaveAttribute("data-step", "people");
+
+    // Toggle Lena and switch duration to 45 min, then schedule.
+    await user.click(screen.getByRole("button", { name: /Lena/i }));
+    await user.click(screen.getByRole("button", { name: "45 min" }));
+    await user.click(screen.getByRole("button", { name: /Schedule ·/i }));
+
+    await waitFor(() => {
+      expect(onSchedule).toHaveBeenCalledWith(
+        expect.objectContaining({
+          time: "09:00",
+          duration: "45 min",
+          attendees: expect.arrayContaining([
+            "Ava Chen",
+            "Marco Rossi",
+            "Lena Park",
+          ]),
+        }),
+      );
+      expect(root).toHaveAttribute("data-step", "done");
+    });
+
+    // Separate Escape cancellation check on a fresh mount.
+    const { container: second } = render(
+      <MeetingScheduler onCancel={onCancel} />,
+    );
+    const secondRoot = second.querySelector('[data-slot="meeting-scheduler"]');
+    await user.click(screen.getByRole("button", { name: "Schedule a call" }));
+    expect(secondRoot).toHaveAttribute("data-step", "time");
+    await user.keyboard("{Escape}");
+    expect(secondRoot).toHaveAttribute("data-step", "rest");
+    expect(onCancel).toHaveBeenCalledTimes(1);
+  });
+
+  test("StatusPill transitions idle -> syncing -> done and recovers from failure via Retry", async () => {
+    const user = userEvent.setup();
+    const onStatusChange = vi.fn();
+
+    const { container, unmount } = render(
+      <StatusPill
+        demoMode="succeed"
+        demoFiles={2}
+        speed={2}
+        resetAfterMs={0}
+        onStatusChange={onStatusChange}
+      />,
+    );
+    const root = container.querySelector('[data-slot="status-pill"]');
+    expect(root).toHaveAttribute("data-status", "idle");
+
+    await user.click(screen.getByRole("button", { name: "Up to date" }));
+    expect(root).toHaveAttribute("data-status", "syncing");
+
+    await waitFor(
+      () => {
+        expect(root).toHaveAttribute("data-status", "done");
+      },
+      { timeout: 3000 },
+    );
+    expect(onStatusChange).toHaveBeenCalledWith("done", { left: 0, total: 2 });
+    unmount();
+
+    const onRetry = vi.fn();
+    const { container: failContainer } = render(
+      <StatusPill
+        demoMode="fail"
+        demoFiles={2}
+        speed={2}
+        resetAfterMs={0}
+        onRetry={onRetry}
+      />,
+    );
+    const failRoot = failContainer.querySelector('[data-slot="status-pill"]');
+    await user.click(screen.getByRole("button", { name: "Up to date" }));
+
+    await waitFor(
+      () => {
+        expect(failRoot).toHaveAttribute("data-status", "failed");
+      },
+      { timeout: 3000 },
+    );
+
+    const retryBtn = await screen.findByRole(
+      "button",
+      { name: "Retry" },
+      { timeout: 2000 },
+    );
+    await user.click(retryBtn);
+    expect(onRetry).toHaveBeenCalledWith(1);
+    expect(failRoot).toHaveAttribute("data-status", "syncing");
+
+    await waitFor(
+      () => {
+        expect(failRoot).toHaveAttribute("data-status", "done");
+      },
+      { timeout: 3000 },
+    );
   });
 });

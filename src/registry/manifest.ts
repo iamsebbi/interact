@@ -4,9 +4,11 @@ import { distortionWavesMeta } from "./items/distortion-waves/meta";
 import { downloadButtonMeta } from "./items/download-button/meta";
 import { expandableTabsMeta } from "./items/expandable-tabs/meta";
 import { heatMapMeta } from "./items/heat-map/meta";
+import { meetingSchedulerMeta } from "./items/meeting-scheduler/meta";
 import { searchButtonMeta } from "./items/search-button/meta";
 import { segmentedControlMeta } from "./items/segmented-control/meta";
 import { selectMenuMeta } from "./items/select-menu/meta";
+import { statusPillMeta } from "./items/status-pill/meta";
 import { stepPlayerMeta } from "./items/step-player/meta";
 import { updateButtonMeta } from "./items/update-button/meta";
 import { uploadButtonMeta } from "./items/upload-button/meta";
@@ -32,6 +34,8 @@ export const CATALOG_META: readonly ComponentMeta<Record<string, unknown>>[] = [
   expandableTabsMeta,
   segmentedControlMeta,
   selectMenuMeta,
+  meetingSchedulerMeta,
+  statusPillMeta,
   voiceAssistantCardMeta,
   distortionWavesMeta,
 ] as unknown as readonly ComponentMeta<Record<string, unknown>>[];

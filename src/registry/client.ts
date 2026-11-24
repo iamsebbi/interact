@@ -199,6 +199,26 @@ export const COMPONENT_CLIENT_REGISTRY: Record<
     },
     COMPONENT_GENERATORS["select-menu"],
   ),
+  "meeting-scheduler": buildClientEntry(
+    () => import("./items/meeting-scheduler/demo"),
+    () => import("./items/meeting-scheduler/inspector"),
+    {
+      preview: "MeetingSchedulerPreview",
+      demo: "MeetingSchedulerDemo",
+      inspector: "MeetingSchedulerInspector",
+    },
+    COMPONENT_GENERATORS["meeting-scheduler"],
+  ),
+  "status-pill": buildClientEntry(
+    () => import("./items/status-pill/demo"),
+    () => import("./items/status-pill/inspector"),
+    {
+      preview: "StatusPillPreview",
+      demo: "StatusPillDemo",
+      inspector: "StatusPillInspector",
+    },
+    COMPONENT_GENERATORS["status-pill"],
+  ),
   "step-player": buildClientEntry(
     () => import("./items/step-player/demo"),
     () => import("./items/step-player/inspector"),

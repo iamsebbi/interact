@@ -266,6 +266,34 @@
       ]
     },
     {
+      "name": "meeting-scheduler",
+      "type": "registry:ui",
+      "title": "Meeting Scheduler",
+      "description": "Compact call trigger that morphs into a two-step day, time, and attendee picker, then folds into a confirmed booking pill",
+      "dependencies": ["react", "motion", "clsx", "tailwind-merge"],
+      "files": [
+        {
+          "path": "src/registry/items/meeting-scheduler/meeting-scheduler.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/meeting-scheduler.tsx"
+        }
+      ]
+    },
+    {
+      "name": "status-pill",
+      "type": "registry:ui",
+      "title": "Status Pill",
+      "description": "Live sync status pill with circular progress ring, rolling file counter, celebratory sheen, and split-out Retry recovery",
+      "dependencies": ["react", "motion", "clsx", "tailwind-merge"],
+      "files": [
+        {
+          "path": "src/registry/items/status-pill/status-pill.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/status-pill.tsx"
+        }
+      ]
+    },
+    {
       "name": "step-player",
       "type": "registry:ui",
       "title": "Step Player",
