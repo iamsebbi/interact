@@ -9,11 +9,18 @@ export const selectMenuMeta: ComponentMeta<SelectMenuConfig> = {
     "Morphing pill selector that opens in place around its current value and collapses cleanly back around the newly chosen option",
   description:
     "A single-surface morphing select menu for React powered by synchronized Motion springs. Clicking the compact capsule expands it upward and downward around the active row while fading the prefix, morphing chevrons into a sliding checkmark, and cascading surrounding options outward — then folds smoothly back to the exact width of the new choice.\nMade for sort menus, compact filter bars, inspector dropdowns, and macOS-inspired toolbars.",
-  categories: ["Select", "Press"],
+  categories: ["Selection"],
   masonryHeight: 340,
   cardHeightClass: "h-[320px] sm:h-[340px]",
   previewBounds: { width: 280, height: 270 },
-  dependencies: ["react", "motion", "clsx", "tailwind-merge"],
+  dependencies: [
+    "@ui-sdk/react",
+    "@ui-sdk/core",
+    "react",
+    "motion",
+    "clsx",
+    "tailwind-merge",
+  ],
   sourceFiles: ["src/registry/items/select-menu/select-menu.tsx"],
   defaultConfig: DEFAULT_SELECT_MENU_CONFIG,
   props: [

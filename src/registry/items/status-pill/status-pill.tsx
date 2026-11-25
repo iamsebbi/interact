@@ -1,5 +1,6 @@
 "use client";
 
+import { Button as ButtonPrimitive } from "@ui-sdk/react/button";
 import {
   AnimatePresence,
   MotionConfig,
@@ -502,29 +503,36 @@ export function StatusPill({
           </output>
 
           {/* Main status capsule */}
-          <motion.button
-            type="button"
+          <ButtonPrimitive
             aria-label={currentLabel}
             disabled={!isClickableIdle}
             onClick={() => {
               if (isClickableIdle) startDemoRun();
             }}
-            animate={{ width: mainWidth }}
-            transition={reduceMotion ? { duration: 0 } : morphSpring}
-            whileHover={
-              isClickableIdle && !reduceMotion ? { scale: 1.02 } : undefined
+            render={
+              <motion.button
+                type="button"
+                animate={{ width: mainWidth }}
+                transition={reduceMotion ? { duration: 0 } : morphSpring}
+                whileHover={
+                  isClickableIdle && !reduceMotion ? { scale: 1.02 } : undefined
+                }
+                whileTap={
+                  isClickableIdle && !reduceMotion ? { scale: 0.97 } : undefined
+                }
+                style={{
+                  height: preset.height,
+                  fontSize: preset.fontSize,
+                  paddingLeft: Math.round(
+                    (preset.height - preset.iconSize) / 2,
+                  ),
+                  paddingRight: Math.round(
+                    (preset.height - preset.iconSize) / 2 +
+                      preset.height * 0.18,
+                  ),
+                }}
+              />
             }
-            whileTap={
-              isClickableIdle && !reduceMotion ? { scale: 0.97 } : undefined
-            }
-            style={{
-              height: preset.height,
-              fontSize: preset.fontSize,
-              paddingLeft: Math.round((preset.height - preset.iconSize) / 2),
-              paddingRight: Math.round(
-                (preset.height - preset.iconSize) / 2 + preset.height * 0.18,
-              ),
-            }}
             className={cn(
               "relative flex shrink-0 items-center gap-2 overflow-hidden rounded-full font-semibold whitespace-nowrap outline-none transition-colors duration-200",
               "focus-visible:ring-2 focus-visible:ring-offset-2",
@@ -690,61 +698,65 @@ export function StatusPill({
                 </motion.span>
               </AnimatePresence>
             </span>
-          </motion.button>
+          </ButtonPrimitive>
 
           {/* Split-out Retry pill on failure */}
           <AnimatePresence initial={false}>
             {showRetry && (
-              <motion.button
+              <ButtonPrimitive
                 key="retry-btn"
-                type="button"
                 aria-label={retryLabel}
                 onClick={() => {
                   onRetry?.(leftCount);
                   if (!isControlled) startDemoRun(leftCount);
                 }}
-                initial={
-                  reduceMotion
-                    ? false
-                    : {
-                        opacity: 0,
-                        scale: 0.72,
-                        x: -10,
-                        filter: "blur(6px)",
-                      }
+                render={
+                  <motion.button
+                    type="button"
+                    initial={
+                      reduceMotion
+                        ? false
+                        : {
+                            opacity: 0,
+                            scale: 0.72,
+                            x: -10,
+                            filter: "blur(6px)",
+                          }
+                    }
+                    animate={{
+                      opacity: 1,
+                      scale: 1,
+                      x: 0,
+                      filter: "blur(0px)",
+                    }}
+                    exit={
+                      reduceMotion
+                        ? undefined
+                        : {
+                            opacity: 0,
+                            scale: 0.72,
+                            x: -10,
+                            filter: "blur(6px)",
+                          }
+                    }
+                    whileHover={!reduceMotion ? { scale: 1.03 } : undefined}
+                    whileTap={!reduceMotion ? { scale: 0.96 } : undefined}
+                    transition={popSpring}
+                    style={{
+                      marginLeft: preset.gap,
+                      width: retryWidth,
+                      height: preset.height,
+                      fontSize: preset.fontSize,
+                      paddingLeft: Math.round(
+                        (preset.height - preset.iconSize) / 2,
+                      ),
+                      paddingRight: Math.round(
+                        (preset.height - preset.iconSize) / 2 +
+                          preset.height * 0.18,
+                      ),
+                    }}
+                  />
                 }
-                animate={{
-                  opacity: 1,
-                  scale: 1,
-                  x: 0,
-                  filter: "blur(0px)",
-                }}
-                exit={
-                  reduceMotion
-                    ? undefined
-                    : {
-                        opacity: 0,
-                        scale: 0.72,
-                        x: -10,
-                        filter: "blur(6px)",
-                      }
-                }
-                whileHover={!reduceMotion ? { scale: 1.03 } : undefined}
-                whileTap={!reduceMotion ? { scale: 0.96 } : undefined}
-                transition={popSpring}
-                style={{
-                  marginLeft: preset.gap,
-                  width: retryWidth,
-                  height: preset.height,
-                  fontSize: preset.fontSize,
-                  paddingLeft: Math.round(
-                    (preset.height - preset.iconSize) / 2,
-                  ),
-                  paddingRight: Math.round(
-                    (preset.height - preset.iconSize) / 2 +
-                      preset.height * 0.18,
-                  ),
-                }}
                 className={cn(
                   "flex shrink-0 cursor-pointer items-center gap-2 rounded-full font-semibold whitespace-nowrap outline-none transition-colors",
                   isDark
@@ -759,7 +771,7 @@ export function StatusPill({
                   <RetryIcon className="h-full w-full" />
                 </span>
                 <span>{retryLabel}</span>
-              </motion.button>
+              </ButtonPrimitive>
             )}
           </AnimatePresence>
         </motion.div>

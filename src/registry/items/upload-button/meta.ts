@@ -12,7 +12,7 @@ export const uploadButtonMeta: ComponentMeta<UploadButtonConfig> = {
     "Expandable file upload trigger with stacked progress queue, inline Retry, and Copy link",
   description:
     "An expandable multi-file upload pill button for React. Triggering upload reveals a staggered stack of concentric file rows from behind the pill with live MB progress, full-row Retry on partial failure, and a morphing 2 uploaded -> Copy link -> Copied summary flow.\nMade for media uploaders, asset drops, shareable galleries, and tactile upload feedback.",
-  categories: ["Press", "Loading"],
+  categories: ["Actions", "Feedback"],
   masonryHeight: 340,
   cardHeightClass: "h-[320px] sm:h-[340px]",
   gridScale: 1,

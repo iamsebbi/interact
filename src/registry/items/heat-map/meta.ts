@@ -9,7 +9,7 @@ export const heatMapMeta: ComponentMeta<HeatMapConfig> = {
     "Interactive canvas field with 256-entry thermal LUT, melting cursor cooling, and click-to-cycle liquid shapes",
   description:
     "An interactive thermal-field canvas for React built with zero external dependencies. Shapes and typography rest in flat neutral grey until the cursor moves near, swelling nearby dots and melting strokes through a 256-entry thermal palette.\nMade for creative hero headers, interactive brand marks, playful cards, and experimental canvases.",
-  categories: ["Hover", "Press"],
+  categories: ["Effects"],
   masonryHeight: 280,
   cardHeightClass: "h-[250px] sm:h-[280px]",
   gridScale: 0.9,

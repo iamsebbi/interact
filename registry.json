@@ -256,7 +256,14 @@
       "type": "registry:ui",
       "title": "Select Menu",
       "description": "Morphing pill selector that opens in place around its current value and collapses cleanly back around the newly chosen option",
-      "dependencies": ["react", "motion", "clsx", "tailwind-merge"],
+      "dependencies": [
+        "@ui-sdk/react",
+        "@ui-sdk/core",
+        "react",
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
       "files": [
         {
           "path": "src/registry/items/select-menu/select-menu.tsx",
@@ -270,7 +277,14 @@
       "type": "registry:ui",
       "title": "Meeting Scheduler",
       "description": "Compact call trigger that morphs into a two-step day, time, and attendee picker, then folds into a confirmed booking pill",
-      "dependencies": ["react", "motion", "clsx", "tailwind-merge"],
+      "dependencies": [
+        "@ui-sdk/react",
+        "@ui-sdk/core",
+        "react",
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
       "files": [
         {
           "path": "src/registry/items/meeting-scheduler/meeting-scheduler.tsx",
@@ -284,12 +298,40 @@
       "type": "registry:ui",
       "title": "Status Pill",
       "description": "Live sync status pill with circular progress ring, rolling file counter, celebratory sheen, and split-out Retry recovery",
-      "dependencies": ["react", "motion", "clsx", "tailwind-merge"],
+      "dependencies": [
+        "@ui-sdk/react",
+        "@ui-sdk/core",
+        "react",
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
       "files": [
         {
           "path": "src/registry/items/status-pill/status-pill.tsx",
           "type": "registry:ui",
           "target": "components/ui/status-pill.tsx"
+        }
+      ]
+    },
+    {
+      "name": "code-input",
+      "type": "registry:ui",
+      "title": "Code Input",
+      "description": "OTP lock pill that splits center-outward into digit cells, rolls digits in, morphs Verifying into Verified, or shakes and clears on error",
+      "dependencies": [
+        "@ui-sdk/react",
+        "@ui-sdk/core",
+        "react",
+        "motion",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "src/registry/items/code-input/code-input.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/code-input.tsx"
         }
       ]
     },

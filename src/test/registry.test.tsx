@@ -5,6 +5,7 @@ import { describe, expect, test, vi } from "vitest";
 import { CATALOG_META } from "@/registry";
 import { getComponentGenerators } from "@/registry/generators";
 import { ApproveReject } from "@/registry/items/approve-reject/approve-reject";
+import { CodeInput } from "@/registry/items/code-input/code-input";
 import { DeleteButton } from "@/registry/items/delete-button/delete-button";
 import { DownloadButton } from "@/registry/items/download-button/download-button";
 import { ExpandableTabs } from "@/registry/items/expandable-tabs/expandable-tabs";
@@ -463,5 +464,119 @@ describe("stateful registry components", () => {
       },
       { timeout: 3000 },
     );
+  });
+
+  test("CodeInput splits into cells, verifies valid code, and rejects wrong code with error state", async () => {
+    const user = userEvent.setup();
+    const onVerified = vi.fn();
+    const onRejected = vi.fn();
+
+    const { container, unmount } = render(
+      <CodeInput
+        length={4}
+        testCode="1234"
+        speed={2}
+        resetAfterMs={0}
+        onVerified={onVerified}
+        onRejected={onRejected}
+      />,
+    );
+    const root = container.querySelector('[data-slot="code-input"]');
+    expect(root).toHaveAttribute("data-status", "rest");
+
+    const input = screen.getByRole("textbox", { name: "4-digit code" });
+    await user.click(input);
+    expect(root).toHaveAttribute("data-status", "entry");
+
+    // Wrong code triggers verify -> rejected -> returns to entry with error.
+    await user.type(input, "9999");
+    await waitFor(
+      () => {
+        expect(onRejected).toHaveBeenCalledWith("9999");
+        expect(root).toHaveAttribute("data-status", "entry");
+      },
+      { timeout: 3000 },
+    );
+
+    // Wait for right-to-left clear, then enter valid code.
+    await waitFor(
+      () => {
+        expect(root).toHaveAttribute("data-error", "false");
+      },
+      { timeout: 2000 },
+    );
+
+    await user.type(input, "1234");
+    await waitFor(
+      () => {
+        expect(onVerified).toHaveBeenCalledWith("1234");
+        expect(root).toHaveAttribute("data-status", "ok");
+      },
+      { timeout: 3000 },
+    );
+    unmount();
+  });
+
+  test("migrated ui-sdk components are discoverable and operable via createAgent()", async () => {
+    const agent = createAgent();
+    const onSelectChange = vi.fn();
+    const onStatusChange = vi.fn();
+
+    const { unmount } = render(
+      <div>
+        <SelectMenu
+          label="Sort"
+          items={["Newest", "Top rated"]}
+          defaultValue="Newest"
+          onValueChange={onSelectChange}
+        />
+        <StatusPill
+          demoMode="succeed"
+          demoFiles={1}
+          speed={2}
+          resetAfterMs={0}
+          onStatusChange={onStatusChange}
+        />
+      </div>,
+    );
+
+    const selectResult = await agent.act({
+      steps: [{ ref: "Sort", action: "setValue", args: ["Top rated"] }],
+    });
+    expect(selectResult.ok, selectResult.error?.message).toBe(true);
+    expect(onSelectChange).toHaveBeenCalledWith("Top rated", 1);
+
+    const syncResult = await agent.act({
+      steps: [{ ref: "Up to date", action: "press" }],
+    });
+    expect(syncResult.ok, syncResult.error?.message).toBe(true);
+    expect(onStatusChange).toHaveBeenCalledWith("syncing", {
+      left: 1,
+      total: 1,
+    });
+    unmount();
+
+    const { container: schedContainer, unmount: unmountSched } = render(
+      <div>
+        <MeetingScheduler resetAfterMs={0} />
+        <CodeInput length={4} testCode="1234" speed={2} resetAfterMs={0} />
+      </div>,
+    );
+    const openSched = await agent.act({
+      steps: [{ ref: "Schedule a call", action: "press" }],
+    });
+    expect(openSched.ok, openSched.error?.message).toBe(true);
+    expect(
+      schedContainer.querySelector('[data-slot="meeting-scheduler"]'),
+    ).toHaveAttribute("data-step", "time");
+
+    const codeAct = await agent.act({
+      steps: [{ ref: "4-digit code", action: "setValue", args: ["1234"] }],
+    });
+    expect(codeAct.ok, codeAct.error?.message).toBe(true);
+    expect(
+      schedContainer.querySelector('[data-slot="code-input"]'),
+    ).toHaveAttribute("data-status", "entry");
+    unmountSched();
   });
 });

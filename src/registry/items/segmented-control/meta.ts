@@ -12,7 +12,7 @@ export const segmentedControlMeta: ComponentMeta<SegmentedControlConfig> = {
     "Elastic pill selector with two-edge spring physics where the leading edge shoots ahead and the trailing edge catches up cleanly",
   description:
     "An accessible segmented control for React built on @ui-sdk/react/segmented-control and Motion springs. Switching segments launches the active pill's leading edge immediately while its trailing edge follows 55ms later with perceptual bounce physics and tactile hover/press growth.\nMade for timeframe pickers, billing toggles, view switchers, and compact filter bars.",
-  categories: ["Select", "Press"],
+  categories: ["Selection"],
   masonryHeight: 210,
   cardHeightClass: "h-[195px] sm:h-[210px]",
   previewBounds: { width: 344, height: 60 },

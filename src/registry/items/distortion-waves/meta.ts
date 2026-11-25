@@ -12,7 +12,7 @@ export const distortionWavesMeta: ComponentMeta<DistortionWavesConfig> = {
     "WebGL2 optical wave transition from Libraries.dev that opens from the triggering element and bends the DOM between two views",
   description:
     "A WebGL2 optical wave transition for React powered by Libraries.dev's distortion-waves. Opens from the exact button or badge that triggered it, bending a snapshot of the DOM as one opaque view sweeps into another while overlay controls stay live and sharp.\nMade for payment confirmations, receipt reveals, mode switches, and state transitions.",
-  categories: ["Press"],
+  categories: ["Effects"],
   masonryHeight: 400,
   cardHeightClass: "h-[380px] sm:h-[400px]",
   gridScale: 0.58,

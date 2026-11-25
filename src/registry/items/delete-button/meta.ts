@@ -12,7 +12,7 @@ export const deleteButtonMeta: ComponentMeta<DeleteButtonConfig> = {
     "Circular delete trigger that splits via an SVG gooey bridge into Confirm and Cancel pills",
   description:
     "A circular delete icon button for React built on ui-sdk Button primitives. Clicking the Trash trigger splits it via an SVG gooey liquid bridge into two contextual pills — Confirm and Cancel — before optionally settling through a brief Deleted state.\nMade for destructive row actions, item cards, settings drawers, and inline confirmations.",
-  categories: ["Press"],
+  categories: ["Actions"],
   masonryHeight: 210,
   cardHeightClass: "h-[195px] sm:h-[210px]",
   previewBounds: { width: 260, height: 56 },

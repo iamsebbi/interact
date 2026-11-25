@@ -240,8 +240,8 @@ describe("app shell pages", () => {
     );
     expect(screen.getAllByText("Search Button").length).toBeGreaterThan(0);
 
-    await user.click(screen.getByRole("button", { name: "Type" }));
-    expect(screen.getByRole("button", { name: "Type" })).toHaveAttribute(
+    await user.click(screen.getByRole("button", { name: "Inputs" }));
+    expect(screen.getByRole("button", { name: "Inputs" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
@@ -272,7 +272,7 @@ describe("app shell pages", () => {
 
     const labels = components.map((entry) => entry.label);
     expect(labels).toContain("All");
-    expect(labels).toContain("Type");
+    expect(labels).toContain("Inputs");
     expect(labels).toContain("Save Search Button");
     expect(labels).toContain("Edit Search Button");
   });

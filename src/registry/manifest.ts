@@ -1,4 +1,5 @@
 import { approveRejectMeta } from "./items/approve-reject/meta";
+import { codeInputMeta } from "./items/code-input/meta";
 import { deleteButtonMeta } from "./items/delete-button/meta";
 import { distortionWavesMeta } from "./items/distortion-waves/meta";
 import { downloadButtonMeta } from "./items/download-button/meta";
@@ -36,6 +37,7 @@ export const CATALOG_META: readonly ComponentMeta<Record<string, unknown>>[] = [
   selectMenuMeta,
   meetingSchedulerMeta,
   statusPillMeta,
+  codeInputMeta,
   voiceAssistantCardMeta,
   distortionWavesMeta,
 ] as unknown as readonly ComponentMeta<Record<string, unknown>>[];

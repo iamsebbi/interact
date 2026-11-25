@@ -9,7 +9,7 @@ export const stepPlayerMeta: ComponentMeta<StepPlayerConfig> = {
     "Two-pill step timeline with two-edge slot easing, boat-wake dot ripple, and quad-morphed Play/Pause mark",
   description:
     "A kinetic two-pill step player for React built with zero external dependencies. Each dot animates its left and right edges while a staggered boat-wake ripple travels across crossed steps alongside a continuous quad-morphed Play/Pause control.\nMade for onboarding tours, feature walkthroughs, story timelines, and playback steppers.",
-  categories: ["Select", "Loading"],
+  categories: ["Selection"],
   masonryHeight: 210,
   cardHeightClass: "h-[195px] sm:h-[210px]",
   previewBounds: { width: 260, height: 56 },

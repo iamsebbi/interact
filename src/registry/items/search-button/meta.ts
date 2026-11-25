@@ -12,7 +12,7 @@ export const searchButtonMeta: ComponentMeta<SearchButtonConfig> = {
     "Magnetic circular search button that springs open into an interactive pill search bar",
   description:
     "A morphing search circle button for React. Built on ui-sdk Button, Field, and Input primitives, clicking the circular icon springs open into a full pill search bar with blur-faded input, concentric clear/close action, Escape dismissal, and outside-click collapse.\nMade for navbars, toolbars, command headers, and compact filter bars.",
-  categories: ["Press", "Hover", "Type"],
+  categories: ["Inputs"],
   masonryHeight: 210,
   cardHeightClass: "h-[195px] sm:h-[210px]",
   previewBounds: { width: 336, height: 64 },

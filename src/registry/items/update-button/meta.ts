@@ -12,7 +12,7 @@ export const updateButtonMeta: ComponentMeta<UpdateButtonConfig> = {
     "Interactive update pill button with inner progress sweep and emerging Cancel circle",
   description:
     "An interactive update pill button for React built on ui-sdk Button and Progress primitives. Clicking Update reveals an inner progress sweep while a circular Cancel (X) button springs out to the right, then contracts into a checkmark circle before settling into Updated.\nMade for software updaters, sync actions, deploy triggers, and tactile progress feedback.",
-  categories: ["Press", "Loading"],
+  categories: ["Actions", "Feedback"],
   masonryHeight: 210,
   cardHeightClass: "h-[195px] sm:h-[210px]",
   previewBounds: { width: 280, height: 56 },

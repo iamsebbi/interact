@@ -12,7 +12,7 @@ export const approveRejectMeta: ComponentMeta<ApproveRejectConfig> = {
     "Contextual two-button decision pair where the chosen pill expands into confirmation and the opposite morphs into Undo",
   description:
     "A contextual two-button decision pair for React built on ui-sdk Button primitives. Both pills rest in neutral surfaces with colored X and Check icons; picking Approve or Reject expands that pill into a colored confirmation state while the opposite pill morphs into a circular Undo button.\nMade for agent approvals, PR reviews, moderation queues, and confirmation bars.",
-  categories: ["Press", "Select"],
+  categories: ["Actions"],
   masonryHeight: 210,
   cardHeightClass: "h-[195px] sm:h-[210px]",
   previewBounds: { width: 270, height: 56 },

@@ -12,12 +12,19 @@ export const meetingSchedulerMeta: ComponentMeta<MeetingSchedulerConfig> = {
     "Compact call trigger that morphs into a two-step day, time, and attendee picker, then folds into a confirmed booking pill",
   description:
     "A multi-step interactive meeting scheduler for React powered by Motion springs. Clicking the trigger expands it into a weekday strip and time grid with traveling selection pills and disabled busy slots, flows into attendee avatar chips and duration toggles, and collapses back into a green confirmation capsule with a diagonal sheen sweep.\nMade for booking widgets, team calendars, sales demos, and quick call triggers.",
-  categories: ["Select", "Press"],
+  categories: ["Flows"],
   masonryHeight: 380,
   cardHeightClass: "h-[360px] sm:h-[380px]",
   gridScale: 0.8,
   previewBounds: { width: 344, height: 340 },
-  dependencies: ["react", "motion", "clsx", "tailwind-merge"],
+  dependencies: [
+    "@ui-sdk/react",
+    "@ui-sdk/core",
+    "react",
+    "motion",
+    "clsx",
+    "tailwind-merge",
+  ],
   sourceFiles: ["src/registry/items/meeting-scheduler/meeting-scheduler.tsx"],
   defaultConfig: DEFAULT_MEETING_SCHEDULER_CONFIG,
   props: [

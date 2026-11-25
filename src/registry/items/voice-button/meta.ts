@@ -9,7 +9,7 @@ export const voiceButtonMeta: ComponentMeta<VoiceButtonConfig> = {
     "Interactive voice pill button with VoiceGlow reactive beam, NumberFlow timer, and emerging Stop circle",
   description:
     "An interactive voice pill button for React built on ui-sdk Button, VoiceGlow, and NumberFlow. Clicking Voice morphs into a live timer with a sound-reactive edge beam while a circular Stop button emerges on the right, supporting both simulated Demo Voice and live microphone Demo Live modes.\nMade for voice assistants, audio recorders, dictation triggers, and conversational UIs.",
-  categories: ["Press", "Loading"],
+  categories: ["Inputs"],
   masonryHeight: 210,
   cardHeightClass: "h-[195px] sm:h-[210px]",
   previewBounds: { width: 250, height: 56 },

@@ -1,11 +1,12 @@
 import type { ComponentType } from "react";
 
 export const INTERACTION_CATEGORIES = [
-  "Press",
-  "Hover",
-  "Loading",
-  "Select",
-  "Type",
+  "Actions",
+  "Inputs",
+  "Selection",
+  "Feedback",
+  "Flows",
+  "Effects",
 ] as const;
 
 export type InteractionCategory = (typeof INTERACTION_CATEGORIES)[number];

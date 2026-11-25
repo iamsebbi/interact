@@ -9,11 +9,18 @@ export const statusPillMeta: ComponentMeta<StatusPillConfig> = {
     "Sync indicator pill that counts files down with a filling ring, confirms with a green sheen, and splits out Retry on failure",
   description:
     "An interactive sync status pill for React powered by Motion springs. Clicking starts a live countdown across queued files as an SVG progress ring fills, morphing into a green Synced capsule with a diagonal sheen — or splitting out a dark Retry pill on failure that resumes right where sync left off.\nMade for cloud sync indicators, document autosave badges, deployment bars, and background job triggers.",
-  categories: ["Loading", "Press"],
+  categories: ["Feedback"],
   masonryHeight: 210,
   cardHeightClass: "h-[195px] sm:h-[210px]",
   previewBounds: { width: 290, height: 60 },
-  dependencies: ["react", "motion", "clsx", "tailwind-merge"],
+  dependencies: [
+    "@ui-sdk/react",
+    "@ui-sdk/core",
+    "react",
+    "motion",
+    "clsx",
+    "tailwind-merge",
+  ],
   sourceFiles: ["src/registry/items/status-pill/status-pill.tsx"],
   defaultConfig: DEFAULT_STATUS_PILL_CONFIG,
   props: [

@@ -12,7 +12,7 @@ export const downloadButtonMeta: ComponentMeta<DownloadButtonConfig> = {
     "Multi-state pill download button with Pause/Play, Cancel, and morphing Open state",
   description:
     "A multi-state pill download button for React. Clicking Download spawns a Pause/Play circle button on the right; pausing reveals a left Cancel circle button, and completing shrinks the pill to an animated checkmark before expanding into Open.\nMade for file managers, asset installers, export actions, and tactile progress feedback.",
-  categories: ["Press", "Loading"],
+  categories: ["Actions", "Feedback"],
   masonryHeight: 210,
   cardHeightClass: "h-[195px] sm:h-[210px]",
   gridScale: 0.88,

@@ -219,6 +219,16 @@ export const COMPONENT_CLIENT_REGISTRY: Record<
     },
     COMPONENT_GENERATORS["status-pill"],
   ),
+  "code-input": buildClientEntry(
+    () => import("./items/code-input/demo"),
+    () => import("./items/code-input/inspector"),
+    {
+      preview: "CodeInputPreview",
+      demo: "CodeInputDemo",
+      inspector: "CodeInputInspector",
+    },
+    COMPONENT_GENERATORS["code-input"],
+  ),
   "step-player": buildClientEntry(
     () => import("./items/step-player/demo"),
     () => import("./items/step-player/inspector"),

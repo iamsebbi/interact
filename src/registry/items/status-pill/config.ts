@@ -98,7 +98,7 @@ export function buildStatusPillAiPrompt(
   return [
     "Implement the Status Pill component from interact.dev in React + TypeScript.",
     `Install via shadcn CLI: ${cliCommand}`,
-    "Dependencies: react, motion, clsx, tailwind-merge",
+    "Dependencies: @ui-sdk/react, @ui-sdk/core, react, motion, clsx, tailwind-merge",
     "",
     "Render it with this exact configuration:",
     "```tsx",

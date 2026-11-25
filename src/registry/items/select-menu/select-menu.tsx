@@ -1,5 +1,6 @@
 "use client";
 
+import { Listbox, ListboxItem } from "@ui-sdk/react/listbox";
 import {
   type AnimationPlaybackControls,
   animate,
@@ -135,6 +136,7 @@ interface RowMotion {
 
 interface SelectRowProps {
   id: string;
+  value: string;
   label: string;
   index: number;
   disabled: boolean;
@@ -156,6 +158,7 @@ interface SelectRowProps {
 
 function SelectRow({
   id,
+  value,
   label,
   index,
   disabled,
@@ -196,13 +199,11 @@ function SelectRow({
   );
 
   return (
-    <motion.div
+    <ListboxItem
       id={id}
-      role="option"
-      aria-selected={isSelected}
-      aria-disabled={disabled || undefined}
+      value={value}
+      disabled={disabled}
       data-slot="select-menu-option"
-      data-selected={isSelected ? "true" : undefined}
       onPointerEnter={() => {
         if (isOpen && !disabled) onHover(index);
       }}
@@ -210,21 +211,26 @@ function SelectRow({
         event.stopPropagation();
         if (isOpen && !disabled) onPick(index);
       }}
-      style={{
-        y,
-        width: rowWidth,
-        height: rowHeight,
-        left: pad,
-        paddingLeft: edgePad,
-        opacity,
-        scale,
-        filter,
-        visibility: isOpen ? "visible" : closedVisibility,
-      }}
+      render={
+        <motion.div
+          style={{
+            y,
+            width: rowWidth,
+            height: rowHeight,
+            left: pad,
+            paddingLeft: edgePad,
+            opacity,
+            scale,
+            filter,
+            visibility: isOpen ? "visible" : closedVisibility,
+          }}
+        />
+      }
       className={cn(
         "absolute top-0 z-10 flex items-center overflow-hidden whitespace-nowrap font-medium select-none",
         isOpen && !disabled ? "cursor-pointer" : "pointer-events-none",
         disabled && "opacity-40",
+        isSelected && "font-medium",
         isDark ? "text-[#f2f1ec]" : "text-[#1a1915]",
       )}
     >
@@ -237,7 +243,7 @@ function SelectRow({
       >
         {label}
       </motion.span>
-    </motion.div>
+    </ListboxItem>
   );
 }
 
@@ -1119,12 +1125,35 @@ export function SelectMenu({
             </motion.span>
           )}
 
-          {/* Options stack */}
-          <div id={listboxId} role="listbox" aria-label={label || "Options"}>
+          {/* Options stack backed by @ui-sdk/react/listbox */}
+          <Listbox
+            id={listboxId}
+            aria-label={label || "Options"}
+            value={normalizedItems[selectedIndex]?.value}
+            onValueChange={(nextVal) => {
+              const nextIdx = normalizedItems.findIndex(
+                (item) => item.value === nextVal,
+              );
+              const chosen = normalizedItems[nextIdx];
+              if (nextIdx < 0 || !chosen || chosen.disabled) return;
+              if (isOpenRef.current) {
+                pickRow(nextIdx);
+                return;
+              }
+              if (nextIdx === selRef.current) return;
+              selRef.current = nextIdx;
+              prevSelRef.current = nextIdx;
+              if (!isValueControlled) setInternalIndex(nextIdx);
+              snapClosedGeometry(nextIdx);
+              onValueChange?.(chosen.value, nextIdx);
+            }}
+            virtualFocus
+          >
             {normalizedItems.map((item, idx) => (
               <SelectRow
                 key={item.value}
                 id={`${baseId}-opt-${idx}`}
+                value={item.value}
                 label={item.label}
                 index={idx}
                 disabled={Boolean(item.disabled)}
@@ -1144,7 +1173,7 @@ export function SelectMenu({
                 onPick={pickRow}
               />
             ))}
-          </div>
+          </Listbox>
 
           {/* Right icon morphing smoothly between Chevrons (closed) and Checkmark (open) */}
           <motion.span

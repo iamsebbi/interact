@@ -12,7 +12,7 @@ export const expandableTabsMeta: ComponentMeta<ExpandableTabsConfig> = {
     "Bottom-docked navigation bar that expands upward into dynamic content panels while smoothly revealing active tab labels",
   description:
     "A bottom-docked expandable tab bar for React built on Motion springs. Clicking any icon expands the active pill to reveal its label while springing the card upward to reveal measured menu or action panels with smooth blur transitions.\nMade for floating docks, quick command menus, compact toolbars, and mobile-style action trays.",
-  categories: ["Select", "Press"],
+  categories: ["Selection"],
   masonryHeight: 400,
   cardHeightClass: "h-[380px] sm:h-[400px]",
   gridScale: 0.82,

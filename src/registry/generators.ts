@@ -1,4 +1,5 @@
 import { approveRejectGenerators } from "./items/approve-reject/config";
+import { codeInputGenerators } from "./items/code-input/config";
 import { deleteButtonGenerators } from "./items/delete-button/config";
 import { distortionWavesGenerators } from "./items/distortion-waves/config";
 import { downloadButtonGenerators } from "./items/download-button/config";
@@ -36,6 +37,7 @@ export const COMPONENT_GENERATORS = {
   "select-menu": selectMenuGenerators,
   "meeting-scheduler": meetingSchedulerGenerators,
   "status-pill": statusPillGenerators,
+  "code-input": codeInputGenerators,
   "voice-assistant-card": voiceAssistantCardGenerators,
   "distortion-waves": distortionWavesGenerators,
 } as unknown as Record<string, ComponentGenerators<Record<string, unknown>>>;

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/controls";
 import { ComponentsGrid } from "@/components/showcase/ComponentsGrid";
 import { DotMatrixWave } from "@/components/showcase/DotMatrixWave";
+import { FeaturedProductBanner } from "@/components/showcase/FeaturedProductBanner";
 
 export default function HomePage() {
   return (
@@ -37,6 +38,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <FeaturedProductBanner />
 
       <ComponentsGrid />
     </main>

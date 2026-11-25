@@ -1,5 +1,7 @@
 "use client";
 
+import { Button as ButtonPrimitive } from "@ui-sdk/react/button";
+import { Toggle, ToggleGroup } from "@ui-sdk/react/toggle";
 import {
   AnimatePresence,
   MotionConfig,
@@ -547,12 +549,6 @@ export function MeetingScheduler({
     setTimeIndex(idx);
   };
 
-  const handleTogglePerson = (idx: number) => {
-    setSelectedPeople((prev) =>
-      prev.includes(idx) ? prev.filter((item) => item !== idx) : [...prev, idx],
-    );
-  };
-
   const handleSchedule = async () => {
     if (selectedPeople.length === 0 || timeIndex < 0) return;
     clearTimers();
@@ -751,19 +747,25 @@ export function MeetingScheduler({
             className="flex h-full w-full flex-col justify-between"
           >
             <div className="relative flex w-full shrink-0 items-center">
-              <motion.button
-                type="button"
+              <ButtonPrimitive
                 onClick={handleOpen}
                 disabled={step !== "rest"}
-                animate={{ marginRight: isExpanded ? ROW_H + GRID_GAP : 0 }}
-                transition={reduceMotion ? { duration: 0 } : morphSpring}
-                whileHover={
-                  step === "rest" && !reduceMotion ? { scale: 1.02 } : undefined
-                }
-                whileTap={
-                  step === "rest" && !reduceMotion
-                    ? { scale: 1.04, transition: pressSpring }
-                    : undefined
+                render={
+                  <motion.button
+                    type="button"
+                    animate={{ marginRight: isExpanded ? ROW_H + GRID_GAP : 0 }}
+                    transition={reduceMotion ? { duration: 0 } : morphSpring}
+                    whileHover={
+                      step === "rest" && !reduceMotion
+                        ? { scale: 1.02 }
+                        : undefined
+                    }
+                    whileTap={
+                      step === "rest" && !reduceMotion
+                        ? { scale: 1.04, transition: pressSpring }
+                        : undefined
+                    }
+                  />
                 }
                 className={cn(
                   "relative flex h-[44px] min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-full pr-4 pl-3.5 text-[15px] font-semibold outline-none transition-colors duration-200",
@@ -850,35 +852,39 @@ export function MeetingScheduler({
                     className="truncate whitespace-nowrap"
                   />
                 </span>
-              </motion.button>
+              </ButtonPrimitive>
 
               <AnimatePresence initial={false}>
                 {isExpanded && (
-                  <motion.button
+                  <ButtonPrimitive
                     key="close-btn"
-                    type="button"
                     aria-label="Close scheduler"
                     disabled={step === "busy"}
                     onClick={handleCancel}
-                    initial={
-                      reduceMotion
-                        ? false
-                        : { opacity: 0, scale: 0.75, filter: "blur(5px)" }
+                    render={
+                      <motion.button
+                        type="button"
+                        initial={
+                          reduceMotion
+                            ? false
+                            : { opacity: 0, scale: 0.75, filter: "blur(5px)" }
+                        }
+                        animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                        exit={
+                          reduceMotion
+                            ? undefined
+                            : {
+                                opacity: 0,
+                                scale: 0.75,
+                                filter: "blur(5px)",
+                                transition: { duration: 0.14 / clampedSpeed },
+                              }
+                        }
+                        whileHover={!reduceMotion ? { scale: 1.05 } : undefined}
+                        whileTap={!reduceMotion ? { scale: 0.94 } : undefined}
+                        transition={popSpring}
+                      />
                     }
-                    animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                    exit={
-                      reduceMotion
-                        ? undefined
-                        : {
-                            opacity: 0,
-                            scale: 0.75,
-                            filter: "blur(5px)",
-                            transition: { duration: 0.14 / clampedSpeed },
-                          }
-                    }
-                    whileHover={!reduceMotion ? { scale: 1.05 } : undefined}
-                    whileTap={!reduceMotion ? { scale: 0.94 } : undefined}
-                    transition={popSpring}
                     className={cn(
                       "absolute top-0 right-0 flex size-[44px] shrink-0 cursor-pointer items-center justify-center rounded-full outline-none transition-colors",
                       "disabled:pointer-events-none disabled:opacity-45",
@@ -888,7 +894,7 @@ export function MeetingScheduler({
                     )}
                   >
                     <CloseIcon className="size-[18px]" />
-                  </motion.button>
+                  </ButtonPrimitive>
                 )}
               </AnimatePresence>
             </div>
@@ -1110,35 +1116,44 @@ export function MeetingScheduler({
                   </motion.fieldset>
 
                   {/* Next CTA */}
-                  <motion.button
-                    type="button"
+                  <ButtonPrimitive
                     disabled={!canAdvanceTime}
                     onClick={() => setStep("people")}
-                    initial={
-                      reduceMotion
-                        ? false
-                        : { opacity: 0, y: 6, scale: 0.96, filter: "blur(5px)" }
-                    }
-                    animate={{
-                      opacity: 1,
-                      y: 0,
-                      scale: 1,
-                      filter: "blur(0px)",
-                    }}
-                    transition={
-                      reduceMotion
-                        ? { duration: 0 }
-                        : { ...popSpring, delay: 0.1 / clampedSpeed }
-                    }
-                    whileHover={
-                      canAdvanceTime && !reduceMotion
-                        ? { scale: 1.015 }
-                        : undefined
-                    }
-                    whileTap={
-                      canAdvanceTime && !reduceMotion
-                        ? { scale: 0.985 }
-                        : undefined
+                    render={
+                      <motion.button
+                        type="button"
+                        initial={
+                          reduceMotion
+                            ? false
+                            : {
+                                opacity: 0,
+                                y: 6,
+                                scale: 0.96,
+                                filter: "blur(5px)",
+                              }
+                        }
+                        animate={{
+                          opacity: 1,
+                          y: 0,
+                          scale: 1,
+                          filter: "blur(0px)",
+                        }}
+                        transition={
+                          reduceMotion
+                            ? { duration: 0 }
+                            : { ...popSpring, delay: 0.1 / clampedSpeed }
+                        }
+                        whileHover={
+                          canAdvanceTime && !reduceMotion
+                            ? { scale: 1.015 }
+                            : undefined
+                        }
+                        whileTap={
+                          canAdvanceTime && !reduceMotion
+                            ? { scale: 0.985 }
+                            : undefined
+                        }
+                      />
                     }
                     className={cn(
                       "flex h-[44px] w-full items-center justify-center rounded-full text-[15px] font-semibold outline-none transition-colors duration-200",
@@ -1152,7 +1167,7 @@ export function MeetingScheduler({
                     )}
                   >
                     {nextLabel}
-                  </motion.button>
+                  </ButtonPrimitive>
                 </motion.div>
               )}
 
@@ -1178,40 +1193,64 @@ export function MeetingScheduler({
                   transition={popSpring}
                   className="flex flex-col gap-[14px] pt-[14px]"
                 >
-                  {/* Attendee chips */}
-                  <motion.fieldset
+                  {/* Attendee chips backed by @ui-sdk/react/toggle */}
+                  <ToggleGroup
+                    multiple
+                    disabled={step === "busy"}
                     aria-label="Attendees"
-                    initial={
-                      reduceMotion
-                        ? false
-                        : { opacity: 0, y: 6, scale: 0.96, filter: "blur(5px)" }
-                    }
-                    animate={{
-                      opacity: 1,
-                      y: 0,
-                      scale: 1,
-                      filter: "blur(0px)",
+                    value={selectedPeople
+                      .map((idx) => peopleList[idx])
+                      .filter((name): name is string => Boolean(name))}
+                    onValueChange={(nextNames) => {
+                      setSelectedPeople(
+                        nextNames
+                          .map((name) => peopleList.indexOf(name))
+                          .filter((idx) => idx >= 0),
+                      );
                     }}
-                    transition={
-                      reduceMotion
-                        ? { duration: 0 }
-                        : { ...popSpring, delay: 0 }
+                    render={
+                      <motion.div
+                        initial={
+                          reduceMotion
+                            ? false
+                            : {
+                                opacity: 0,
+                                y: 6,
+                                scale: 0.96,
+                                filter: "blur(5px)",
+                              }
+                        }
+                        animate={{
+                          opacity: 1,
+                          y: 0,
+                          scale: 1,
+                          filter: "blur(0px)",
+                        }}
+                        transition={
+                          reduceMotion
+                            ? { duration: 0 }
+                            : { ...popSpring, delay: 0 }
+                        }
+                      />
                     }
-                    className="m-0 flex flex-wrap gap-2 border-0 p-0"
+                    className="flex flex-wrap gap-2"
                   >
                     {peopleList.map((name, idx) => {
                       const active = selectedPeople.includes(idx);
                       return (
-                        <motion.button
+                        <Toggle
                           key={name}
-                          type="button"
+                          value={name}
                           disabled={step === "busy"}
-                          aria-pressed={active}
-                          onClick={() => handleTogglePerson(idx)}
-                          whileTap={
-                            step !== "busy" && !reduceMotion
-                              ? { scale: 0.96 }
-                              : undefined
+                          render={
+                            <motion.button
+                              type="button"
+                              whileTap={
+                                step !== "busy" && !reduceMotion
+                                  ? { scale: 0.96 }
+                                  : undefined
+                              }
+                            />
                           }
                           className={cn(
                             "inline-flex h-[36px] cursor-pointer items-center gap-2 rounded-full pr-4 pl-1.5 text-[14px] font-medium outline-none transition-colors duration-200",
@@ -1237,10 +1276,10 @@ export function MeetingScheduler({
                             {getInitials(name)}
                           </span>
                           <span>{getFirstName(name)}</span>
-                        </motion.button>
+                        </Toggle>
                       );
                     })}
-                  </motion.fieldset>
+                  </ToggleGroup>
 
                   {/* Duration selector with traveling pill */}
                   <motion.fieldset
@@ -1333,42 +1372,49 @@ export function MeetingScheduler({
                   <div className="flex w-full items-center">
                     <AnimatePresence initial={false}>
                       {step === "people" && (
-                        <motion.button
+                        <ButtonPrimitive
                           key="back-btn"
-                          type="button"
                           onClick={() => setStep("time")}
-                          initial={
-                            reduceMotion
-                              ? false
-                              : {
-                                  opacity: 0,
-                                  width: 0,
-                                  marginRight: 0,
-                                  filter: "blur(4px)",
-                                }
-                          }
-                          animate={{
-                            opacity: 1,
-                            width: "auto",
-                            marginRight: GRID_GAP,
-                            filter: "blur(0px)",
-                            transition: reduceMotion
-                              ? { duration: 0 }
-                              : { ...snapSpring, delay: 0.09 / clampedSpeed },
-                          }}
-                          exit={
-                            reduceMotion
-                              ? undefined
-                              : {
-                                  opacity: 0,
-                                  width: 0,
-                                  marginRight: 0,
-                                  filter: "blur(4px)",
-                                  transition: {
-                                    duration: 0.18 / clampedSpeed,
-                                    ease: [0.4, 0, 1, 1],
-                                  },
-                                }
+                          render={
+                            <motion.button
+                              type="button"
+                              initial={
+                                reduceMotion
+                                  ? false
+                                  : {
+                                      opacity: 0,
+                                      width: 0,
+                                      marginRight: 0,
+                                      filter: "blur(4px)",
+                                    }
+                              }
+                              animate={{
+                                opacity: 1,
+                                width: "auto",
+                                marginRight: GRID_GAP,
+                                filter: "blur(0px)",
+                                transition: reduceMotion
+                                  ? { duration: 0 }
+                                  : {
+                                      ...snapSpring,
+                                      delay: 0.09 / clampedSpeed,
+                                    },
+                              }}
+                              exit={
+                                reduceMotion
+                                  ? undefined
+                                  : {
+                                      opacity: 0,
+                                      width: 0,
+                                      marginRight: 0,
+                                      filter: "blur(4px)",
+                                      transition: {
+                                        duration: 0.18 / clampedSpeed,
+                                        ease: [0.4, 0, 1, 1],
+                                      },
+                                    }
+                              }
+                            />
                           }
                           className={cn(
                             "flex h-[44px] shrink-0 cursor-pointer items-center overflow-hidden rounded-full text-[15px] font-semibold whitespace-nowrap outline-none transition-colors",
@@ -1381,44 +1427,48 @@ export function MeetingScheduler({
                             <BackIcon className="size-[16px] shrink-0" />
                             <span>{backLabel}</span>
                           </span>
-                        </motion.button>
+                        </ButtonPrimitive>
                       )}
                     </AnimatePresence>
 
-                    <motion.button
-                      type="button"
+                    <ButtonPrimitive
                       disabled={!canSchedule || step === "busy"}
                       onClick={handleSchedule}
-                      initial={
-                        reduceMotion
-                          ? false
-                          : {
-                              opacity: 0,
-                              y: 6,
-                              scale: 0.96,
-                              filter: "blur(5px)",
-                            }
-                      }
-                      animate={{
-                        opacity: 1,
-                        y: 0,
-                        scale: 1,
-                        filter: "blur(0px)",
-                      }}
-                      transition={
-                        reduceMotion
-                          ? { duration: 0 }
-                          : { ...popSpring, delay: 0.05 / clampedSpeed }
-                      }
-                      whileHover={
-                        canSchedule && step === "people" && !reduceMotion
-                          ? { scale: 1.015 }
-                          : undefined
-                      }
-                      whileTap={
-                        canSchedule && step === "people" && !reduceMotion
-                          ? { scale: 0.985 }
-                          : undefined
+                      render={
+                        <motion.button
+                          type="button"
+                          initial={
+                            reduceMotion
+                              ? false
+                              : {
+                                  opacity: 0,
+                                  y: 6,
+                                  scale: 0.96,
+                                  filter: "blur(5px)",
+                                }
+                          }
+                          animate={{
+                            opacity: 1,
+                            y: 0,
+                            scale: 1,
+                            filter: "blur(0px)",
+                          }}
+                          transition={
+                            reduceMotion
+                              ? { duration: 0 }
+                              : { ...popSpring, delay: 0.05 / clampedSpeed }
+                          }
+                          whileHover={
+                            canSchedule && step === "people" && !reduceMotion
+                              ? { scale: 1.015 }
+                              : undefined
+                          }
+                          whileTap={
+                            canSchedule && step === "people" && !reduceMotion
+                              ? { scale: 0.985 }
+                              : undefined
+                          }
+                        />
                       }
                       className={cn(
                         "flex h-[44px] min-w-0 flex-1 items-center justify-center gap-2 rounded-full px-4 text-[14px] font-semibold whitespace-nowrap outline-none transition-colors duration-200",
@@ -1446,7 +1496,7 @@ export function MeetingScheduler({
                         transition={snapSpring}
                         className="truncate"
                       />
-                    </motion.button>
+                    </ButtonPrimitive>
                   </div>
                 </motion.div>
               )}
