@@ -9,9 +9,9 @@ export const voiceAssistantCardMeta: ComponentMeta<VoiceAssistantCardConfig> = {
   title: "Voice Assistant Card",
   shortTitle: "Assistant",
   tagline:
-    "Voice assistant card with floating iMessage greeting, word-by-word transcript stream, and VoiceBeam glow",
+    "Minimalist voice assistant card with centered prompt, word-by-word transcript stream, and VoiceBeam glow",
   description:
-    "An interactive voice assistant card for React built with VoiceBeam. Features a floating iMessage-style greeting, tap-to-speak waveform trigger, word-by-word blurred transcript streaming, smooth caption swaps, and a rising voice glow across the card.\nMade for AI voice companions, conversational cards, and hands-free assistant demos.",
+    "A minimalist voice assistant card for React built with VoiceBeam. Features a centered prompt with generous negative space, a tap-to-speak waveform pill, word-by-word blurred transcript streaming, smooth caption swaps, and a rising voice glow across the card.\nMade for AI voice companions, conversational cards, and hands-free assistant demos.",
   categories: ["Flows"],
   masonryHeight: 440,
   cardHeightClass: "h-[410px] sm:h-[440px]",

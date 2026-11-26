@@ -479,8 +479,8 @@ export function SegmentedControl({
           "relative inline-flex max-w-full select-none items-center gap-[2px] rounded-full transition-[background-color,box-shadow] duration-200",
           showTray
             ? isDark
-              ? "bg-[#252420] shadow-[0_0_0_1px_rgba(255,255,255,0.07),0_1px_1px_rgba(0,0,0,0.3),0_6px_16px_-6px_rgba(0,0,0,0.45),0_22px_44px_-24px_rgba(0,0,0,0.6)]"
-              : "bg-white shadow-[0_0_0_1px_rgba(26,25,21,0.06),0_1px_1px_rgba(26,25,21,0.04),0_6px_16px_-6px_rgba(26,25,21,0.1),0_22px_44px_-24px_rgba(26,25,21,0.16)]"
+              ? "bg-[#26262b] shadow-[0_0_0_1px_rgba(255,255,255,0.07),0_1px_1px_rgba(0,0,0,0.3),0_6px_16px_-6px_rgba(0,0,0,0.45),0_22px_44px_-24px_rgba(0,0,0,0.6)]"
+              : "bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.06),0_1px_1px_rgba(0,0,0,0.04),0_6px_16px_-6px_rgba(0,0,0,0.1),0_22px_44px_-24px_rgba(0,0,0,0.16)]"
             : "bg-transparent shadow-none",
           disabled && "pointer-events-none opacity-55",
           className,
@@ -518,7 +518,7 @@ export function SegmentedControl({
           className={cn(
             "pointer-events-none absolute left-0 z-0 rounded-full will-change-[transform,width] transition-[opacity,background-color] duration-150",
             indicatorReady ? "opacity-100" : "opacity-0",
-            isDark ? "bg-[#3a3934]" : "bg-[#efeee9]",
+            isDark ? "bg-[#34343b]" : "bg-[#f2f2f2]",
           )}
         />
 
@@ -563,16 +563,16 @@ export function SegmentedControl({
                 "relative z-10 inline-flex h-full shrink-0 cursor-pointer items-center justify-center whitespace-nowrap rounded-full outline-none",
                 "focus-visible:ring-2 focus-visible:ring-offset-2",
                 isDark
-                  ? "focus-visible:ring-[#6e88ff]/60 focus-visible:ring-offset-[#252420]"
-                  : "focus-visible:ring-[#3355ff]/55 focus-visible:ring-offset-white",
+                  ? "focus-visible:ring-[#60a5fa]/60 focus-visible:ring-offset-[#26262b]"
+                  : "focus-visible:ring-[#0062d6]/55 focus-visible:ring-offset-white",
                 "data-disabled:pointer-events-none data-disabled:opacity-40",
                 isChecked
                   ? isDark
-                    ? "text-[#f2f1ec]"
-                    : "text-[#1a1915]"
+                    ? "text-[#ffffff]"
+                    : "text-[#111111]"
                   : isDark
-                    ? "text-[#a09d93] hover:text-[#f2f1ec]"
-                    : "text-[#8d8a81] hover:text-[#1a1915]",
+                    ? "text-[#a1a1aa] hover:text-[#ffffff]"
+                    : "text-[#71717a] hover:text-[#111111]",
               )}
               style={{
                 paddingLeft: preset.itemPx,

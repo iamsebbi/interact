@@ -1,12 +1,7 @@
 "use client";
 
 import type { VoiceBeamColorVariant, VoiceBeamLook } from "voice-glow";
-import {
-  SelectField,
-  Slider,
-  TextareaField,
-  TextField,
-} from "@/components/controls";
+import { SelectField, Slider } from "@/components/controls";
 import type { ComponentInspectorProps } from "@/registry/types";
 import {
   DEFAULT_VOICE_ASSISTANT_CARD_CONFIG,
@@ -70,45 +65,6 @@ export function VoiceAssistantCardInspector({
         step={0.05}
         defaultValue={DEFAULT_VOICE_ASSISTANT_CARD_CONFIG.strength}
         onValueChange={(strength) => patch({ strength })}
-      />
-
-      <TextField
-        label="Assistant"
-        value={config.assistantName}
-        placeholder="Kai"
-        onValueChange={(assistantName) => patch({ assistantName })}
-      />
-
-      <TextField
-        label="Role"
-        value={config.assistantRole}
-        placeholder="Personal assistant"
-        onValueChange={(assistantRole) => patch({ assistantRole })}
-      />
-
-      <TextField
-        label="Initials"
-        maxLength={2}
-        value={config.initials}
-        placeholder="KA"
-        className="w-20 uppercase"
-        onValueChange={(initials) => patch({ initials })}
-      />
-
-      <TextField
-        label="Greeting"
-        layout="stacked"
-        value={config.greeting}
-        placeholder="What's on your mind today?"
-        onValueChange={(greeting) => patch({ greeting })}
-      />
-
-      <TextareaField
-        label="Transcript"
-        rows={3}
-        value={config.transcript}
-        placeholder="Block out two hours tomorrow morning for deep work and mute notifications"
-        onValueChange={(transcript) => patch({ transcript })}
       />
     </div>
   );

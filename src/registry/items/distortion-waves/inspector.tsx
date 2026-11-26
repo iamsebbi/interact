@@ -1,6 +1,6 @@
 "use client";
 
-import { SelectField, Slider, TextField } from "@/components/controls";
+import { SelectField, Slider } from "@/components/controls";
 import type { ComponentInspectorProps } from "@/registry/types";
 import {
   DEFAULT_DISTORTION_WAVES_CONFIG,
@@ -115,34 +115,6 @@ export function DistortionWavesInspector({
         step={4}
         defaultValue={d.particleCount}
         onValueChange={(particleCount) => patch({ particleCount })}
-      />
-
-      <TextField
-        label="Title"
-        value={config.title}
-        placeholder={d.title}
-        onValueChange={(title) => patch({ title })}
-      />
-
-      <TextField
-        label="Subtitle"
-        value={config.subtitle}
-        placeholder={d.subtitle}
-        onValueChange={(subtitle) => patch({ subtitle })}
-      />
-
-      <TextField
-        label="Amount"
-        value={config.amount}
-        placeholder={d.amount}
-        onValueChange={(amount) => patch({ amount })}
-      />
-
-      <TextField
-        label="Button"
-        value={config.ctaLabel}
-        placeholder={d.ctaLabel}
-        onValueChange={(ctaLabel) => patch({ ctaLabel })}
       />
     </div>
   );

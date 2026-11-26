@@ -737,8 +737,8 @@ export function MeetingScheduler({
           className={cn(
             "relative overflow-hidden",
             isDark
-              ? "bg-[#252420] text-[#f2f1ec] shadow-[0_0_0_1px_rgba(255,255,255,0.07),0_1px_1px_rgba(0,0,0,0.3),0_6px_16px_-6px_rgba(0,0,0,0.45),0_22px_44px_-24px_rgba(0,0,0,0.6)]"
-              : "bg-white text-[#1a1915] shadow-[0_0_0_1px_rgba(26,25,21,0.06),0_1px_1px_rgba(26,25,21,0.04),0_6px_16px_-6px_rgba(26,25,21,0.1),0_22px_44px_-24px_rgba(26,25,21,0.16)]",
+              ? "bg-[#26262b] text-[#ffffff] shadow-[0_0_0_1px_rgba(255,255,255,0.07),0_1px_1px_rgba(0,0,0,0.3),0_6px_16px_-6px_rgba(0,0,0,0.45),0_22px_44px_-24px_rgba(0,0,0,0.6)]"
+              : "bg-white text-[#111111] shadow-[0_0_0_1px_rgba(0,0,0,0.06),0_1px_1px_rgba(0,0,0,0.04),0_6px_16px_-6px_rgba(0,0,0,0.1),0_22px_44px_-24px_rgba(0,0,0,0.16)]",
           )}
         >
           {/* Header row (morphs between compact trigger pill, expanded title bar, and green confirmation pill) */}
@@ -771,19 +771,19 @@ export function MeetingScheduler({
                   "relative flex h-[44px] min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-full pr-4 pl-3.5 text-[15px] font-semibold outline-none transition-colors duration-200",
                   "focus-visible:ring-2 focus-visible:ring-offset-2",
                   isDark
-                    ? "focus-visible:ring-[#6e88ff]/60 focus-visible:ring-offset-[#252420]"
-                    : "focus-visible:ring-[#3355ff]/55 focus-visible:ring-offset-white",
+                    ? "focus-visible:ring-[#60a5fa]/60 focus-visible:ring-offset-[#26262b]"
+                    : "focus-visible:ring-[#0062d6]/55 focus-visible:ring-offset-white",
                   step === "done"
                     ? isDark
-                      ? "cursor-default bg-[#2dc46b] text-white"
-                      : "cursor-default bg-[#1fb257] text-white"
+                      ? "cursor-default bg-[#16a34a] text-white"
+                      : "cursor-default bg-[#15803d] text-white"
                     : step === "rest"
                       ? isDark
-                        ? "cursor-pointer bg-[#33322d] text-[#f2f1ec] hover:bg-[#3c3b35]"
-                        : "cursor-pointer bg-[#efeee9] text-[#1a1915] hover:bg-[#e8e6e0]"
+                        ? "cursor-pointer bg-[#323238] text-[#ffffff] hover:bg-[#3c3c44]"
+                        : "cursor-pointer bg-[#f2f2f2] text-[#111111] hover:bg-[#e7e7ea]"
                       : isDark
-                        ? "cursor-default bg-[#33322d] text-[#f2f1ec]"
-                        : "cursor-default bg-[#efeee9] text-[#1a1915]",
+                        ? "cursor-default bg-[#323238] text-[#ffffff]"
+                        : "cursor-default bg-[#f2f2f2] text-[#111111]",
                 )}
               >
                 {showSheen && (
@@ -889,8 +889,8 @@ export function MeetingScheduler({
                       "absolute top-0 right-0 flex size-[44px] shrink-0 cursor-pointer items-center justify-center rounded-full outline-none transition-colors",
                       "disabled:pointer-events-none disabled:opacity-45",
                       isDark
-                        ? "bg-[#33322d] text-[#f2f1ec] hover:bg-[#3c3b35]"
-                        : "bg-[#efeee9] text-[#1a1915] hover:bg-[#e8e6e0]",
+                        ? "bg-[#323238] text-[#ffffff] hover:bg-[#3c3c44]"
+                        : "bg-[#f2f2f2] text-[#111111] hover:bg-[#e7e7ea]",
                     )}
                   >
                     <CloseIcon className="size-[18px]" />
@@ -952,7 +952,7 @@ export function MeetingScheduler({
                             style={{ height: DAY_H }}
                             className={cn(
                               "rounded-[22px]",
-                              isDark ? "bg-[#33322d]" : "bg-[#efeee9]",
+                              isDark ? "bg-[#323238]" : "bg-[#f2f2f2]",
                             )}
                           />
                         ))}
@@ -965,7 +965,7 @@ export function MeetingScheduler({
                         style={{ width: dayCellW, height: DAY_H }}
                         className={cn(
                           "pointer-events-none absolute top-0 left-0 rounded-[22px]",
-                          isDark ? "bg-[#f2f1ec]" : "bg-[#1a1915]",
+                          isDark ? "bg-[#ffffff]" : "bg-[#111111]",
                         )}
                       />
 
@@ -983,11 +983,11 @@ export function MeetingScheduler({
                                 "relative z-10 flex cursor-pointer flex-col items-center justify-center gap-0.5 rounded-[22px] outline-none transition-colors duration-200",
                                 active
                                   ? isDark
-                                    ? "text-[#1a1915]"
+                                    ? "text-[#111111]"
                                     : "text-white"
                                   : isDark
-                                    ? "text-[#f2f1ec]"
-                                    : "text-[#1a1915]",
+                                    ? "text-[#ffffff]"
+                                    : "text-[#111111]",
                               )}
                             >
                               <span
@@ -995,11 +995,11 @@ export function MeetingScheduler({
                                   "text-[10.5px] font-semibold tracking-[0.04em] uppercase transition-colors",
                                   active
                                     ? isDark
-                                      ? "text-[#1a1915]/65"
+                                      ? "text-[#111111]/65"
                                       : "text-white/65"
                                     : isDark
-                                      ? "text-[#a09d93]"
-                                      : "text-[#8d8a81]",
+                                      ? "text-[#a1a1aa]"
+                                      : "text-[#71717a]",
                                 )}
                               >
                                 {d.toLocaleDateString("en-US", {
@@ -1051,11 +1051,11 @@ export function MeetingScheduler({
                                 "h-[44px] rounded-full transition-colors duration-200",
                                 busy
                                   ? isDark
-                                    ? "bg-[#33322d]/45"
-                                    : "bg-[#efeee9]/45"
+                                    ? "bg-[#323238]/45"
+                                    : "bg-[#f2f2f2]/45"
                                   : isDark
-                                    ? "bg-[#33322d]"
-                                    : "bg-[#efeee9]",
+                                    ? "bg-[#323238]"
+                                    : "bg-[#f2f2f2]",
                               )}
                             />
                           );
@@ -1077,7 +1077,7 @@ export function MeetingScheduler({
                         style={{ width: timeCellW, height: ROW_H }}
                         className={cn(
                           "pointer-events-none absolute top-0 left-0 rounded-full",
-                          isDark ? "bg-[#f2f1ec]" : "bg-[#1a1915]",
+                          isDark ? "bg-[#ffffff]" : "bg-[#111111]",
                         )}
                       />
 
@@ -1100,11 +1100,11 @@ export function MeetingScheduler({
                                     : "cursor-default text-[#b8b5ad] line-through decoration-[1.5px]"
                                   : active
                                     ? isDark
-                                      ? "cursor-pointer text-[#1a1915]"
+                                      ? "cursor-pointer text-[#111111]"
                                       : "cursor-pointer text-white"
                                     : isDark
-                                      ? "cursor-pointer text-[#f2f1ec]"
-                                      : "cursor-pointer text-[#1a1915]",
+                                      ? "cursor-pointer text-[#ffffff]"
+                                      : "cursor-pointer text-[#111111]",
                               )}
                             >
                               {t}
@@ -1159,10 +1159,10 @@ export function MeetingScheduler({
                       "flex h-[44px] w-full items-center justify-center rounded-full text-[15px] font-semibold outline-none transition-colors duration-200",
                       canAdvanceTime
                         ? isDark
-                          ? "cursor-pointer bg-[#f2f1ec] text-[#1a1915] hover:bg-[#e5e4df]"
-                          : "cursor-pointer bg-[#1a1915] text-white hover:bg-[#2d2b25]"
+                          ? "cursor-pointer bg-[#ffffff] text-[#111111] hover:bg-[#e7e7ea]"
+                          : "cursor-pointer bg-[#111111] text-white hover:bg-[#26262b]"
                         : isDark
-                          ? "cursor-default bg-[#5e5b53] text-[#1a1915]/70"
+                          ? "cursor-default bg-[#5e5b53] text-[#111111]/70"
                           : "cursor-default bg-[#cfccc3] text-white",
                     )}
                   >
@@ -1257,11 +1257,11 @@ export function MeetingScheduler({
                             "disabled:pointer-events-none",
                             active
                               ? isDark
-                                ? "bg-[#f2f1ec] text-[#1a1915]"
-                                : "bg-[#1a1915] text-white"
+                                ? "bg-[#ffffff] text-[#111111]"
+                                : "bg-[#111111] text-white"
                               : isDark
-                                ? "bg-[#33322d] text-[#f2f1ec] hover:bg-[#3c3b35]"
-                                : "bg-[#efeee9] text-[#1a1915] hover:bg-[#e8e6e0]",
+                                ? "bg-[#323238] text-[#ffffff] hover:bg-[#3c3c44]"
+                                : "bg-[#f2f2f2] text-[#111111] hover:bg-[#e7e7ea]",
                           )}
                         >
                           <span
@@ -1315,7 +1315,7 @@ export function MeetingScheduler({
                             style={{ height: ROW_H }}
                             className={cn(
                               "rounded-full",
-                              isDark ? "bg-[#33322d]" : "bg-[#efeee9]",
+                              isDark ? "bg-[#323238]" : "bg-[#f2f2f2]",
                             )}
                           />
                         ))}
@@ -1328,7 +1328,7 @@ export function MeetingScheduler({
                         style={{ width: durCellW, height: ROW_H }}
                         className={cn(
                           "pointer-events-none absolute top-0 left-0 rounded-full",
-                          isDark ? "bg-[#f2f1ec]" : "bg-[#1a1915]",
+                          isDark ? "bg-[#ffffff]" : "bg-[#111111]",
                         )}
                       />
 
@@ -1353,11 +1353,11 @@ export function MeetingScheduler({
                                 "disabled:pointer-events-none",
                                 active
                                   ? isDark
-                                    ? "text-[#1a1915]"
+                                    ? "text-[#111111]"
                                     : "text-white"
                                   : isDark
-                                    ? "text-[#f2f1ec]"
-                                    : "text-[#1a1915]",
+                                    ? "text-[#ffffff]"
+                                    : "text-[#111111]",
                               )}
                             >
                               {dur}
@@ -1419,8 +1419,8 @@ export function MeetingScheduler({
                           className={cn(
                             "flex h-[44px] shrink-0 cursor-pointer items-center overflow-hidden rounded-full text-[15px] font-semibold whitespace-nowrap outline-none transition-colors",
                             isDark
-                              ? "bg-[#33322d] text-[#f2f1ec] hover:bg-[#3c3b35]"
-                              : "bg-[#efeee9] text-[#1a1915] hover:bg-[#e8e6e0]",
+                              ? "bg-[#323238] text-[#ffffff] hover:bg-[#3c3c44]"
+                              : "bg-[#f2f2f2] text-[#111111] hover:bg-[#e7e7ea]",
                           )}
                         >
                           <span className="inline-flex items-center gap-1.5 pr-4 pl-3">
@@ -1474,10 +1474,10 @@ export function MeetingScheduler({
                         "flex h-[44px] min-w-0 flex-1 items-center justify-center gap-2 rounded-full px-4 text-[14px] font-semibold whitespace-nowrap outline-none transition-colors duration-200",
                         canSchedule
                           ? isDark
-                            ? "cursor-pointer bg-[#f2f1ec] text-[#1a1915] hover:bg-[#e5e4df]"
-                            : "cursor-pointer bg-[#1a1915] text-white hover:bg-[#2d2b25]"
+                            ? "cursor-pointer bg-[#ffffff] text-[#111111] hover:bg-[#e7e7ea]"
+                            : "cursor-pointer bg-[#111111] text-white hover:bg-[#26262b]"
                           : isDark
-                            ? "cursor-default bg-[#5e5b53] text-[#1a1915]/70"
+                            ? "cursor-default bg-[#5e5b53] text-[#111111]/70"
                             : "cursor-default bg-[#cfccc3] text-white",
                       )}
                     >

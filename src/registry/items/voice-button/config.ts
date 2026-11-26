@@ -35,10 +35,10 @@ export const DEFAULT_VOICE_BUTTON_CONFIG: VoiceButtonConfig = {
 };
 
 export const VOICE_SIZE_OPTIONS: readonly SelectFieldOption[] = [
-  { value: "sm", label: "Small" },
-  { value: "md", label: "Medium" },
-  { value: "lg", label: "Large" },
-  { value: "xl", label: "Extra Large" },
+  { value: "sm", label: "Small (36px)" },
+  { value: "md", label: "Medium (44px)" },
+  { value: "lg", label: "Large (48px)" },
+  { value: "xl", label: "Extra Large (54px)" },
 ];
 
 export const VOICE_THEME_OPTIONS: readonly SelectFieldOption[] = [

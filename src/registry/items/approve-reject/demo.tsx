@@ -59,6 +59,7 @@ export function ApproveRejectDemo({
       rejectedLabel={config.rejectedLabel || "Rejected"}
       autoReset={config.autoReset}
       resetDelayMs={Math.round(config.resetDelaySec * 1000)}
+      showTray={config.showTray}
       size={config.size}
       theme={config.theme}
       replaySignal={playKey || undefined}

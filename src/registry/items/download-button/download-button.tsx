@@ -90,8 +90,8 @@ const SIZE_PRESETS: Record<"sm" | "md" | "lg" | "xl", SizePreset> = {
     gapPx: 10,
     pxPx: 18,
     textClass: "text-sm",
-    iconSize: 19,
-    checkSize: 21,
+    iconSize: 18,
+    checkSize: 20,
   },
   lg: {
     pillHeightClass: "h-12",
@@ -100,8 +100,8 @@ const SIZE_PRESETS: Record<"sm" | "md" | "lg" | "xl", SizePreset> = {
     gapPx: 11,
     pxPx: 22,
     textClass: "text-base",
-    iconSize: 21,
-    checkSize: 23,
+    iconSize: 20,
+    checkSize: 22,
   },
   xl: {
     pillHeightClass: "h-[54px]",
@@ -111,7 +111,7 @@ const SIZE_PRESETS: Record<"sm" | "md" | "lg" | "xl", SizePreset> = {
     pxPx: 24,
     textClass: "text-[17px]",
     iconSize: 22,
-    checkSize: 25,
+    checkSize: 24,
   },
 };
 

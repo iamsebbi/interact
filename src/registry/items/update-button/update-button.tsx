@@ -75,7 +75,7 @@ const SIZE_PRESETS: Record<UpdateButtonSize, SizePreset> = {
     pxPx: 14,
     contentGapPx: 6,
     textClass: "text-xs",
-    iconSize: 14,
+    iconSize: 16,
     checkSize: 18,
   },
   md: {
@@ -86,8 +86,8 @@ const SIZE_PRESETS: Record<UpdateButtonSize, SizePreset> = {
     pxPx: 18,
     contentGapPx: 7,
     textClass: "text-sm",
-    iconSize: 16,
-    checkSize: 21,
+    iconSize: 18,
+    checkSize: 20,
   },
   lg: {
     pillHeightClass: "h-12",
@@ -97,8 +97,8 @@ const SIZE_PRESETS: Record<UpdateButtonSize, SizePreset> = {
     pxPx: 22,
     contentGapPx: 8,
     textClass: "text-base",
-    iconSize: 18,
-    checkSize: 23,
+    iconSize: 20,
+    checkSize: 22,
   },
   xl: {
     pillHeightClass: "h-[54px]",
@@ -108,8 +108,8 @@ const SIZE_PRESETS: Record<UpdateButtonSize, SizePreset> = {
     pxPx: 24,
     contentGapPx: 9,
     textClass: "text-[17px]",
-    iconSize: 19,
-    checkSize: 25,
+    iconSize: 22,
+    checkSize: 24,
   },
 };
 

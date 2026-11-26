@@ -10,6 +10,10 @@ import {
   useState,
 } from "react";
 import { cn } from "@/lib/utils";
+import {
+  StatusPill,
+  type StatusPillState,
+} from "@/registry/items/status-pill/status-pill";
 import type {
   ComponentDemoProps,
   ComponentPreviewProps,
@@ -26,6 +30,8 @@ import {
   type DistortionWavePalette,
   type DistortionWaveStyleInput,
   type DistortionWaveType,
+  defaultStyle,
+  duration,
 } from "./distortion-waves";
 
 export interface DistortionWavesShowcaseProps {
@@ -115,6 +121,44 @@ function ArrowRightIcon({ className }: { className?: string }) {
   );
 }
 
+const POSTER_SLIDES = [
+  {
+    id: "aurora",
+    index: "01",
+    title: "Aurora Drift",
+    subtitle: "Atmospheric gradient",
+    src: "/images/gradients/aurora.jpg",
+  },
+  {
+    id: "cobalt",
+    index: "02",
+    title: "Cobalt Field",
+    subtitle: "Deep spectral bloom",
+    src: "/images/gradients/cobalt.jpg",
+  },
+  {
+    id: "nebula",
+    index: "03",
+    title: "Nebula Pulse",
+    subtitle: "Luminous dispersion",
+    src: "/images/gradients/nebula.jpg",
+  },
+  {
+    id: "solstice",
+    index: "04",
+    title: "Solstice Glow",
+    subtitle: "Warm horizon light",
+    src: "/images/gradients/solstice.jpg",
+  },
+  {
+    id: "prism",
+    index: "05",
+    title: "Prism Refraction",
+    subtitle: "Chromatic wave study",
+    src: "/images/gradients/prism.jpg",
+  },
+] as const;
+
 export function DistortionWavesShowcase({
   type = "vertical",
   palette,
@@ -141,9 +185,14 @@ export function DistortionWavesShowcase({
 }: DistortionWavesShowcaseProps) {
   const waveRef = useRef<DistortionWaveHandle>(null);
   const ctaButtonRef = useRef<HTMLButtonElement>(null);
+  const posterSourceRef = useRef<HTMLDivElement>(null);
   const centerTokenRef = useRef<HTMLDivElement>(null);
   const [revealed, setRevealed] = useState(false);
+  const [slideIndex, setSlideIndex] = useState(0);
+  const [pillStatus, setPillStatus] = useState<StatusPillState>("idle");
   const [frozenScrub, setFrozenScrub] = useState<number | null>(null);
+  const pendingAdvanceResetRef = useRef(false);
+  const pillDoneTimerRef = useRef<number | null>(null);
   const isDark = theme === "dark";
   const prevReplayRef = useRef<number | undefined>(replaySignal);
   const replayRafRef = useRef<number | null>(null);
@@ -160,6 +209,10 @@ export function DistortionWavesShowcase({
   const resolvedPalette = palette ?? (type === "center" ? "green" : "colorful");
 
   useEffect(() => {
+    for (const slide of POSTER_SLIDES) {
+      const img = new Image();
+      img.src = slide.src;
+    }
     return () => {
       if (replayRafRef.current !== null) {
         cancelAnimationFrame(replayRafRef.current);
@@ -167,8 +220,18 @@ export function DistortionWavesShowcase({
       if (returnTimerRef.current !== null) {
         window.clearTimeout(returnTimerRef.current);
       }
+      if (pillDoneTimerRef.current !== null) {
+        window.clearTimeout(pillDoneTimerRef.current);
+      }
     };
   }, []);
+
+  useLayoutEffect(() => {
+    if (!pendingAdvanceResetRef.current) return;
+    pendingAdvanceResetRef.current = false;
+    void slideIndex;
+    waveRef.current?.reset();
+  }, [slideIndex]);
 
   useEffect(() => {
     if (previewActive !== false) return;
@@ -183,6 +246,7 @@ export function DistortionWavesShowcase({
     if (revealedRef.current) {
       setRevealed(false);
     }
+    setPillStatus("idle");
   }, [previewActive]);
 
   useLayoutEffect(() => {
@@ -194,6 +258,7 @@ export function DistortionWavesShowcase({
       replayRafRef.current = requestAnimationFrame(() => {
         replayRafRef.current = null;
         if (previewActiveRef.current !== false) {
+          setPillStatus("syncing");
           setRevealed(true);
         }
       });
@@ -221,6 +286,7 @@ export function DistortionWavesShowcase({
           waveRef.current?.reset();
           setRevealed(false);
         }
+        setPillStatus("idle");
       }
       return;
     }
@@ -247,6 +313,7 @@ export function DistortionWavesShowcase({
       return;
     }
     if (!revealedRef.current) {
+      setPillStatus("syncing");
       setRevealed(true);
       return;
     }
@@ -255,6 +322,7 @@ export function DistortionWavesShowcase({
     replayRafRef.current = requestAnimationFrame(() => {
       replayRafRef.current = null;
       if (previewActiveRef.current !== false) {
+        setPillStatus("syncing");
         setRevealed(true);
       }
     });
@@ -263,6 +331,20 @@ export function DistortionWavesShowcase({
   const handleWaveFinish = useCallback(
     (isRevealed: boolean) => {
       onFinish?.(isRevealed);
+      if (type === "vertical" && isRevealed) {
+        pendingAdvanceResetRef.current = true;
+        setSlideIndex((prev) => (prev + 1) % POSTER_SLIDES.length);
+        setRevealed(false);
+        setPillStatus("done");
+        if (pillDoneTimerRef.current !== null) {
+          window.clearTimeout(pillDoneTimerRef.current);
+        }
+        pillDoneTimerRef.current = window.setTimeout(() => {
+          pillDoneTimerRef.current = null;
+          setPillStatus("idle");
+        }, 900);
+        return;
+      }
       if (isRevealed && previewActiveRef.current === true) {
         if (returnTimerRef.current !== null) {
           window.clearTimeout(returnTimerRef.current);
@@ -275,7 +357,7 @@ export function DistortionWavesShowcase({
         }, 650);
       }
     },
-    [onFinish],
+    [onFinish, type],
   );
 
   const handleAction = useCallback(() => {
@@ -283,11 +365,17 @@ export function DistortionWavesShowcase({
       cancelAnimationFrame(replayRafRef.current);
       replayRafRef.current = null;
     }
+    if (pillDoneTimerRef.current !== null) {
+      window.clearTimeout(pillDoneTimerRef.current);
+      pillDoneTimerRef.current = null;
+    }
     if (revealed) {
       waveRef.current?.reset();
       setRevealed(false);
+      setPillStatus("idle");
       return;
     }
+    setPillStatus("syncing");
     setRevealed(true);
   }, [revealed]);
 
@@ -490,6 +578,118 @@ export function DistortionWavesShowcase({
   }
 
   const isHorizontal = type === "horizontal";
+
+  if (!isHorizontal) {
+    const currentSlide = POSTER_SLIDES[slideIndex % POSTER_SLIDES.length];
+    const nextSlide = POSTER_SLIDES[(slideIndex + 1) % POSTER_SLIDES.length];
+
+    const renderPosterView = (slide: (typeof POSTER_SLIDES)[number]) => (
+      <div
+        style={{
+          width,
+          height: cardHeight,
+          backgroundColor: "#09090b",
+          color: "#ffffff",
+          borderStyle: "none",
+        }}
+        className="relative overflow-hidden text-left antialiased select-none"
+      >
+        {/* biome-ignore lint/performance/noImgElement: local asset serialized inside distortion-waves SVG foreignObject snapshot */}
+        <img
+          src={slide.src}
+          alt={slide.title}
+          decoding="sync"
+          className="absolute inset-0 size-full object-cover"
+        />
+        <div
+          aria-hidden="true"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.04) 45%, rgba(0,0,0,0.72) 100%)",
+          }}
+          className="absolute inset-0"
+        />
+        <div className="relative flex size-full flex-col justify-end p-6 pb-[88px]">
+          <div>
+            <div className="text-[28px] leading-[1.08] font-semibold tracking-[-0.03em] text-white">
+              {slide.title}
+            </div>
+            <div className="mt-1.5 text-[13px] font-normal text-white/75">
+              {slide.subtitle}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+
+    const baseVerticalStyle = defaultStyle("vertical");
+    const resolvedWaveDurationMs = Math.round(
+      duration({
+        ...baseVerticalStyle,
+        travel: travel ?? baseVerticalStyle.travel,
+      }) * 1000,
+    );
+
+    const posterOverlay = (
+      <div className="pointer-events-none absolute inset-x-6 bottom-6 flex items-center justify-center">
+        <div ref={posterSourceRef} className="pointer-events-auto w-full">
+          <StatusPill
+            status={pillStatus}
+            progressDurationMs={resolvedWaveDurationMs}
+            idleLabel="Generate"
+            busyLabel="Generating"
+            busyOneLabel="Generating"
+            doneLabel="Generated"
+            size="md"
+            theme={theme}
+            showTray={false}
+            fullWidth
+            showIdleIcon={false}
+            showDoneSheen={false}
+            onTrigger={handleAction}
+          />
+        </div>
+      </div>
+    );
+
+    return (
+      <div
+        data-theme={theme}
+        className={cn("inline-block max-w-full", className)}
+        style={{
+          padding: 10,
+          borderRadius: 48,
+          backgroundColor: isDark ? "#26262b" : "#ffffff",
+          boxShadow: tokens.cardShadow,
+          ...style,
+        }}
+      >
+        <DistortionWave
+          ref={waveRef}
+          revealed={revealed}
+          type="vertical"
+          palette={resolvedPalette}
+          source={posterSourceRef}
+          waveStyle={waveStyle}
+          scrub={scrub ?? frozenScrub}
+          onFinish={handleWaveFinish}
+          revealedContent={renderPosterView(nextSlide)}
+          overlay={posterOverlay}
+          className="max-w-full"
+          style={{
+            width,
+            maxWidth: "100%",
+            height: cardHeight,
+            backgroundColor: "#09090b",
+            borderRadius: 38,
+            overflow: "hidden",
+          }}
+        >
+          {renderPosterView(currentSlide)}
+        </DistortionWave>
+      </div>
+    );
+  }
 
   const renderTransferView = (isRevealedView: boolean) => {
     const rows = [

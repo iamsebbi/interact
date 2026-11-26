@@ -11,6 +11,7 @@ export interface ApproveRejectConfig {
   rejectedLabel: string;
   autoReset: boolean;
   resetDelaySec: number;
+  showTray: boolean;
   size: ApproveRejectSize;
   theme: ApproveRejectStudioTheme;
 }
@@ -22,15 +23,16 @@ export const DEFAULT_APPROVE_REJECT_CONFIG: ApproveRejectConfig = {
   rejectedLabel: "Rejected",
   autoReset: true,
   resetDelaySec: 2.4,
+  showTray: true,
   size: "xl",
   theme: "light",
 };
 
 export const APPROVE_REJECT_SIZE_OPTIONS: readonly SelectFieldOption[] = [
-  { value: "sm", label: "Small" },
-  { value: "md", label: "Medium" },
-  { value: "lg", label: "Large" },
-  { value: "xl", label: "Extra Large" },
+  { value: "sm", label: "Small (36px)" },
+  { value: "md", label: "Medium (44px)" },
+  { value: "lg", label: "Large (48px)" },
+  { value: "xl", label: "Extra Large (54px)" },
 ];
 
 export const APPROVE_REJECT_THEME_OPTIONS: readonly SelectFieldOption[] = [
@@ -71,6 +73,9 @@ export function buildApproveRejectJsx(config: ApproveRejectConfig): string {
     config.resetDelaySec !== DEFAULT_APPROVE_REJECT_CONFIG.resetDelaySec
   ) {
     lines.push(`  resetDelayMs={${Math.round(config.resetDelaySec * 1000)}}`);
+  }
+  if (!config.showTray) {
+    lines.push(`  showTray={false}`);
   }
   if (config.size !== DEFAULT_APPROVE_REJECT_CONFIG.size) {
     lines.push(`  size="${config.size}"`);

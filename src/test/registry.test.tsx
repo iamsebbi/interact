@@ -1,4 +1,10 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createAgent } from "@ui-sdk/react/agent";
 import { describe, expect, test, vi } from "vitest";
@@ -84,13 +90,57 @@ describe("stateful registry components", () => {
     expect(root).toHaveAttribute("data-status", "approved");
     expect(onApprove).toHaveBeenCalledTimes(1);
 
-    await user.click(screen.getByRole("button", { name: "Undo approval" }));
+    const undoButton = screen.getByRole("button", { name: "Undo approval" });
+    expect(undoButton).toHaveTextContent("Undo");
+    expect(
+      undoButton.querySelector('[data-part="undo-progress"]'),
+    ).toBeInTheDocument();
+
+    await user.click(undoButton);
     expect(root).toHaveAttribute("data-status", "idle");
     expect(onUndo).toHaveBeenCalledTimes(1);
 
     await user.click(screen.getByRole("button", { name: "Reject" }));
     expect(root).toHaveAttribute("data-status", "rejected");
     expect(onReject).toHaveBeenCalledTimes(1);
+  });
+
+  test("ApproveReject absorbs Undo via goo after timeout and resets in showcase mode", () => {
+    vi.useFakeTimers();
+    try {
+      const { container } = render(
+        <ApproveReject autoReset resetDelayMs={1000} />,
+      );
+      const root = container.querySelector('[data-slot="approve-reject"]');
+      expect(root).toHaveAttribute("data-status", "idle");
+      expect(root).toHaveAttribute("data-undo-expired", "false");
+
+      fireEvent.click(screen.getByRole("button", { name: "Approve" }));
+      expect(root).toHaveAttribute("data-status", "approved");
+      expect(root).toHaveAttribute("data-undo-expired", "false");
+      expect(
+        screen.getByRole("button", { name: "Undo approval" }),
+      ).toBeInTheDocument();
+
+      // After resetDelayMs, Undo is absorbed into the selected pill while Approved stays visible
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+      expect(root).toHaveAttribute("data-status", "approved");
+      expect(root).toHaveAttribute("data-undo-expired", "true");
+      expect(
+        screen.queryByRole("button", { name: "Undo approval" }),
+      ).not.toBeInTheDocument();
+
+      // After the showcase hold period, component resets back to idle
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+      expect(root).toHaveAttribute("data-status", "idle");
+      expect(root).toHaveAttribute("data-undo-expired", "false");
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   test("DeleteButton opens confirmation split and handles Cancel and Confirm", async () => {

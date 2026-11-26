@@ -137,111 +137,38 @@ more [Button press] voice button
   cursor: pointer;
 }
 
-.va-top {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px;
-}
-
-.va-top-text {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.va-name {
-  font-size: 16px;
-  line-height: 22px;
-  font-weight: 500;
-}
-
-.va-meta {
-  font-size: 12px;
-  line-height: 16px;
-  color: var(--stage-muted);
-}
-
-.va-divider {
-  height: 1px;
-  flex: none;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--divider) 20%,
-    var(--divider) 80%,
-    transparent
-  );
-}
-
 .va-body {
-  padding: 24px 24px 0;
+  flex: 1;
+  padding: 44px 28px 16px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+  text-align: center;
 }
 
-.va-bubble-row {
-  padding-left: 8px;
-  animation: va-float var(--float-dur) ease-in-out infinite;
+.va-prompt {
+  font-size: 20px;
+  line-height: 27px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--stage-fg);
+  text-wrap: balance;
+  transition: opacity 260ms var(--ease-smooth-out);
 }
 
-@keyframes va-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(calc(var(--float-distance) * -1));
-  }
-}
-
-.va-bubble {
-  position: relative;
-  display: inline-block;
-  max-width: 240px;
-  padding: 8px 12px;
-  border-radius: 18px;
-  background: var(--bubble);
-  font-size: 14px;
-  line-height: 20px;
-}
-
-.va-bubble span {
-  position: relative;
-  z-index: 1;
-}
-
-.va-bubble::before {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: -7px;
-  width: 20px;
-  height: 20px;
-  background: var(--bubble);
-  border-bottom-right-radius: 16px 14px;
-}
-
-.va-bubble::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: -26px;
-  width: 26px;
-  height: 20px;
-  background: var(--stage-surface);
-  border-bottom-right-radius: 10px;
+.va-prompt.is-dimmed {
+  opacity: 0.45;
 }
 
 .va-transcript {
   font-size: 14px;
-  line-height: 20px;
+  line-height: 21px;
   color: var(--stage-fg);
-  text-align: right;
+  text-align: center;
   text-wrap: pretty;
-  padding-left: 32px;
+  max-width: 290px;
 }
 
 .t-stream-w {
@@ -259,17 +186,40 @@ more [Button press] voice button
 
 .va-bottom {
   margin-top: auto;
-  padding: 0 24px 24px;
+  padding: 0 24px 26px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
+}
+
+.va-caption-wrap {
+  display: inline-grid;
+  grid-template-columns: 0fr;
+  margin-left: 0;
+  opacity: 0;
+  filter: blur(3px);
+  transition:
+    grid-template-columns 340ms var(--ease-smooth-out),
+    margin-left 340ms var(--ease-smooth-out),
+    opacity 240ms var(--ease-smooth-out),
+    filter 280ms var(--ease-smooth-out);
+}
+
+.va-mic.is-expanded .va-caption-wrap {
+  grid-template-columns: 1fr;
+  margin-left: 10px;
+  opacity: 1;
+  filter: blur(0);
 }
 
 .va-caption {
-  font-size: 12px;
-  line-height: 16px;
-  color: var(--stage-muted);
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+  color: var(--stage-fg);
 }
 
 .t-text-swap {
@@ -298,16 +248,23 @@ more [Button press] voice button
 }
 
 .va-mic {
-  --press-scale: 0.95;
-  width: 48px;
+  --press-scale: 0.96;
   height: 48px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
+  padding: 0 15px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: var(--va-btn-bg);
   box-shadow: var(--va-btn-shadow);
   color: var(--stage-fg);
-  transition: transform var(--press-dur) var(--ease-smooth-out);
+  transition:
+    transform var(--press-dur) var(--ease-smooth-out),
+    padding 340ms var(--ease-smooth-out);
+}
+
+.va-mic.is-expanded {
+  padding: 0 18px;
 }
 
 :where(.va-card) .va-mic {

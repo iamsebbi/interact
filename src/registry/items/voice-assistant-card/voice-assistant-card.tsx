@@ -2,7 +2,6 @@
 
 import { useReducedMotion } from "motion/react";
 import {
-  type CSSProperties,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -113,9 +112,9 @@ function getThinkingMotion(): VoiceBeamMotion {
 }
 
 export function VoiceAssistantCard({
-  assistantName = "Kai",
-  assistantRole = "Personal assistant",
-  initials = "KA",
+  assistantName: _assistantName = "Kai",
+  assistantRole: _assistantRole = "Personal assistant",
+  initials: _initials = "KA",
   greeting = "What's on your mind today?",
   transcript = DEFAULT_TRANSCRIPT,
   wordIntervalMs = DEFAULT_WORD_MS,
@@ -257,15 +256,12 @@ export function VoiceAssistantCard({
   }, [strength]);
 
   const live = phase === "listening";
-  const avatarStyle = {
-    "--av-bg": "#DCEFE8",
-    "--av-fg": "#1E3F35",
-    "--av-size": "32px",
-  } as CSSProperties;
+  const expanded = phase !== "idle";
 
   return (
     <div
       data-theme={theme}
+      data-phase={phase}
       data-paused={paused ? "true" : undefined}
       className={cn("va-card", className)}
     >
@@ -283,27 +279,13 @@ export function VoiceAssistantCard({
       >
         <div className="va-inner">
           <div className="va-content">
-            <header className="va-top">
-              <span
-                className="t-av"
-                style={avatarStyle}
-                role="img"
-                aria-label={assistantName}
-              >
-                {initials.slice(0, 2).toUpperCase()}
-              </span>
-              <div className="va-top-text">
-                <span className="va-name">{assistantName}</span>
-                <span className="va-meta">{assistantRole}</span>
-              </div>
-            </header>
-            <div className="va-divider" aria-hidden="true" />
             <div className="va-body">
-              <div className="va-bubble-row">
-                <p className="va-bubble" style={{ margin: 0 }}>
-                  <span>{greeting}</span>
-                </p>
-              </div>
+              <p
+                className={cn("va-prompt", phase !== "idle" && "is-dimmed")}
+                style={{ margin: 0 }}
+              >
+                {greeting}
+              </p>
               <p
                 className="va-transcript"
                 key={runKey}
@@ -324,12 +306,13 @@ export function VoiceAssistantCard({
               </p>
             </div>
             <div className="va-bottom">
-              <span className="va-caption">
-                <SwapText value={CAPTIONS[phase]} reduceMotion={reduceMotion} />
-              </span>
               <button
                 type="button"
-                className={`va-mic${live ? " is-live" : ""}`}
+                className={cn(
+                  "va-mic",
+                  live && "is-live",
+                  expanded && "is-expanded",
+                )}
                 aria-label={live ? "Stop speaking" : "Start speaking"}
                 aria-pressed={live}
                 onClick={onTap}
@@ -340,6 +323,14 @@ export function VoiceAssistantCard({
                   <i />
                   <i />
                   <i />
+                </span>
+                <span className="va-caption-wrap" aria-hidden={!expanded}>
+                  <span className="va-caption">
+                    <SwapText
+                      value={CAPTIONS[phase]}
+                      reduceMotion={reduceMotion}
+                    />
+                  </span>
                 </span>
               </button>
             </div>

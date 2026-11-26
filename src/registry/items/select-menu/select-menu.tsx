@@ -231,7 +231,7 @@ function SelectRow({
         isOpen && !disabled ? "cursor-pointer" : "pointer-events-none",
         disabled && "opacity-40",
         isSelected && "font-medium",
-        isDark ? "text-[#f2f1ec]" : "text-[#1a1915]",
+        isDark ? "text-[#ffffff]" : "text-[#111111]",
       )}
     >
       <motion.span
@@ -1067,12 +1067,12 @@ export function SelectMenu({
             "absolute top-0 left-0 cursor-pointer overflow-hidden outline-none will-change-[transform,width,height]",
             "focus-visible:ring-2 focus-visible:ring-offset-2",
             isDark
-              ? "focus-visible:ring-[#6e88ff]/60 focus-visible:ring-offset-[#252420]"
-              : "focus-visible:ring-[#3355ff]/55 focus-visible:ring-offset-white",
+              ? "focus-visible:ring-[#60a5fa]/60 focus-visible:ring-offset-[#26262b]"
+              : "focus-visible:ring-[#0062d6]/55 focus-visible:ring-offset-white",
             showTray
               ? isDark
-                ? "bg-[#252420] shadow-[0_0_0_1px_rgba(255,255,255,0.07),0_1px_1px_rgba(0,0,0,0.3),0_6px_16px_-6px_rgba(0,0,0,0.45),0_22px_44px_-24px_rgba(0,0,0,0.6)]"
-                : "bg-white shadow-[0_0_0_1px_rgba(26,25,21,0.06),0_1px_1px_rgba(26,25,21,0.04),0_6px_16px_-6px_rgba(26,25,21,0.1),0_22px_44px_-24px_rgba(26,25,21,0.16)]"
+                ? "bg-[#26262b] shadow-[0_0_0_1px_rgba(255,255,255,0.07),0_1px_1px_rgba(0,0,0,0.3),0_6px_16px_-6px_rgba(0,0,0,0.45),0_22px_44px_-24px_rgba(0,0,0,0.6)]"
+                : "bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.06),0_1px_1px_rgba(0,0,0,0.04),0_6px_16px_-6px_rgba(0,0,0,0.1),0_22px_44px_-24px_rgba(0,0,0,0.16)]"
               : "bg-transparent shadow-none",
           )}
         >
@@ -1091,11 +1091,11 @@ export function SelectMenu({
               "pointer-events-none absolute top-0 z-0 transition-colors duration-200",
               isDark
                 ? closedHovered && !isOpen
-                  ? "bg-[#3c3b35]"
-                  : "bg-[#36352f]"
+                  ? "bg-[#3c3c44]"
+                  : "bg-[#323238]"
                 : closedHovered && !isOpen
-                  ? "bg-[#e8e6e0]"
-                  : "bg-[#efeee9]",
+                  ? "bg-[#e7e7ea]"
+                  : "bg-[#f2f2f2]",
             )}
           />
 
@@ -1118,7 +1118,7 @@ export function SelectMenu({
                 prefixHidden
                   ? "opacity-0 duration-100"
                   : "opacity-100 duration-200",
-                isDark ? "text-[#a09d93]" : "text-[#8d8a81]",
+                isDark ? "text-[#a1a1aa]" : "text-[#71717a]",
               )}
             >
               {label}
@@ -1189,11 +1189,11 @@ export function SelectMenu({
               "pointer-events-none absolute top-0 left-0 z-20 inline-block transition-colors duration-200",
               iconMode === "check"
                 ? isDark
-                  ? "text-[#f2f1ec]"
-                  : "text-[#1a1915]"
+                  ? "text-[#ffffff]"
+                  : "text-[#111111]"
                 : isDark
-                  ? "text-[#a09d93]"
-                  : "text-[#8d8a81]",
+                  ? "text-[#a1a1aa]"
+                  : "text-[#71717a]",
             )}
           >
             <motion.svg

@@ -55,7 +55,7 @@ const SIZE_PRESETS: Record<DeleteButtonSize, SizePreset> = {
   sm: {
     pillHeightClass: "h-9",
     btnPx: 36,
-    gapPx: 8,
+    gapPx: 9,
     gooBlur: 5,
     pxPx: 14,
     contentGapPx: 6,
@@ -75,9 +75,9 @@ const SIZE_PRESETS: Record<DeleteButtonSize, SizePreset> = {
   lg: {
     pillHeightClass: "h-12",
     btnPx: 48,
-    gapPx: 10,
+    gapPx: 11,
     gooBlur: 6,
-    pxPx: 20,
+    pxPx: 22,
     contentGapPx: 8,
     textClass: "text-base",
     iconSize: 20,

@@ -719,8 +719,8 @@ export function CodeInput({
               "relative overflow-hidden transition-[background-color,box-shadow] duration-200",
               showTray
                 ? isDark
-                  ? "bg-[#252420] shadow-[0_0_0_1px_rgba(255,255,255,0.07),0_1px_1px_rgba(0,0,0,0.3),0_6px_16px_-6px_rgba(0,0,0,0.45),0_22px_44px_-24px_rgba(0,0,0,0.6)]"
-                  : "bg-white shadow-[0_0_0_1px_rgba(26,25,21,0.06),0_1px_1px_rgba(26,25,21,0.04),0_6px_16px_-6px_rgba(26,25,21,0.1),0_22px_44px_-24px_rgba(26,25,21,0.16)]"
+                  ? "bg-[#26262b] shadow-[0_0_0_1px_rgba(255,255,255,0.07),0_1px_1px_rgba(0,0,0,0.3),0_6px_16px_-6px_rgba(0,0,0,0.45),0_22px_44px_-24px_rgba(0,0,0,0.6)]"
+                  : "bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.06),0_1px_1px_rgba(0,0,0,0.04),0_6px_16px_-6px_rgba(0,0,0,0.1),0_22px_44px_-24px_rgba(0,0,0,0.16)]"
                 : "bg-transparent shadow-none",
             )}
           >
@@ -757,11 +757,11 @@ export function CodeInput({
                 "pointer-events-none absolute flex items-center justify-center overflow-hidden rounded-full font-semibold whitespace-nowrap transition-colors duration-200",
                 state === "ok"
                   ? isDark
-                    ? "bg-[#2dc46b] text-white"
-                    : "bg-[#1fb257] text-white"
+                    ? "bg-[#16a34a] text-white"
+                    : "bg-[#15803d] text-white"
                   : isDark
-                    ? "bg-[#33322d] text-[#f2f1ec]"
-                    : "bg-[#efeee9] text-[#1a1915]",
+                    ? "bg-[#323238] text-[#ffffff]"
+                    : "bg-[#f2f2f2] text-[#111111]",
               )}
             >
               {showSheen && (
@@ -893,11 +893,11 @@ export function CodeInput({
                       "absolute top-0 left-0 flex items-center justify-center overflow-hidden font-semibold transition-colors duration-200",
                       isBad
                         ? isDark
-                          ? "bg-[#43262a] text-[#ff5c61]"
-                          : "bg-[#fce9e8] text-[#e5484d]"
+                          ? "bg-[#451a1f] text-[#ff5c61]"
+                          : "bg-[#fef2f2] text-[#dc2626]"
                         : isDark
-                          ? "bg-[#33322d] text-[#f2f1ec]"
-                          : "bg-[#efeee9] text-[#1a1915]",
+                          ? "bg-[#323238] text-[#ffffff]"
+                          : "bg-[#f2f2f2] text-[#111111]",
                     )}
                   >
                     <AnimatePresence mode="popLayout" initial={false}>
@@ -952,8 +952,8 @@ export function CodeInput({
                   width: cellW,
                   height,
                   boxShadow: isDark
-                    ? "inset 0 0 0 2px #f2f1ec"
-                    : "inset 0 0 0 2px #1a1915",
+                    ? "inset 0 0 0 2px #ffffff"
+                    : "inset 0 0 0 2px #111111",
                 }}
                 className="pointer-events-none absolute top-0 left-0 z-10 flex items-center justify-center"
               >
@@ -969,7 +969,7 @@ export function CodeInput({
                     }}
                     className={cn(
                       "h-[40%] w-[1.5px] rounded-full",
-                      isDark ? "bg-[#f2f1ec]" : "bg-[#1a1915]",
+                      isDark ? "bg-[#ffffff]" : "bg-[#111111]",
                     )}
                   />
                 )}

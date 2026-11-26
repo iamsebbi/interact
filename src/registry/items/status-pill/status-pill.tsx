@@ -41,6 +41,9 @@ export interface StatusPillProps {
   remaining?: number;
   /** Controlled total file count when `status="syncing"`. */
   total?: number;
+  /** Optional explicit progress (0..1) or CSS transition duration in ms while `status="syncing"`. */
+  progress?: number;
+  progressDurationMs?: number;
   /** Number of files simulated in interactive mode (default 4). */
   demoFiles?: number;
   /** Controls whether interactive demo runs alternate failure, always succeed, or always fail. */
@@ -51,6 +54,9 @@ export interface StatusPillProps {
   bounce?: number;
   speed?: number;
   showTray?: boolean;
+  fullWidth?: boolean;
+  showIdleIcon?: boolean;
+  showDoneSheen?: boolean;
   /** Incrementing counter that starts a fresh sync run (used by previews/Studio Play). */
   replaySignal?: number;
   /** Pauses & smoothly resets to idle when false in grid previews. */
@@ -59,6 +65,7 @@ export interface StatusPillProps {
     status: StatusPillState,
     detail?: { left?: number; total?: number },
   ) => void;
+  onTrigger?: () => void;
   onRetry?: (remaining: number) => void;
   className?: string;
   style?: CSSProperties;
@@ -189,6 +196,8 @@ export function StatusPill({
   status: controlledStatus,
   remaining: controlledRemaining,
   total: controlledTotal,
+  progress: controlledProgress,
+  progressDurationMs,
   demoFiles = 4,
   demoMode = "alternate",
   resetAfterMs = 1800,
@@ -197,9 +206,13 @@ export function StatusPill({
   bounce = 1,
   speed = 1,
   showTray = true,
+  fullWidth = false,
+  showIdleIcon = true,
+  showDoneSheen = true,
   replaySignal,
   active,
   onStatusChange,
+  onTrigger,
   onRetry,
   className,
   style,
@@ -223,6 +236,7 @@ export function StatusPill({
   const [internalLeft, setInternalLeft] = useState(safeFiles);
   const [showRetry, setShowRetry] = useState(false);
   const [showSheen, setShowSheen] = useState(false);
+  const [timedProgressStarted, setTimedProgressStarted] = useState(false);
 
   const status = isControlled ? controlledStatus : internalStatus;
   const totalCount = Math.max(
@@ -305,7 +319,7 @@ export function StatusPill({
   }, [clampedSpeed, reduceMotion, status]);
 
   useEffect(() => {
-    if (status === "done" && !reduceMotion) {
+    if (status === "done" && showDoneSheen && !reduceMotion) {
       const t1 = window.setTimeout(
         () => setShowSheen(true),
         Math.round(320 / clampedSpeed),
@@ -320,9 +334,25 @@ export function StatusPill({
       };
     }
     setShowSheen(false);
-  }, [clampedSpeed, reduceMotion, status]);
+  }, [clampedSpeed, reduceMotion, showDoneSheen, status]);
 
   useEffect(() => clearTimers, [clearTimers]);
+
+  useEffect(() => {
+    if (
+      status !== "syncing" ||
+      progressDurationMs === undefined ||
+      reduceMotion
+    ) {
+      setTimedProgressStarted(false);
+      return;
+    }
+    setTimedProgressStarted(false);
+    const raf = window.requestAnimationFrame(() => {
+      setTimedProgressStarted(true);
+    });
+    return () => window.cancelAnimationFrame(raf);
+  }, [status, progressDurationMs, reduceMotion]);
 
   const startDemoRun = useCallback(
     (resumeFrom?: number) => {
@@ -402,7 +432,13 @@ export function StatusPill({
     status === "done"
       ? 1
       : status === "syncing"
-        ? Math.max(0.08, Math.min(1, (totalCount - leftCount) / totalCount))
+        ? progressDurationMs !== undefined
+          ? timedProgressStarted || reduceMotion
+            ? 1
+            : 0.06
+          : controlledProgress !== undefined
+            ? Math.max(0.06, Math.min(1, controlledProgress))
+            : Math.max(0.08, Math.min(1, (totalCount - leftCount) / totalCount))
         : 0;
   const dashOffset = RING_CIRCUMFERENCE * (1 - progress);
 
@@ -423,7 +459,8 @@ export function StatusPill({
     mainWidth + (showRetry ? preset.gap + retryWidth : 0) + 2 * preset.pad;
   const trayHeight = preset.height + 2 * preset.pad;
 
-  const isClickableIdle = !isControlled && status === "idle";
+  const isClickableIdle =
+    status === "idle" && (!isControlled || Boolean(onTrigger));
 
   return (
     <MotionConfig reducedMotion="user">
@@ -432,7 +469,8 @@ export function StatusPill({
         data-status={status}
         data-theme={theme}
         className={cn(
-          "relative inline-block select-none tabular-nums",
+          "relative select-none tabular-nums",
+          fullWidth ? "block w-full" : "inline-block",
           className,
         )}
         style={style}
@@ -481,19 +519,20 @@ export function StatusPill({
         </div>
 
         <motion.div
-          animate={{ width: trayWidth }}
+          animate={fullWidth ? undefined : { width: trayWidth }}
           transition={reduceMotion ? { duration: 0 } : morphSpring}
           style={{
+            width: fullWidth ? "100%" : undefined,
             height: trayHeight,
-            padding: preset.pad,
-            borderRadius: trayHeight / 2,
+            padding: fullWidth && !showTray ? 0 : preset.pad,
+            borderRadius: fullWidth ? 9999 : trayHeight / 2,
           }}
           className={cn(
             "relative flex items-center overflow-hidden transition-[background-color,box-shadow] duration-200",
             showTray
               ? isDark
-                ? "bg-[#252420] shadow-[0_0_0_1px_rgba(255,255,255,0.07),0_1px_1px_rgba(0,0,0,0.3),0_6px_16px_-6px_rgba(0,0,0,0.45),0_22px_44px_-24px_rgba(0,0,0,0.6)]"
-                : "bg-white shadow-[0_0_0_1px_rgba(26,25,21,0.06),0_1px_1px_rgba(26,25,21,0.04),0_6px_16px_-6px_rgba(26,25,21,0.1),0_22px_44px_-24px_rgba(26,25,21,0.16)]"
+                ? "bg-[#26262b] shadow-[0_0_0_1px_rgba(255,255,255,0.07),0_1px_1px_rgba(0,0,0,0.3),0_6px_16px_-6px_rgba(0,0,0,0.45),0_22px_44px_-24px_rgba(0,0,0,0.6)]"
+                : "bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.06),0_1px_1px_rgba(0,0,0,0.04),0_6px_16px_-6px_rgba(0,0,0,0.1),0_22px_44px_-24px_rgba(0,0,0,0.16)]"
               : "bg-transparent shadow-none",
           )}
         >
@@ -507,12 +546,14 @@ export function StatusPill({
             aria-label={currentLabel}
             disabled={!isClickableIdle}
             onClick={() => {
-              if (isClickableIdle) startDemoRun();
+              if (!isClickableIdle) return;
+              if (isControlled) onTrigger?.();
+              else startDemoRun();
             }}
             render={
               <motion.button
                 type="button"
-                animate={{ width: mainWidth }}
+                animate={fullWidth ? undefined : { width: mainWidth }}
                 transition={reduceMotion ? { duration: 0 } : morphSpring}
                 whileHover={
                   isClickableIdle && !reduceMotion ? { scale: 1.02 } : undefined
@@ -521,6 +562,8 @@ export function StatusPill({
                   isClickableIdle && !reduceMotion ? { scale: 0.97 } : undefined
                 }
                 style={{
+                  borderRadius: 9999,
+                  width: fullWidth && !showRetry ? "100%" : undefined,
                   height: preset.height,
                   fontSize: preset.fontSize,
                   paddingLeft: Math.round(
@@ -534,26 +577,28 @@ export function StatusPill({
               />
             }
             className={cn(
-              "relative flex shrink-0 items-center gap-2 overflow-hidden rounded-full font-semibold whitespace-nowrap outline-none transition-colors duration-200",
+              "relative flex shrink-0 items-center overflow-hidden rounded-full font-semibold whitespace-nowrap outline-none transition-colors duration-200",
+              status === "idle" && !showIdleIcon ? "gap-0" : "gap-2",
+              fullWidth && "flex-1 justify-center",
               "focus-visible:ring-2 focus-visible:ring-offset-2",
               isDark
-                ? "focus-visible:ring-[#6e88ff]/60 focus-visible:ring-offset-[#252420]"
-                : "focus-visible:ring-[#3355ff]/55 focus-visible:ring-offset-white",
+                ? "focus-visible:ring-[#60a5fa]/60 focus-visible:ring-offset-[#26262b]"
+                : "focus-visible:ring-[#0062d6]/55 focus-visible:ring-offset-white",
               status === "done"
                 ? isDark
-                  ? "cursor-default bg-[#2dc46b] text-white"
-                  : "cursor-default bg-[#1fb257] text-white"
+                  ? "cursor-default bg-[#16a34a] text-white"
+                  : "cursor-default bg-[#15803d] text-white"
                 : status === "failed"
                   ? isDark
-                    ? "cursor-default bg-[#43262a] text-[#ff5c61]"
-                    : "cursor-default bg-[#fce9e8] text-[#e5484d]"
+                    ? "cursor-default bg-[#451a1f] text-[#ff5c61]"
+                    : "cursor-default bg-[#fef2f2] text-[#dc2626]"
                   : isClickableIdle
                     ? isDark
-                      ? "cursor-pointer bg-[#33322d] text-[#f2f1ec] hover:bg-[#3c3b35]"
-                      : "cursor-pointer bg-[#efeee9] text-[#1a1915] hover:bg-[#e8e6e0]"
+                      ? "cursor-pointer bg-[#323238] text-[#ffffff] hover:bg-[#3c3c44]"
+                      : "cursor-pointer bg-[#f2f2f2] text-[#111111] hover:bg-[#e7e7ea]"
                     : isDark
-                      ? "cursor-default bg-[#33322d] text-[#f2f1ec]"
-                      : "cursor-default bg-[#efeee9] text-[#1a1915]",
+                      ? "cursor-default bg-[#323238] text-[#ffffff]"
+                      : "cursor-default bg-[#f2f2f2] text-[#111111]",
             )}
           >
             {showSheen && (
@@ -571,101 +616,105 @@ export function StatusPill({
             )}
 
             {/* Status icon / progress ring slot */}
-            <span
-              style={{ width: preset.iconSize, height: preset.iconSize }}
-              className="relative inline-flex shrink-0 items-center justify-center"
-            >
-              <AnimatePresence mode="popLayout" initial={false}>
-                {status === "syncing" ? (
-                  <motion.svg
-                    key="ring"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                    initial={
-                      reduceMotion
-                        ? false
-                        : { opacity: 0, scale: 0.6, filter: "blur(3px)" }
-                    }
-                    animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                    exit={
-                      reduceMotion
-                        ? undefined
-                        : { opacity: 0, scale: 0.6, filter: "blur(3px)" }
-                    }
-                    transition={popSpring}
-                    className="h-[116%] w-[116%] -rotate-90"
-                  >
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r={RING_RADIUS}
-                      fill="none"
-                      strokeWidth={2.6}
-                      stroke={
-                        isDark
-                          ? "rgba(110, 136, 255, 0.24)"
-                          : "rgba(51, 85, 255, 0.22)"
+            {(status !== "idle" || showIdleIcon) && (
+              <span
+                style={{ width: preset.iconSize, height: preset.iconSize }}
+                className="relative inline-flex shrink-0 items-center justify-center"
+              >
+                <AnimatePresence mode="popLayout" initial={false}>
+                  {status === "syncing" ? (
+                    <motion.svg
+                      key="ring"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                      initial={
+                        reduceMotion
+                          ? false
+                          : { opacity: 0, scale: 0.6, filter: "blur(3px)" }
                       }
-                    />
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r={RING_RADIUS}
-                      fill="none"
-                      strokeWidth={2.6}
-                      strokeLinecap="round"
-                      stroke={isDark ? "#6e88ff" : "#3355ff"}
-                      strokeDasharray={RING_CIRCUMFERENCE.toFixed(2)}
-                      strokeDashoffset={dashOffset.toFixed(2)}
-                      style={{
-                        transition: reduceMotion
-                          ? "none"
-                          : "stroke-dashoffset 380ms cubic-bezier(0.3, 0.7, 0.3, 1)",
+                      animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                      exit={
+                        reduceMotion
+                          ? undefined
+                          : { opacity: 0, scale: 0.6, filter: "blur(3px)" }
+                      }
+                      transition={popSpring}
+                      className="h-[116%] w-[116%] -rotate-90"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r={RING_RADIUS}
+                        fill="none"
+                        strokeWidth={2.6}
+                        stroke={
+                          isDark
+                            ? "rgba(110, 136, 255, 0.24)"
+                            : "rgba(51, 85, 255, 0.22)"
+                        }
+                      />
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r={RING_RADIUS}
+                        fill="none"
+                        strokeWidth={2.6}
+                        strokeLinecap="round"
+                        stroke={isDark ? "#60a5fa" : "#0062d6"}
+                        strokeDasharray={RING_CIRCUMFERENCE.toFixed(2)}
+                        strokeDashoffset={dashOffset.toFixed(2)}
+                        style={{
+                          transition: reduceMotion
+                            ? "none"
+                            : progressDurationMs !== undefined
+                              ? `stroke-dashoffset ${progressDurationMs}ms linear`
+                              : "stroke-dashoffset 380ms cubic-bezier(0.3, 0.7, 0.3, 1)",
+                        }}
+                      />
+                    </motion.svg>
+                  ) : (
+                    <motion.span
+                      key={status}
+                      initial={
+                        reduceMotion
+                          ? false
+                          : {
+                              opacity: 0,
+                              scale: 0.45,
+                              rotate: -35,
+                              filter: "blur(4px)",
+                            }
+                      }
+                      animate={{
+                        opacity: 1,
+                        scale: 1,
+                        rotate: 0,
+                        filter: "blur(0px)",
                       }}
-                    />
-                  </motion.svg>
-                ) : (
-                  <motion.span
-                    key={status}
-                    initial={
-                      reduceMotion
-                        ? false
-                        : {
-                            opacity: 0,
-                            scale: 0.45,
-                            rotate: -35,
-                            filter: "blur(4px)",
-                          }
-                    }
-                    animate={{
-                      opacity: 1,
-                      scale: 1,
-                      rotate: 0,
-                      filter: "blur(0px)",
-                    }}
-                    exit={
-                      reduceMotion
-                        ? undefined
-                        : { opacity: 0, scale: 0.45, filter: "blur(4px)" }
-                    }
-                    transition={popSpring}
-                    className={cn(
-                      "absolute inset-0 flex items-center justify-center",
-                      status === "idle" &&
-                        (isDark ? "text-[#a09d93]" : "text-[#8d8a81]"),
-                    )}
-                  >
-                    {status === "done" ? (
-                      <CheckIcon className="h-full w-full" />
-                    ) : status === "failed" ? (
-                      <AlertIcon className="h-full w-full" />
-                    ) : (
-                      <CloudCheckIcon className="h-full w-full" />
-                    )}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </span>
+                      exit={
+                        reduceMotion
+                          ? undefined
+                          : { opacity: 0, scale: 0.45, filter: "blur(4px)" }
+                      }
+                      transition={popSpring}
+                      className={cn(
+                        "absolute inset-0 flex items-center justify-center",
+                        status === "idle" &&
+                          (isDark ? "text-[#a1a1aa]" : "text-[#71717a]"),
+                      )}
+                    >
+                      {status === "done" ? (
+                        <CheckIcon className="h-full w-full" />
+                      ) : status === "failed" ? (
+                        <AlertIcon className="h-full w-full" />
+                      ) : (
+                        <CloudCheckIcon className="h-full w-full" />
+                      )}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </span>
+            )}
 
             {/* Morphing status label */}
             <span className="relative inline-flex items-center overflow-hidden">
@@ -760,8 +809,8 @@ export function StatusPill({
                 className={cn(
                   "flex shrink-0 cursor-pointer items-center gap-2 rounded-full font-semibold whitespace-nowrap outline-none transition-colors",
                   isDark
-                    ? "bg-[#f2f1ec] text-[#1a1915] hover:bg-[#e5e4df]"
-                    : "bg-[#1a1915] text-white hover:bg-[#2d2b25]",
+                    ? "bg-[#ffffff] text-[#111111] hover:bg-[#e7e7ea]"
+                    : "bg-[#111111] text-white hover:bg-[#26262b]",
                 )}
               >
                 <span

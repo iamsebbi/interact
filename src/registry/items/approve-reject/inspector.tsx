@@ -71,6 +71,13 @@ export function ApproveRejectInspector({
       )}
 
       <Switch
+        label="Tray"
+        checked={config.showTray}
+        onCheckedChange={(showTray) => patch({ showTray })}
+        aria-label="Toggle pill tray container around buttons"
+      />
+
+      <Switch
         label="Auto Reset"
         checked={config.autoReset}
         onCheckedChange={(autoReset) => patch({ autoReset })}

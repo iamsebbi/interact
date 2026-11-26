@@ -183,11 +183,6 @@
           "target": "components/animate-ui/icons/check.tsx"
         },
         {
-          "path": "src/registry/icons/undo-2.tsx",
-          "type": "registry:component",
-          "target": "components/animate-ui/icons/undo-2.tsx"
-        },
-        {
           "path": "src/registry/icons/x.tsx",
           "type": "registry:component",
           "target": "components/animate-ui/icons/x.tsx"

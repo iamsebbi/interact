@@ -99,19 +99,19 @@ const SIZE_PRESETS: Record<SearchButtonSize, SizePreset> = {
   lg: {
     btnPx: 48,
     textClass: "text-base",
-    iconSize: 19,
+    iconSize: 20,
     iconSlotPx: 42,
     closeBtnPx: 36,
-    closeIconSize: 17,
+    closeIconSize: 18,
     defaultExpandedWidth: 300,
   },
   xl: {
     btnPx: 54,
     textClass: "text-[17px]",
-    iconSize: 20,
+    iconSize: 22,
     iconSlotPx: 47,
     closeBtnPx: 40,
-    closeIconSize: 18,
+    closeIconSize: 20,
     defaultExpandedWidth: 320,
   },
 };

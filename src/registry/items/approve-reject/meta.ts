@@ -11,7 +11,7 @@ export const approveRejectMeta: ComponentMeta<ApproveRejectConfig> = {
   tagline:
     "Contextual two-button decision pair where the chosen pill expands into confirmation and the opposite morphs into Undo",
   description:
-    "A contextual two-button decision pair for React built on ui-sdk Button primitives. Both pills rest in neutral surfaces with colored X and Check icons; picking Approve or Reject expands that pill into a colored confirmation state while the opposite pill morphs into a circular Undo button.\nMade for agent approvals, PR reviews, moderation queues, and confirmation bars.",
+    "A contextual two-button decision pair for React built on ui-sdk Button primitives. Both pills rest in neutral surfaces with colored X and Check icons; picking Approve or Reject expands that pill into a colored confirmation state while the opposite pill morphs into an Undo pill with a countdown progress circle.\nMade for agent approvals, PR reviews, moderation queues, and confirmation bars.",
   categories: ["Actions"],
   masonryHeight: 210,
   cardHeightClass: "h-[195px] sm:h-[210px]",
@@ -25,7 +25,6 @@ export const approveRejectMeta: ComponentMeta<ApproveRejectConfig> = {
   sourceFiles: [
     "src/registry/items/approve-reject/approve-reject.tsx",
     "src/registry/icons/check.tsx",
-    "src/registry/icons/undo-2.tsx",
     "src/registry/icons/x.tsx",
   ],
   defaultConfig: DEFAULT_APPROVE_REJECT_CONFIG,
@@ -70,6 +69,13 @@ export const approveRejectMeta: ComponentMeta<ApproveRejectConfig> = {
       defaultValue: "true",
       description:
         "Automatically returns to idle after resetDelayMs if Undo is not pressed.",
+    },
+    {
+      name: "showTray",
+      type: "boolean",
+      defaultValue: "true",
+      description:
+        "Renders a rounded pill tray with padding behind the two buttons.",
     },
     {
       name: "resetDelayMs",
