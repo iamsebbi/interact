@@ -16,7 +16,7 @@ export const distortionWavesMeta: ComponentMeta<DistortionWavesConfig> = {
   masonryHeight: 400,
   cardHeightClass: "h-[380px] sm:h-[400px]",
   gridScale: 0.58,
-  previewBounds: { width: 380, height: 447 },
+  previewBounds: { width: 380, height: 475 },
   dependencies: ["react", "distortion-waves"],
   sourceFiles: ["src/registry/items/distortion-waves/distortion-waves.tsx"],
   defaultConfig: DEFAULT_DISTORTION_WAVES_CONFIG,

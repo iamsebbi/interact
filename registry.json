@@ -256,6 +256,7 @@
         "@ui-sdk/core",
         "react",
         "motion",
+        "@animate-ui/react",
         "clsx",
         "tailwind-merge"
       ],
@@ -264,6 +265,16 @@
           "path": "src/registry/items/select-menu/select-menu.tsx",
           "type": "registry:ui",
           "target": "components/ui/select-menu.tsx"
+        },
+        {
+          "path": "src/registry/icons/check.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/check.tsx"
+        },
+        {
+          "path": "src/registry/icons/chevrons-up-down.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/chevrons-up-down.tsx"
         }
       ]
     },
@@ -298,6 +309,7 @@
         "@ui-sdk/core",
         "react",
         "motion",
+        "@animate-ui/react",
         "clsx",
         "tailwind-merge"
       ],
@@ -306,6 +318,26 @@
           "path": "src/registry/items/status-pill/status-pill.tsx",
           "type": "registry:ui",
           "target": "components/ui/status-pill.tsx"
+        },
+        {
+          "path": "src/registry/icons/check.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/check.tsx"
+        },
+        {
+          "path": "src/registry/icons/circle-alert.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/circle-alert.tsx"
+        },
+        {
+          "path": "src/registry/icons/cloud-check.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/cloud-check.tsx"
+        },
+        {
+          "path": "src/registry/icons/refresh-cw.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/refresh-cw.tsx"
         }
       ]
     },
@@ -319,6 +351,7 @@
         "@ui-sdk/core",
         "react",
         "motion",
+        "@animate-ui/react",
         "clsx",
         "tailwind-merge"
       ],
@@ -327,6 +360,16 @@
           "path": "src/registry/items/code-input/code-input.tsx",
           "type": "registry:ui",
           "target": "components/ui/code-input.tsx"
+        },
+        {
+          "path": "src/registry/icons/check.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/check.tsx"
+        },
+        {
+          "path": "src/registry/icons/lock.tsx",
+          "type": "registry:component",
+          "target": "components/animate-ui/icons/lock.tsx"
         }
       ]
     },

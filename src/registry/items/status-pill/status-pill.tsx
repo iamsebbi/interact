@@ -16,6 +16,10 @@ import {
   useRef,
   useState,
 } from "react";
+import { Check } from "@/components/animate-ui/icons/check";
+import { CircleAlert } from "@/components/animate-ui/icons/circle-alert";
+import { CloudCheck } from "@/components/animate-ui/icons/cloud-check";
+import { RefreshCw } from "@/components/animate-ui/icons/refresh-cw";
 import { cn } from "@/lib/utils";
 
 const useIsomorphicLayoutEffect =
@@ -44,6 +48,7 @@ export interface StatusPillProps {
   /** Optional explicit progress (0..1) or CSS transition duration in ms while `status="syncing"`. */
   progress?: number;
   progressDurationMs?: number;
+  progressEasing?: string;
   /** Number of files simulated in interactive mode (default 4). */
   demoFiles?: number;
   /** Controls whether interactive demo runs alternate failure, always succeed, or always fail. */
@@ -57,6 +62,7 @@ export interface StatusPillProps {
   fullWidth?: boolean;
   showIdleIcon?: boolean;
   showDoneSheen?: boolean;
+  doneTone?: "green" | "neutral";
   /** Incrementing counter that starts a fresh sync run (used by previews/Studio Play). */
   replaySignal?: number;
   /** Pauses & smoothly resets to idle when false in grid previews. */
@@ -111,81 +117,6 @@ function perceptualSpring(
   return { type: "spring" as const, stiffness, damping, mass: 1 };
 }
 
-function CloudCheckIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      className={className}
-    >
-      <path d="M7.3 18.6a4.2 4.2 0 0 1-.6-8.4 5.6 5.6 0 0 1 10.8 1.2 3.6 3.6 0 0 1-.3 7.2H7.3z" />
-      <path d="M9.7 14.2l1.6 1.6 3.1-3.2" />
-    </svg>
-  );
-}
-
-function CheckIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.4}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      className={className}
-    >
-      <path d="M5.5 12.6l4.2 4.2 8.8-9.3" />
-    </svg>
-  );
-}
-
-function AlertIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      className={className}
-    >
-      <circle cx="12" cy="12" r="8.5" />
-      <path d="M12 7.8v4.8M12 16.2h.01" />
-    </svg>
-  );
-}
-
-function RetryIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.1}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      className={className}
-    >
-      <path d="M19 12a7 7 0 1 1-2.05-4.95" />
-      <path d="M19.2 4.6v3.6h-3.6" />
-    </svg>
-  );
-}
-
 export function StatusPill({
   idleLabel = "Up to date",
   busyLabel = "Syncing {n} files",
@@ -198,6 +129,7 @@ export function StatusPill({
   total: controlledTotal,
   progress: controlledProgress,
   progressDurationMs,
+  progressEasing = "linear",
   demoFiles = 4,
   demoMode = "alternate",
   resetAfterMs = 1800,
@@ -209,6 +141,7 @@ export function StatusPill({
   fullWidth = false,
   showIdleIcon = true,
   showDoneSheen = true,
+  doneTone = "green",
   replaySignal,
   active,
   onStatusChange,
@@ -348,10 +281,16 @@ export function StatusPill({
       return;
     }
     setTimedProgressStarted(false);
-    const raf = window.requestAnimationFrame(() => {
-      setTimedProgressStarted(true);
+    let raf2 = 0;
+    const raf1 = window.requestAnimationFrame(() => {
+      raf2 = window.requestAnimationFrame(() => {
+        setTimedProgressStarted(true);
+      });
     });
-    return () => window.cancelAnimationFrame(raf);
+    return () => {
+      window.cancelAnimationFrame(raf1);
+      window.cancelAnimationFrame(raf2);
+    };
   }, [status, progressDurationMs, reduceMotion]);
 
   const startDemoRun = useCallback(
@@ -469,7 +408,7 @@ export function StatusPill({
         data-status={status}
         data-theme={theme}
         className={cn(
-          "relative select-none tabular-nums",
+          "relative font-sans select-none tabular-nums",
           fullWidth ? "block w-full" : "inline-block",
           className,
         )}
@@ -523,9 +462,10 @@ export function StatusPill({
           transition={reduceMotion ? { duration: 0 } : morphSpring}
           style={{
             width: fullWidth ? "100%" : undefined,
-            height: trayHeight,
+            height: fullWidth && !showTray ? preset.height : trayHeight,
             padding: fullWidth && !showTray ? 0 : preset.pad,
-            borderRadius: fullWidth ? 9999 : trayHeight / 2,
+            borderRadius:
+              fullWidth && !showTray ? preset.height / 2 : trayHeight / 2,
           }}
           className={cn(
             "relative flex items-center overflow-hidden transition-[background-color,box-shadow] duration-200",
@@ -562,7 +502,9 @@ export function StatusPill({
                   isClickableIdle && !reduceMotion ? { scale: 0.97 } : undefined
                 }
                 style={{
-                  borderRadius: 9999,
+                  borderRadius: preset.height / 2,
+                  transform: "translateZ(0)",
+                  willChange: "transform",
                   width: fullWidth && !showRetry ? "100%" : undefined,
                   height: preset.height,
                   fontSize: preset.fontSize,
@@ -577,7 +519,7 @@ export function StatusPill({
               />
             }
             className={cn(
-              "relative flex shrink-0 items-center overflow-hidden rounded-full font-semibold whitespace-nowrap outline-none transition-colors duration-200",
+              "relative flex shrink-0 items-center overflow-hidden rounded-full font-semibold whitespace-nowrap outline-none transition-[color,background-color,opacity] duration-200",
               status === "idle" && !showIdleIcon ? "gap-0" : "gap-2",
               fullWidth && "flex-1 justify-center",
               "focus-visible:ring-2 focus-visible:ring-offset-2",
@@ -585,9 +527,13 @@ export function StatusPill({
                 ? "focus-visible:ring-[#60a5fa]/60 focus-visible:ring-offset-[#26262b]"
                 : "focus-visible:ring-[#0062d6]/55 focus-visible:ring-offset-white",
               status === "done"
-                ? isDark
-                  ? "cursor-default bg-[#16a34a] text-white"
-                  : "cursor-default bg-[#15803d] text-white"
+                ? doneTone === "neutral"
+                  ? isDark
+                    ? "cursor-default bg-[#323238] text-[#ffffff]"
+                    : "cursor-default bg-[#f2f2f2] text-[#111111]"
+                  : isDark
+                    ? "cursor-default bg-[#16a34a] text-white"
+                    : "cursor-default bg-[#15803d] text-white"
                 : status === "failed"
                   ? isDark
                     ? "cursor-default bg-[#451a1f] text-[#ff5c61]"
@@ -597,8 +543,8 @@ export function StatusPill({
                       ? "cursor-pointer bg-[#323238] text-[#ffffff] hover:bg-[#3c3c44]"
                       : "cursor-pointer bg-[#f2f2f2] text-[#111111] hover:bg-[#e7e7ea]"
                     : isDark
-                      ? "cursor-default bg-[#323238] text-[#ffffff]"
-                      : "cursor-default bg-[#f2f2f2] text-[#111111]",
+                      ? "cursor-not-allowed bg-[#323238] text-[#ffffff]/60 opacity-75"
+                      : "cursor-not-allowed bg-[#f2f2f2] text-[#111111]/60 opacity-75",
             )}
           >
             {showSheen && (
@@ -667,7 +613,7 @@ export function StatusPill({
                           transition: reduceMotion
                             ? "none"
                             : progressDurationMs !== undefined
-                              ? `stroke-dashoffset ${progressDurationMs}ms linear`
+                              ? `stroke-dashoffset ${progressDurationMs}ms ${progressEasing}`
                               : "stroke-dashoffset 380ms cubic-bezier(0.3, 0.7, 0.3, 1)",
                         }}
                       />
@@ -704,11 +650,23 @@ export function StatusPill({
                       )}
                     >
                       {status === "done" ? (
-                        <CheckIcon className="h-full w-full" />
+                        <Check
+                          size={preset.iconSize}
+                          strokeWidth={2.4}
+                          aria-hidden="true"
+                        />
                       ) : status === "failed" ? (
-                        <AlertIcon className="h-full w-full" />
+                        <CircleAlert
+                          size={preset.iconSize}
+                          strokeWidth={2}
+                          aria-hidden="true"
+                        />
                       ) : (
-                        <CloudCheckIcon className="h-full w-full" />
+                        <CloudCheck
+                          size={preset.iconSize}
+                          strokeWidth={2}
+                          aria-hidden="true"
+                        />
                       )}
                     </motion.span>
                   )}
@@ -817,7 +775,11 @@ export function StatusPill({
                   style={{ width: preset.iconSize, height: preset.iconSize }}
                   className="inline-flex shrink-0 items-center justify-center"
                 >
-                  <RetryIcon className="h-full w-full" />
+                  <RefreshCw
+                    size={preset.iconSize}
+                    strokeWidth={2.1}
+                    aria-hidden="true"
+                  />
                 </span>
                 <span>{retryLabel}</span>
               </ButtonPrimitive>

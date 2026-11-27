@@ -23,6 +23,8 @@ import {
   useRef,
   useState,
 } from "react";
+import { Check } from "@/components/animate-ui/icons/check";
+import { ChevronsUpDown } from "@/components/animate-ui/icons/chevrons-up-down";
 import { cn } from "@/lib/utils";
 
 const useIsomorphicLayoutEffect =
@@ -227,10 +229,10 @@ function SelectRow({
         />
       }
       className={cn(
-        "absolute top-0 z-10 flex items-center overflow-hidden whitespace-nowrap font-medium select-none",
+        "absolute top-0 z-10 flex items-center overflow-hidden whitespace-nowrap font-semibold select-none",
         isOpen && !disabled ? "cursor-pointer" : "pointer-events-none",
         disabled && "opacity-40",
-        isSelected && "font-medium",
+        isSelected && "font-semibold",
         isDark ? "text-[#ffffff]" : "text-[#111111]",
       )}
     >
@@ -960,7 +962,7 @@ export function SelectMenu({
         data-size={size}
         data-open={isOpen ? "true" : "false"}
         className={cn(
-          "relative inline-block select-none align-middle tabular-nums",
+          "relative inline-block font-sans select-none align-middle tabular-nums",
           disabled && "pointer-events-none opacity-55",
           className,
         )}
@@ -988,12 +990,12 @@ export function SelectMenu({
           className="pointer-events-none invisible absolute top-0 left-0 whitespace-nowrap"
           style={{ fontSize: preset.fontSize }}
         >
-          <span ref={measurePrefixRef} className="inline-block font-[450]">
+          <span ref={measurePrefixRef} className="inline-block font-semibold">
             {label}
           </span>
           <div ref={measureItemsRef} className="inline-flex">
             {normalizedItems.map((item) => (
-              <span key={item.value} className="inline-block font-medium">
+              <span key={item.value} className="inline-block font-semibold">
                 {item.label}
               </span>
             ))}
@@ -1196,14 +1198,8 @@ export function SelectMenu({
                   : "text-[#71717a]",
             )}
           >
-            <motion.svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2.2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
+            <motion.span
+              aria-hidden="true"
               initial={false}
               animate={{
                 opacity: iconMode === "chevrons" ? 1 : 0,
@@ -1215,19 +1211,17 @@ export function SelectMenu({
                     : `blur(${(4 * clampedBlur).toFixed(1)}px)`,
               }}
               transition={perceptualSpring("pop", clampedSpeed, clampedBounce)}
-              className="absolute inset-0 h-full w-full"
+              className="absolute inset-0 flex items-center justify-center"
             >
-              <path d="M8.2 9.6L12 5.8l3.8 3.8M8.2 14.4L12 18.2l3.8-3.8" />
-            </motion.svg>
+              <ChevronsUpDown
+                size={iconSize}
+                strokeWidth={2.2}
+                aria-hidden="true"
+              />
+            </motion.span>
 
-            <motion.svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2.3}
-              strokeLinecap="round"
-              strokeLinejoin="round"
+            <motion.span
+              aria-hidden="true"
               initial={false}
               animate={{
                 opacity: iconMode === "check" ? 1 : 0,
@@ -1239,10 +1233,10 @@ export function SelectMenu({
                     : `blur(${(4 * clampedBlur).toFixed(1)}px)`,
               }}
               transition={perceptualSpring("pop", clampedSpeed, clampedBounce)}
-              className="absolute inset-0 h-full w-full"
+              className="absolute inset-0 flex items-center justify-center"
             >
-              <path d="M5.5 12.6l4.2 4.2 8.8-9.3" />
-            </motion.svg>
+              <Check size={iconSize} strokeWidth={2.3} aria-hidden="true" />
+            </motion.span>
           </motion.span>
         </motion.div>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { SelectField, Slider, TextField } from "@/components/controls";
+import { SelectField, Slider, Switch, TextField } from "@/components/controls";
 import type { ComponentInspectorProps } from "@/registry/types";
 import {
   DEFAULT_DELETE_BUTTON_CONFIG,
@@ -65,6 +65,13 @@ export function DeleteButtonInspector({
         unit="s"
         defaultValue={DEFAULT_DELETE_BUTTON_CONFIG.deletedDurationSec}
         onValueChange={(deletedDurationSec) => patch({ deletedDurationSec })}
+      />
+
+      <Switch
+        label="Show Tray"
+        checked={config.showTray}
+        onCheckedChange={(showTray) => patch({ showTray })}
+        aria-label="Toggle elevated tray around delete button"
       />
     </div>
   );

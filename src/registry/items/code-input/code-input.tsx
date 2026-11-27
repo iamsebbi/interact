@@ -16,6 +16,8 @@ import {
   useRef,
   useState,
 } from "react";
+import { Check } from "@/components/animate-ui/icons/check";
+import { Lock } from "@/components/animate-ui/icons/lock";
 import { cn } from "@/lib/utils";
 
 const useIsomorphicLayoutEffect =
@@ -84,25 +86,6 @@ function perceptualSpring(
   return { type: "spring" as const, stiffness, damping, mass: 1 };
 }
 
-function LockIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      className={className}
-    >
-      <rect x="5" y="10.5" width="14" height="9.5" rx="2.6" />
-      <path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" />
-    </svg>
-  );
-}
-
 function SpinnerIcon({ className }: { className?: string }) {
   return (
     <svg
@@ -118,24 +101,6 @@ function SpinnerIcon({ className }: { className?: string }) {
     >
       <circle cx="12" cy="12" r="7.5" opacity={0.28} />
       <path d="M12 4.5a7.5 7.5 0 0 1 7.5 7.5" />
-    </svg>
-  );
-}
-
-function CheckIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.4}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      className={className}
-    >
-      <path d="M5.5 12.6l4.2 4.2 8.8-9.3" />
     </svg>
   );
 }
@@ -665,7 +630,7 @@ export function CodeInput({
         data-error={isBad ? "true" : "false"}
         data-theme={theme}
         className={cn(
-          "relative inline-block select-none align-middle tabular-nums",
+          "relative inline-block font-sans select-none align-middle tabular-nums",
           className,
         )}
         style={style}
@@ -825,11 +790,19 @@ export function CodeInput({
                       className="absolute inset-0 flex items-center justify-center"
                     >
                       {state === "ok" ? (
-                        <CheckIcon className="h-full w-full" />
+                        <Check
+                          size={iconSize}
+                          strokeWidth={2.4}
+                          aria-hidden="true"
+                        />
                       ) : state === "verify" ? (
                         <SpinnerIcon className="h-full w-full" />
                       ) : (
-                        <LockIcon className="h-full w-full" />
+                        <Lock
+                          size={iconSize}
+                          strokeWidth={2}
+                          aria-hidden="true"
+                        />
                       )}
                     </motion.span>
                   </AnimatePresence>

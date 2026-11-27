@@ -59,6 +59,7 @@ export function DeleteButtonDemo({
       deletedDurationMs={Math.round(config.deletedDurationSec * 1000)}
       size={config.size}
       theme={config.theme}
+      showTray={config.showTray}
       replaySignal={playKey || undefined}
     />
   );

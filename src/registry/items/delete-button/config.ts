@@ -11,6 +11,7 @@ export interface DeleteButtonConfig {
   deletedDurationSec: number;
   size: DeleteButtonSize;
   theme: DeleteButtonStudioTheme;
+  showTray: boolean;
 }
 
 export const DEFAULT_DELETE_BUTTON_CONFIG: DeleteButtonConfig = {
@@ -20,6 +21,7 @@ export const DEFAULT_DELETE_BUTTON_CONFIG: DeleteButtonConfig = {
   deletedDurationSec: 1.4,
   size: "xl",
   theme: "light",
+  showTray: true,
 };
 
 export const DELETE_BUTTON_SIZE_OPTIONS: readonly SelectFieldOption[] = [
@@ -69,6 +71,9 @@ export function buildDeleteButtonJsx(config: DeleteButtonConfig): string {
   }
   if (config.theme !== DEFAULT_DELETE_BUTTON_CONFIG.theme) {
     lines.push(`  theme="${config.theme}"`);
+  }
+  if (!config.showTray) {
+    lines.push(`  showTray={false}`);
   }
   lines.push(`  onConfirm={() => console.log("Confirmed delete")}`);
   lines.push(`  onCancel={() => console.log("Cancelled delete")}`);

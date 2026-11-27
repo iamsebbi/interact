@@ -197,7 +197,7 @@ export function buildDistortionWavesJsx(config: DistortionWavesConfig): string {
     `}`,
   );
   props.push(
-    `style={{ width: 380, height: 447, borderRadius: 38, overflow: "hidden" }}`,
+    `style={{ width: 380, height: 475, borderRadius: 28, overflow: "hidden" }}`,
   );
 
   return [

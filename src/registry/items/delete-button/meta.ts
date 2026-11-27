@@ -15,7 +15,7 @@ export const deleteButtonMeta: ComponentMeta<DeleteButtonConfig> = {
   categories: ["Actions"],
   masonryHeight: 210,
   cardHeightClass: "h-[195px] sm:h-[210px]",
-  previewBounds: { width: 260, height: 56 },
+  previewBounds: { width: 272, height: 66 },
   dependencies: [
     "@ui-sdk/react",
     "@ui-sdk/core",
@@ -42,6 +42,13 @@ export const deleteButtonMeta: ComponentMeta<DeleteButtonConfig> = {
       defaultValue: '"light"',
       description:
         "Explicit light or dark surface palette across idle, confirmation, and cancel pills (defaults to light).",
+    },
+    {
+      name: "showTray",
+      type: "boolean",
+      defaultValue: "true",
+      description:
+        "Wraps the morphing delete pills in an elevated outer pill tray.",
     },
     {
       name: "confirmLabel / cancelLabel / deletedLabel",

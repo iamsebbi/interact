@@ -385,7 +385,7 @@ function DecisionSlot({
             : "transform 150ms ease",
         }}
         className={cn(
-          "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border-0 bg-transparent p-0 font-medium",
+          "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border-0 bg-transparent p-0 font-semibold",
           !measured && mode !== "undo" && "px-5",
           FOCUS_CLASS,
           DISABLED_CLASS,
@@ -687,7 +687,7 @@ export const ApproveReject = React.forwardRef<
     status === "approved" ? "active" : status === "rejected" ? "undo" : "idle";
 
   const measureRowClass = cn(
-    "pointer-events-none invisible absolute top-0 left-0 inline-flex items-center whitespace-nowrap font-medium",
+    "pointer-events-none invisible absolute top-0 left-0 inline-flex items-center whitespace-nowrap font-semibold",
     dim.textClass,
   );
   const measureLabels = [
@@ -726,7 +726,7 @@ export const ApproveReject = React.forwardRef<
           padding: showTray ? dim.trayPadPx : undefined,
         }}
         className={cn(
-          "relative inline-flex items-center justify-center rounded-full select-none",
+          "relative inline-flex items-center justify-center rounded-full font-sans select-none",
           showTray && styles.tray,
           className,
         )}

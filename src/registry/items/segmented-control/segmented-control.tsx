@@ -476,7 +476,7 @@ export function SegmentedControl({
         data-theme={theme}
         data-size={size}
         className={cn(
-          "relative inline-flex max-w-full select-none items-center gap-[2px] rounded-full transition-[background-color,box-shadow] duration-200",
+          "relative inline-flex max-w-full font-sans select-none items-center gap-[2px] rounded-full transition-[background-color,box-shadow] duration-200",
           showTray
             ? isDark
               ? "bg-[#26262b] shadow-[0_0_0_1px_rgba(255,255,255,0.07),0_1px_1px_rgba(0,0,0,0.3),0_6px_16px_-6px_rgba(0,0,0,0.45),0_22px_44px_-24px_rgba(0,0,0,0.6)]"
@@ -594,8 +594,7 @@ export function SegmentedControl({
                 </span>
                 <span
                   className={cn(
-                    "col-start-1 row-start-1 transition-[color,font-weight] duration-200",
-                    isChecked ? "font-semibold" : "font-[450]",
+                    "col-start-1 row-start-1 font-semibold transition-colors duration-200",
                   )}
                 >
                   {item.label}

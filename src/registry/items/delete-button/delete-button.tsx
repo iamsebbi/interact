@@ -29,6 +29,7 @@ export interface DeleteButtonProps
   deletedDurationMs?: number;
   size?: DeleteButtonSize;
   theme?: DeleteButtonTheme;
+  showTray?: boolean;
   status?: DeleteButtonStatus;
   defaultStatus?: DeleteButtonStatus;
   disabled?: boolean;
@@ -43,6 +44,7 @@ export interface DeleteButtonProps
 interface SizePreset {
   pillHeightClass: string;
   btnPx: number;
+  trayPad: number;
   gapPx: number;
   gooBlur: number;
   pxPx: number;
@@ -55,6 +57,7 @@ const SIZE_PRESETS: Record<DeleteButtonSize, SizePreset> = {
   sm: {
     pillHeightClass: "h-9",
     btnPx: 36,
+    trayPad: 4,
     gapPx: 9,
     gooBlur: 5,
     pxPx: 14,
@@ -65,6 +68,7 @@ const SIZE_PRESETS: Record<DeleteButtonSize, SizePreset> = {
   md: {
     pillHeightClass: "h-11",
     btnPx: 44,
+    trayPad: 5,
     gapPx: 10,
     gooBlur: 6.2,
     pxPx: 18,
@@ -75,6 +79,7 @@ const SIZE_PRESETS: Record<DeleteButtonSize, SizePreset> = {
   lg: {
     pillHeightClass: "h-12",
     btnPx: 48,
+    trayPad: 5,
     gapPx: 11,
     gooBlur: 6,
     pxPx: 22,
@@ -85,6 +90,7 @@ const SIZE_PRESETS: Record<DeleteButtonSize, SizePreset> = {
   xl: {
     pillHeightClass: "h-[54px]",
     btnPx: 54,
+    trayPad: 6,
     gapPx: 12,
     gooBlur: 6.2,
     pxPx: 24,
@@ -98,22 +104,26 @@ const THEME_STYLES: Record<
   DeleteButtonTheme | "default",
   {
     neutralPill: string;
+    trayNeutralPill: string;
     neutralInk: string;
     redInk: string;
   }
 > = {
   dark: {
     neutralPill: "bg-[#26262b]",
+    trayNeutralPill: "bg-[#323238]",
     neutralInk: "text-white",
     redInk: "text-[#ff5c61]",
   },
   light: {
     neutralPill: "bg-white",
+    trayNeutralPill: "bg-[#f2f2f2]",
     neutralInk: "text-[#111111]",
     redInk: "text-[#d62020]",
   },
   default: {
     neutralPill: "bg-[#f2f2f2] dark:bg-[#26262b]",
+    trayNeutralPill: "bg-[#f2f2f2] dark:bg-[#323238]",
     neutralInk: "text-[#111111] dark:text-white",
     redInk: "text-[#d62020] dark:text-[#ff5c61]",
   },
@@ -230,6 +240,7 @@ export const DeleteButton = React.forwardRef<HTMLDivElement, DeleteButtonProps>(
       deletedDurationMs = 1400,
       size = "xl",
       theme = "light",
+      showTray = true,
       status: controlledStatus,
       defaultStatus = "idle",
       disabled = false,
@@ -424,13 +435,14 @@ export const DeleteButton = React.forwardRef<HTMLDivElement, DeleteButtonProps>(
       cancelCanTap,
       setIsCancelPressed,
     );
+    const isDark = theme === "dark";
     const pillSurfaceClass = cn(
       "shrink-0 transition-colors",
-      styles.neutralPill,
+      showTray ? styles.trayNeutralPill : styles.neutralPill,
       dim.pillHeightClass,
     );
     const foregroundButtonBase = cn(
-      "relative flex shrink-0 items-center justify-center overflow-hidden rounded-full border-0 bg-transparent p-0 font-medium transition-colors active:scale-100",
+      "relative flex shrink-0 items-center justify-center overflow-hidden rounded-full border-0 bg-transparent p-0 font-semibold transition-colors active:scale-100",
       FOCUS_CLASS,
       DISABLED_CLASS,
       dim.pillHeightClass,
@@ -438,7 +450,7 @@ export const DeleteButton = React.forwardRef<HTMLDivElement, DeleteButtonProps>(
     );
 
     const measureRowClass = cn(
-      "pointer-events-none invisible absolute top-0 left-0 inline-flex items-center whitespace-nowrap font-medium",
+      "pointer-events-none invisible absolute top-0 left-0 inline-flex items-center whitespace-nowrap font-semibold",
       dim.textClass,
     );
     const measureSpecs = React.useMemo(
@@ -457,239 +469,254 @@ export const DeleteButton = React.forwardRef<HTMLDivElement, DeleteButtonProps>(
           data-slot="delete-button"
           data-status={status}
           data-theme={theme}
+          data-tray={showTray ? "true" : "false"}
+          style={{
+            padding: showTray ? dim.trayPad : 0,
+            borderRadius: 9999,
+          }}
           className={cn(
-            "relative inline-flex items-center justify-center select-none",
+            "relative inline-flex items-center justify-center rounded-full font-sans select-none transition-[background-color,box-shadow] duration-200",
+            showTray &&
+              (isDark
+                ? "bg-[#26262b] shadow-[0_0_0_1px_rgba(255,255,255,0.07),0_1px_1px_rgba(0,0,0,0.3),0_6px_16px_-6px_rgba(0,0,0,0.45),0_22px_44px_-24px_rgba(0,0,0,0.6)]"
+                : "bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.06),0_1px_1px_rgba(0,0,0,0.04),0_6px_16px_-6px_rgba(0,0,0,0.1),0_22px_44px_-24px_rgba(0,0,0,0.16)]"),
             className,
           )}
           {...props}
         >
-          {goo.filterDef}
+          <div className="relative inline-flex items-center justify-center">
+            {goo.filterDef}
 
-          {/* Offscreen sizers measure intrinsic label widths for smooth pill springs */}
-          {measureSpecs.map(({ id, text, hasIcon }, idx) => (
-            <span
-              key={id}
-              ref={(el) => {
-                sizerRefs.current[idx] = el;
-              }}
-              aria-hidden="true"
-              className={measureRowClass}
-              style={{ gap: hasIcon ? dim.contentGapPx : undefined }}
-            >
-              {hasIcon && (
-                <span
-                  style={{ width: dim.iconSize, height: dim.iconSize }}
-                  className="shrink-0"
-                />
-              )}
-              <span>{text}</span>
-            </span>
-          ))}
+            {/* Offscreen sizers measure intrinsic label widths for smooth pill springs */}
+            {measureSpecs.map(({ id, text, hasIcon }, idx) => (
+              <span
+                key={id}
+                ref={(el) => {
+                  sizerRefs.current[idx] = el;
+                }}
+                aria-hidden="true"
+                className={measureRowClass}
+                style={{ gap: hasIcon ? dim.contentGapPx : undefined }}
+              >
+                {hasIcon && (
+                  <span
+                    style={{ width: dim.iconSize, height: dim.iconSize }}
+                    className="shrink-0"
+                  />
+                )}
+                <span>{text}</span>
+              </span>
+            ))}
 
-          {/* Gooey backdrop layer: solid shapes only so liquid bridge never blurs text */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 z-0 [filter:drop-shadow(0_1px_2px_rgba(0,0,0,0.09))_drop-shadow(0_10px_20px_rgba(0,0,0,0.07))]"
-          >
+            {/* Gooey backdrop layer: solid shapes only so liquid bridge never blurs text */}
             <div
-              style={{ filter: reduceMotion ? undefined : goo.url }}
+              aria-hidden="true"
               className={cn(
-                "flex size-full items-center justify-center",
-                disabled && "opacity-50",
+                "pointer-events-none absolute inset-0 z-0",
+                !showTray &&
+                  "[filter:drop-shadow(0_1px_2px_rgba(0,0,0,0.09))_drop-shadow(0_10px_20px_rgba(0,0,0,0.07))]",
               )}
             >
-              <motion.span
-                animate={{
-                  scale:
-                    isPrimaryPressed && primaryCanTap && !reduceMotion
-                      ? 0.96
-                      : 1,
-                }}
-                transition={
-                  reduceMotion
-                    ? ZERO_TRANSITION
-                    : { duration: 0.14, ease: EASE_OUT }
-                }
-                style={{
-                  borderRadius: 9999,
-                  width: widths ? primaryWidthSpring : dim.btnPx,
-                }}
-                className={cn("inline-block", pillSurfaceClass)}
-              />
-
-              <motion.div
-                style={{
-                  width: cancelWidthSpring,
-                  marginLeft: cancelGapSpring,
-                }}
-                className="flex shrink-0 items-center justify-end overflow-visible"
+              <div
+                style={{ filter: reduceMotion ? undefined : goo.url }}
+                className={cn(
+                  "flex size-full items-center justify-center",
+                  disabled && "opacity-50",
+                )}
               >
                 <motion.span
-                  initial={false}
                   animate={{
-                    scale: !isConfirming
-                      ? 0.76
-                      : isCancelPressed && !disabled && !reduceMotion
+                    scale:
+                      isPrimaryPressed && primaryCanTap && !reduceMotion
                         ? 0.96
                         : 1,
                   }}
                   transition={
                     reduceMotion
                       ? ZERO_TRANSITION
-                      : {
-                          type: "spring",
-                          stiffness: 320,
-                          damping: 22,
-                          mass: 0.85,
-                        }
+                      : { duration: 0.14, ease: EASE_OUT }
                   }
                   style={{
                     borderRadius: 9999,
-                    width: widths ? cancelBlobWidth : dim.btnPx,
+                    width: widths ? primaryWidthSpring : dim.btnPx,
                   }}
-                  className={cn("block", pillSurfaceClass)}
+                  className={cn("inline-block", pillSurfaceClass)}
                 />
-              </motion.div>
-            </div>
-          </div>
 
-          {/* Interactive crisp foreground layer */}
-          <div className="relative z-10 inline-flex items-center justify-center">
-            <AnimateIcon animateOnHover={primaryCanTap} asChild>
-              <ButtonPrimitive
-                type="button"
-                disabled={disabled}
-                focusableWhenDisabled={focusableWhenDisabled}
-                aria-label={
-                  status === "idle"
-                    ? "Delete"
-                    : isConfirming
-                      ? confirmLabel
-                      : deletedLabel
-                }
-                onClick={handlePrimaryPress}
-                {...primaryPressHandlers}
-                className={cn(
-                  "z-10",
-                  foregroundButtonBase,
-                  styles.redInk,
-                  primaryCanTap ? "cursor-pointer" : "cursor-default",
-                )}
-                render={
-                  <motion.button
-                    data-part="delete-primary-pill"
-                    whileTap={
-                      primaryCanTap && !reduceMotion
-                        ? { scale: 0.96 }
-                        : undefined
+                <motion.div
+                  style={{
+                    width: cancelWidthSpring,
+                    marginLeft: cancelGapSpring,
+                  }}
+                  className="flex shrink-0 items-center justify-end overflow-visible"
+                >
+                  <motion.span
+                    initial={false}
+                    animate={{
+                      scale: !isConfirming
+                        ? 0.76
+                        : isCancelPressed && !disabled && !reduceMotion
+                          ? 0.96
+                          : 1,
+                    }}
+                    transition={
+                      reduceMotion
+                        ? ZERO_TRANSITION
+                        : {
+                            type: "spring",
+                            stiffness: 320,
+                            damping: 22,
+                            mass: 0.85,
+                          }
                     }
                     style={{
                       borderRadius: 9999,
-                      width: widths ? primaryWidthSpring : dim.btnPx,
+                      width: widths ? cancelBlobWidth : dim.btnPx,
                     }}
+                    className={cn("block", pillSurfaceClass)}
                   />
-                }
-              >
-                <span className="pointer-events-none relative block size-full overflow-hidden rounded-[inherit]">
-                  <AnimatePresence initial={false}>
-                    {status === "idle" && (
-                      <motion.span
-                        key="delete-idle"
-                        {...swapProps}
-                        className="absolute inset-0 flex items-center justify-center"
-                      >
-                        <Trash2
-                          size={dim.iconSize}
-                          strokeWidth={2.35}
-                          className="shrink-0"
-                          aria-hidden="true"
-                        />
-                      </motion.span>
-                    )}
+                </motion.div>
+              </div>
+            </div>
 
-                    {isConfirming && (
-                      <motion.span
-                        key="delete-confirm"
-                        {...swapProps}
-                        className="absolute inset-0 flex items-center justify-center whitespace-nowrap"
-                      >
-                        <span>{confirmLabel}</span>
-                      </motion.span>
-                    )}
+            {/* Interactive crisp foreground layer */}
+            <div className="relative z-10 inline-flex items-center justify-center">
+              <AnimateIcon animateOnHover={primaryCanTap} asChild>
+                <ButtonPrimitive
+                  type="button"
+                  disabled={disabled}
+                  focusableWhenDisabled={focusableWhenDisabled}
+                  aria-label={
+                    status === "idle"
+                      ? "Delete"
+                      : isConfirming
+                        ? confirmLabel
+                        : deletedLabel
+                  }
+                  onClick={handlePrimaryPress}
+                  {...primaryPressHandlers}
+                  className={cn(
+                    "z-10",
+                    foregroundButtonBase,
+                    styles.redInk,
+                    primaryCanTap ? "cursor-pointer" : "cursor-default",
+                  )}
+                  render={
+                    <motion.button
+                      data-part="delete-primary-pill"
+                      whileTap={
+                        primaryCanTap && !reduceMotion
+                          ? { scale: 0.96 }
+                          : undefined
+                      }
+                      style={{
+                        borderRadius: 9999,
+                        width: widths ? primaryWidthSpring : dim.btnPx,
+                      }}
+                    />
+                  }
+                >
+                  <span className="pointer-events-none relative block size-full overflow-hidden rounded-[inherit]">
+                    <AnimatePresence initial={false}>
+                      {status === "idle" && (
+                        <motion.span
+                          key="delete-idle"
+                          {...swapProps}
+                          className="absolute inset-0 flex items-center justify-center"
+                        >
+                          <Trash2
+                            size={dim.iconSize}
+                            strokeWidth={2.35}
+                            className="shrink-0"
+                            aria-hidden="true"
+                          />
+                        </motion.span>
+                      )}
 
-                    {isDeleted && (
-                      <motion.span
-                        key="delete-done"
-                        {...swapProps}
-                        style={{ gap: dim.contentGapPx }}
-                        className="absolute inset-0 flex items-center justify-center whitespace-nowrap"
-                      >
-                        <Check
-                          size={dim.iconSize}
-                          strokeWidth={2.7}
-                          className="shrink-0"
-                          aria-hidden="true"
-                        />
-                        <span>{deletedLabel}</span>
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </span>
-              </ButtonPrimitive>
-            </AnimateIcon>
+                      {isConfirming && (
+                        <motion.span
+                          key="delete-confirm"
+                          {...swapProps}
+                          className="absolute inset-0 flex items-center justify-center whitespace-nowrap"
+                        >
+                          <span>{confirmLabel}</span>
+                        </motion.span>
+                      )}
 
-            <motion.div
-              aria-hidden={!isConfirming}
-              style={{
-                width: cancelWidthSpring,
-                marginLeft: cancelGapSpring,
-              }}
-              className={cn(
-                "relative z-10 flex shrink-0 items-center justify-end overflow-hidden rounded-full",
-                !isConfirming && "pointer-events-none",
-              )}
-            >
-              <ButtonPrimitive
-                type="button"
-                disabled={disabled}
-                focusableWhenDisabled={focusableWhenDisabled}
-                tabIndex={isConfirming ? 0 : -1}
-                aria-label={cancelLabel}
-                onClick={handleCancelPress}
-                {...cancelPressHandlers}
+                      {isDeleted && (
+                        <motion.span
+                          key="delete-done"
+                          {...swapProps}
+                          style={{ gap: dim.contentGapPx }}
+                          className="absolute inset-0 flex items-center justify-center whitespace-nowrap"
+                        >
+                          <Check
+                            size={dim.iconSize}
+                            strokeWidth={2.7}
+                            className="shrink-0"
+                            aria-hidden="true"
+                          />
+                          <span>{deletedLabel}</span>
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                  </span>
+                </ButtonPrimitive>
+              </AnimateIcon>
+
+              <motion.div
+                aria-hidden={!isConfirming}
+                style={{
+                  width: cancelWidthSpring,
+                  marginLeft: cancelGapSpring,
+                }}
                 className={cn(
-                  "w-full",
-                  foregroundButtonBase,
-                  styles.neutralInk,
-                  cancelCanTap ? "cursor-pointer" : "pointer-events-none",
+                  "relative z-10 flex shrink-0 items-center justify-end overflow-hidden rounded-full",
+                  !isConfirming && "pointer-events-none",
                 )}
-                render={
-                  <motion.button
-                    data-part="delete-cancel-pill"
-                    whileTap={
-                      cancelCanTap && !reduceMotion
-                        ? { scale: 0.96 }
-                        : undefined
-                    }
-                    style={{ borderRadius: 9999 }}
-                  />
-                }
               >
-                <span className="pointer-events-none relative block size-full overflow-hidden rounded-[inherit]">
-                  <AnimatePresence initial={false}>
-                    {isConfirming && (
-                      <motion.span
-                        key="delete-cancel"
-                        {...swapProps}
-                        className="absolute inset-0 flex items-center justify-center whitespace-nowrap"
-                      >
-                        <span>{cancelLabel}</span>
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </span>
-              </ButtonPrimitive>
-            </motion.div>
+                <ButtonPrimitive
+                  type="button"
+                  disabled={disabled}
+                  focusableWhenDisabled={focusableWhenDisabled}
+                  tabIndex={isConfirming ? 0 : -1}
+                  aria-label={cancelLabel}
+                  onClick={handleCancelPress}
+                  {...cancelPressHandlers}
+                  className={cn(
+                    "w-full",
+                    foregroundButtonBase,
+                    styles.neutralInk,
+                    cancelCanTap ? "cursor-pointer" : "pointer-events-none",
+                  )}
+                  render={
+                    <motion.button
+                      data-part="delete-cancel-pill"
+                      whileTap={
+                        cancelCanTap && !reduceMotion
+                          ? { scale: 0.96 }
+                          : undefined
+                      }
+                      style={{ borderRadius: 9999 }}
+                    />
+                  }
+                >
+                  <span className="pointer-events-none relative block size-full overflow-hidden rounded-[inherit]">
+                    <AnimatePresence initial={false}>
+                      {isConfirming && (
+                        <motion.span
+                          key="delete-cancel"
+                          {...swapProps}
+                          className="absolute inset-0 flex items-center justify-center whitespace-nowrap"
+                        >
+                          <span>{cancelLabel}</span>
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                  </span>
+                </ButtonPrimitive>
+              </motion.div>
+            </div>
           </div>
         </div>
       </MotionConfig>

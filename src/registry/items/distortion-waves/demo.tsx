@@ -123,39 +123,46 @@ function ArrowRightIcon({ className }: { className?: string }) {
 
 const POSTER_SLIDES = [
   {
-    id: "aurora",
+    id: "slide-1",
     index: "01",
     title: "Aurora Drift",
     subtitle: "Atmospheric gradient",
-    src: "/images/gradients/aurora.jpg",
+    src: "/images/posters/1.jpg",
   },
   {
-    id: "cobalt",
+    id: "slide-2",
     index: "02",
     title: "Cobalt Field",
     subtitle: "Deep spectral bloom",
-    src: "/images/gradients/cobalt.jpg",
+    src: "/images/posters/2.jpg",
   },
   {
-    id: "nebula",
+    id: "slide-3",
     index: "03",
     title: "Nebula Pulse",
     subtitle: "Luminous dispersion",
-    src: "/images/gradients/nebula.jpg",
+    src: "/images/posters/3.jpg",
   },
   {
-    id: "solstice",
+    id: "slide-4",
     index: "04",
     title: "Solstice Glow",
     subtitle: "Warm horizon light",
-    src: "/images/gradients/solstice.jpg",
+    src: "/images/posters/4.jpg",
   },
   {
-    id: "prism",
+    id: "slide-5",
     index: "05",
     title: "Prism Refraction",
     subtitle: "Chromatic wave study",
-    src: "/images/gradients/prism.jpg",
+    src: "/images/posters/5.jpg",
+  },
+  {
+    id: "slide-6",
+    index: "06",
+    title: "Velvet Horizon",
+    subtitle: "Optical wave study",
+    src: "/images/posters/6.jpg",
   },
 ] as const;
 
@@ -205,7 +212,7 @@ export function DistortionWavesShowcase({
   const previewActiveRef = useRef(previewActive);
   previewActiveRef.current = previewActive;
 
-  const cardHeight = height ?? (type === "center" ? 386 : 447);
+  const cardHeight = height ?? (type === "center" ? 386 : 475);
   const resolvedPalette = palette ?? (type === "center" ? "green" : "colorful");
 
   useEffect(() => {
@@ -605,18 +612,13 @@ export function DistortionWavesShowcase({
           aria-hidden="true"
           style={{
             background:
-              "linear-gradient(180deg, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.04) 45%, rgba(0,0,0,0.72) 100%)",
+              "linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.52) 76%, rgba(0,0,0,0.8) 100%)",
           }}
           className="absolute inset-0"
         />
         <div className="relative flex size-full flex-col justify-end p-6 pb-[88px]">
-          <div>
-            <div className="text-[28px] leading-[1.08] font-semibold tracking-[-0.03em] text-white">
-              {slide.title}
-            </div>
-            <div className="mt-1.5 text-[13px] font-normal text-white/75">
-              {slide.subtitle}
-            </div>
+          <div className="text-[28px] leading-[1.08] font-semibold tracking-[-0.03em] text-white">
+            {slide.title}
           </div>
         </div>
       </div>
@@ -631,11 +633,15 @@ export function DistortionWavesShowcase({
     );
 
     const posterOverlay = (
-      <div className="pointer-events-none absolute inset-x-6 bottom-6 flex items-center justify-center">
-        <div ref={posterSourceRef} className="pointer-events-auto w-full">
+      <div className="pointer-events-none absolute inset-x-5 bottom-5 flex items-center justify-center">
+        <div
+          ref={posterSourceRef}
+          className="pointer-events-auto w-full rounded-full shadow-[0_6px_18px_rgba(0,0,0,0.24)]"
+        >
           <StatusPill
             status={pillStatus}
             progressDurationMs={resolvedWaveDurationMs}
+            progressEasing="cubic-bezier(0.22, 1, 0.36, 1)"
             idleLabel="Generate"
             busyLabel="Generating"
             busyOneLabel="Generating"
@@ -646,6 +652,7 @@ export function DistortionWavesShowcase({
             fullWidth
             showIdleIcon={false}
             showDoneSheen={false}
+            doneTone="neutral"
             onTrigger={handleAction}
           />
         </div>
@@ -657,8 +664,8 @@ export function DistortionWavesShowcase({
         data-theme={theme}
         className={cn("inline-block max-w-full", className)}
         style={{
-          padding: 10,
-          borderRadius: 48,
+          padding: 6,
+          borderRadius: 34,
           backgroundColor: isDark ? "#26262b" : "#ffffff",
           boxShadow: tokens.cardShadow,
           ...style,
@@ -680,8 +687,8 @@ export function DistortionWavesShowcase({
             width,
             maxWidth: "100%",
             height: cardHeight,
-            backgroundColor: "#09090b",
-            borderRadius: 38,
+            backgroundColor: isDark ? "#26262b" : "#ffffff",
+            borderRadius: 28,
             overflow: "hidden",
           }}
         >
